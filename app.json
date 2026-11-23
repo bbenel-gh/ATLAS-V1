@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "ATLAS",
+    "slug": "atlas",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "atlas",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F2F4F3",
+    "android": {
+      "package": "com.atlas.learn",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-video",
+      "expo-audio"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

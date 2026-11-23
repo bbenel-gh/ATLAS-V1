@@ -1,0 +1,62 @@
+# ATLAS V1
+
+An Android app that teaches one topic: Basic 7 Integrated Science, Diversity of
+Matter: Materials. One overview and five segments, 1A to 1E.
+
+It is a pilot release for one class at Detieso D/A Basic School, installed
+directly on pilot phones as an APK. It is not a public Play Store release.
+
+Read `CLAUDE.md` before you change anything. It holds the shift protocol, the
+role table and the rules that never bend. `DOCS_INDEX.md` says which document
+wins when two disagree.
+
+## Running it
+
+You need Node 24.22.3 or newer. On this computer it is at
+`C:\ATLAS\tools\node-v24.22.3-win-x64` and already on the user PATH.
+
+```
+npm install
+npm start
+```
+
+Then pick one:
+
+- Press `w` for the browser.
+- Press `a` for the Android emulator. The AVD is `atlas_api36`.
+- Scan the QR code with Expo Go on an Android phone, on the same network.
+
+## Checks
+
+All three must pass before any task is called done.
+
+```
+npm run typecheck
+npm run lint
+npm test
+```
+
+## Layout
+
+| Path | Holds |
+| --- | --- |
+| `app/` | Routes. Expo Router. Not `src/app`, see D-12 in `ops/DECISIONS.md` |
+| `src/domain/` | Pure TypeScript rules. No React imports. Fully unit tested |
+| `src/data/` | Supabase client, content loader, video cache, offline queue |
+| `src/components/` | UI pieces by feature: lesson, board, exam, admin, common |
+| `src/theme.ts` | Every colour, font and size. Guarded by `src/theme.test.ts` |
+| `supabase/migrations/` | SQL migrations only. Never change the database by hand |
+| `supabase/functions/` | Edge Functions. Every Claude API call happens here |
+| `content/materials.json` | The topic content, validated by `src/data/contentSchema.ts` |
+| `specs/` | The specs. Only Bright may change them |
+| `ops/` | Status, handover, decisions, blockers, bugs, rota, shift logs |
+
+Video and audio files never go in the repo. They live in `C:\ATLAS\media` and
+on Cloudflare R2.
+
+## Stack
+
+Expo SDK 58, React Native 0.88, React 19.3, TypeScript 6 in strict mode.
+Expo Router. Supabase for Postgres, Auth, Storage and Edge Functions. Zustand
+for UI state, TanStack Query for server state, zod for validation. Jest for
+`src/domain`.
