@@ -31,18 +31,41 @@ Blank means not run.
 | `npm run typecheck` | Pass | `tsc --noEmit`, exit 0, no output |
 | `npm run lint` | Pass | `expo lint` exit 0, confirmed with `npx eslint . --format json` showing 6 files linted, 0 errors, 0 warnings |
 | `npm test` | Pass | `jest`, exit 0, 1 suite, 11 tests passed |
-| Screen in the browser | | |
-| Screen in Expo Go on a phone | | |
+| Web and Android both bundle | Pass | `npx expo export --platform android --platform web`, exit 0. Web 882 modules, Android 1208 modules. One `dist/index.html`, 1.4 KB, title ATLAS, which also proves `web.output: single` |
+| Screen in the browser | Not proven | The bundle compiles and the page is served, but no browser was opened from this session, so nobody has seen it render. The operator must press `w` |
+| Screen in Expo Go on a phone | Not proven | No phone is connected to this computer. BL-8 |
+
+## Log, continued
+
+12. Found `ATLAS V1 Claude Code Runbook (S00 to S41).md` in the repo root and read S00 to S02. It contradicts three things done earlier in the shift. Fixed the two where the runbook is the only authority, and raised the third for Bright.
+13. Changed the Android application id from `com.atlasghana.atlas` to `com.atlas.learn`, which runbook S01 item 8 names. Recorded as D-14 superseding D-13. Done before the first commit, because the id cannot change after a Play Store publish.
+14. Removed the 48 step from the spacing scale, so it is 4, 8, 12, 16, 24, 32 exactly as runbook S02 lists. Recorded as D-15, and added a test that guards the scale.
+15. Added two tests for runbook S02's "There is NO red in the theme". The first attempt was wrong: it compared colour channels and failed on gold `#B9852F`, which is amber, not red. Replaced it with a hue check. Gold sits at about 37 degrees, a real red lands under 20 or over 340. The theme was right and the test was wrong, so the test was fixed rather than the theme.
+16. Re-ran all three checks after the theme edits. Typecheck, lint and test all pass. 14 tests.
+17. Initialised git. Set the identity **locally**, not globally, to `ATLAS build operator <build-operator@atlas.local>`, because this computer is shared and the person on shift did not give a name. Committing under the owner's email would have misattributed the work. Empty commit `S00: init` on `main`, then branch `feat/S00-setup`, then one commit of 41 files. Confirmed `node_modules`, `dist` and `.env` are all excluded. Did not push: there is no remote, and CLAUDE.md forbids pushing to `main`.
+
+## Still open from the runbook, not done this shift
+
+Not attempted, because the shift goal was the setup task as given, not S01 and S02 in full.
+
+- S01 item 3: an ESLint rule forbidding `react`, `react-native` and `expo` imports inside `src/domain/`. CLAUDE.md also requires this. The runbook asks for it to be proven by a deliberately failing lint.
+- S01 item 4: Prettier.
+- S01 item 5: a real test in `src/domain/__tests__/sanity.test.ts` covering a pure function in `src/domain/sanity.ts`.
+- S01 item 6: a `test:watch` script.
+- S01 item 7: the eight placeholder routes, with `app/index.tsx` redirecting to `/(auth)/sign-in`. This shift built one screen showing ATLAS instead, as instructed.
+- S01 item 9: README section on running on a phone over USB.
+- S02 items 2 to 6: the font weights the runbook names differ from the eight loaded here, the seven shared components, the dev components screen, accessibility labels and reduced motion.
+- S02 item 1 puts the theme at `src/components/common/theme.ts`. It is at `src/theme.ts` here, as instructed.
 
 ## S00 "Done when"
 
 | Line | State | How checked |
 | --- | --- | --- |
-| Expo app with latest stable SDK, TypeScript strict, Expo Router | | |
-| Routes in `app/` at the root, template screens and components deleted | | |
-| Named packages installed with `npx expo install` | | |
-| Scripts `typecheck`, `lint`, `test`; web output `single` | | |
-| `src/theme.ts` with app tokens and board tokens | | |
-| `ops/` files created and the 23 Nov decision logged | | |
-| One screen showing "ATLAS" in Fraunces on paper | | |
-| Git initialised, committed on `feat/S00-setup` | | |
+| Expo app with latest stable SDK, TypeScript strict, Expo Router | Proven | SDK 58.0.26 read from `node_modules/expo/package.json`, confirmed latest stable on docs.expo.dev. `strict: true` in `tsconfig.json` and `tsc --noEmit` passes. expo-router 58.0.32 installed and it bundled 1208 Android modules from `expo-router/entry` |
+| Routes in `app/` at the root, template screens and components deleted | Proven | `app/` holds only `_layout.tsx` and `index.tsx`. `src/app` does not exist, which matters because Expo Router gives `src/app` precedence when both are present. The scaffold was generated in a temp folder and only config files were carried over, so no template screen, component, hook or image ever entered the repo |
+| Named packages installed with `npx expo install` | Proven, with a caveat | All 21 present, versions read off disk. `npx expo install` resolved the SDK-versioned ones, which is how the correct 58.x pins were obtained. But it failed three times with `ECONNRESET`, so the final reconcile was a plain `npm install` against a `package.json` with those same pinned versions. The versions are the ones `expo install` chose; the command that last wrote `node_modules` was not `expo install`. `npx expo install --check` has not been run |
+| Scripts `typecheck`, `lint`, `test`; web output `single` | Proven | All three run and pass. `web.output` is `single` in `app.json`, and the export produced exactly one `index.html` with no per-route HTML |
+| `src/theme.ts` with app tokens and board tokens | Proven | All nine app tokens and all four board tokens match CLAUDE.md character for character, asserted by `toEqual` in `src/theme.test.ts`, 14 tests passing |
+| `ops/` files created and the 23 Nov decision logged | Proven | STATUS, HANDOVER, DECISIONS, BLOCKERS, BUGS, ROTA and `shifts/` all exist and are committed. The decision is D-8 in `ops/DECISIONS.md`, worded as given |
+| One screen showing "ATLAS" in Fraunces on paper | **Not proven** | `app/index.tsx` sets `fontFamily: Fraunces_700Bold` on `colors.paper`, it compiles for both platforms, and the font files are in the export assets. But no human or browser has seen it render. Nobody should tick this line until the operator presses `w` and scans the QR |
+| Git initialised, committed on `feat/S00-setup` | Proven | `git log` shows `9c2791f S00: init` on `main` and `725c451` on `feat/S00-setup`, 41 files, 23492 insertions. Working tree clean. Not pushed, because there is no remote yet |

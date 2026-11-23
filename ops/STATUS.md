@@ -1,21 +1,23 @@
 # ATLAS V1 status
 
-Last updated: 23 November 2026, by the build operator in shift 1.
+Last updated: 23 November 2026, shift 2, build operator.
 
 ## Where the project stands
 
-Session S00 is **part done and not proven**. Every file is written, but
-`npm install` has not finished, so nothing has been typechecked, linted, tested
-or displayed. No lesson content, no database, no accounts. Git is not
-initialised.
+The repo exists and the app builds. Expo SDK 58 app on branch `feat/S00-setup`,
+one commit, working tree clean, not pushed because there is no remote yet.
+Typecheck, lint and tests pass. Both the Android and the web bundle compile.
 
-An earlier version of this file said S00 was done. That was wrong.
-See the correction note in `ops/HANDOVER.md`.
+One thing is still unproven: **nobody has seen the screen render.** It compiles
+and the page is served, but no browser and no phone has displayed it. Do not
+call S00 finished until someone does.
+
+No lesson content, no database, no accounts.
 
 | Step | Sessions | State |
 | --- | --- | --- |
-| B0 Setup | S00 to S04 | S00 part done, not proven. S01 to S04 not started |
-| B1 Data model and content | S05 to S09 | Not started |
+| B0 Setup | S00 to S04 | Setup task done except the on-screen check. See the runbook gap list below |
+| B1 Data model and content | S05 to S09 | Blocked on BL-2, `specs/data-model.md` does not exist |
 | B2 Accounts | S10 to S13 | Not started |
 | B3 Onboarding | S14 | Not started |
 | B4 Home | S15 | Not started |
@@ -29,36 +31,49 @@ See the correction note in `ops/HANDOVER.md`.
 | B12 Handwriting | S40 | Not started |
 | Release | S41 | Not started |
 
-## What is written
+## What is built and checked
 
-Written means the file exists. It does not mean it runs. Nothing in this list
-has been typechecked, linted, tested or displayed.
+- Expo SDK 58.0.26, React Native 0.88.1, React 19.3.0, TypeScript 6.0.3, strict mode.
+- Expo Router, routes in `app/` at the repo root. `src/app` deliberately absent, because Expo Router gives it precedence over `app/` when both exist.
+- `app/index.tsx` shows ATLAS in Fraunces on paper `#F2F4F3`. Compiles, not yet seen.
+- `app/_layout.tsx` loads eight font weights at runtime, so Expo Go works without a development build.
+- `src/theme.ts`: all nine app tokens and all four board tokens from CLAUDE.md, spacing 4 to 32, pill and card radii, 1px border, no shadows, no red.
+- `src/theme.test.ts`: 14 tests guarding every token value, the hex format, the app and board palettes staying separate, body text at 16px, the spacing scale, and that no red can enter the theme.
+- Web export is `single`. SDK 58 changed the Expo Router default to `server`, so this is set on purpose and the export was checked to produce exactly one `index.html`.
+- All 21 required packages installed, versions verified on disk.
 
-- `package.json` pinned to Expo SDK 58.0.26, React Native 0.88.1, React 19.3.0, TypeScript 6.0.3, strict mode on.
-- Expo Router, routes in `app/` at the repo root.
-- `app/index.tsx`, a placeholder screen meant to show "ATLAS" in Fraunces on paper.
-- `app/_layout.tsx`, which loads eight font weights at runtime so Expo Go works.
-- `src/theme.ts` holds every app token and board token from CLAUDE.md, with `src/theme.test.ts` guarding each value.
-- Web export set to `single`. SDK 58 defaults this to `server`, so it is set on purpose.
+## Checks, with how they were proven
 
-## What is installed
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | Pass, exit 0 |
+| `npm run lint` | Pass. Confirmed it is really linting: `npx eslint . --format json` reports 6 files, 0 errors, 0 warnings |
+| `npm test` | Pass, 14 tests |
+| Android bundle | Pass, 1208 modules via `npx expo export` |
+| Web bundle | Pass, 882 modules, one `index.html` |
+| Dev server | HTTP 200 on `http://localhost:8081` and `http://192.168.0.174:8081` |
+| Screen rendered in a browser | **Not proven** |
+| Screen rendered in Expo Go | **Not proven**, no phone connected, BL-8 |
 
-`npm install` has not finished. Only the base Expo dependencies were attempted,
-and they are incomplete. Supabase, zod, zustand, TanStack Query, AsyncStorage,
-expo-video, expo-audio, expo-crypto, expo-file-system, the four font families,
-jest-expo and jest are **not** installed.
+## Runbook gaps, carried forward
 
-## Dates
+The runbook arrived in the repo after the setup work began. The setup task maps
+onto parts of **S01** and **S02**, not S00, and the runbook says S00 is run by
+Bright because it writes `CLAUDE.md` and `specs/`. See BL-11.
 
-Content freeze 5 December. Feature freeze 8 December. Pilot 9 to 11 December.
-Release to the pilot class 15 December. Spaced re-check 18 December.
+Still open from S01 and S02, listed in full at the end of
+`ops/shifts/2026-11-23-2-build-operator.md`:
+
+- The ESLint rule forbidding `react`, `react-native` and `expo` imports inside `src/domain/`. CLAUDE.md requires this too.
+- Prettier.
+- A real `src/domain` test and a `test:watch` script.
+- The eight placeholder routes. This shift built one ATLAS screen instead, as instructed.
+- The seven shared components, the dev components screen, accessibility labels, reduced motion.
+- Theme location: runbook says `src/components/common/theme.ts`, it is at `src/theme.ts` as instructed.
 
 ## Next
 
-Finish S00 before anything else. The ordered list is in `ops/HANDOVER.md` under
-"What the next shift should do first". It starts with letting `npm install`
-finish and ends with the first commit.
-
-After that, S01 to S04, to reach the B0 "Done when": a "Hello ATLAS" build
-installs on both test phones from a link. That needs an Expo account and an EAS
-build profile, which do not exist yet. See BL-5 in `ops/BLOCKERS.md`.
+1. Someone presses `w` and scans the QR, and ticks or fails the two unproven lines above.
+2. Bright decides on BL-11, the branch naming and session split.
+3. Bright clears BL-1 and BL-2 by writing `specs/`. S05 onward cannot start without the data model.
+4. Then S01 and S02 properly, closing the gap list.

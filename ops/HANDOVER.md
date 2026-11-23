@@ -5,62 +5,83 @@ Rewritten at the end of every shift. The next person reads this first, then
 
 ---
 
-**Shift**: 23 November 2026, shift 1
-**Person and role**: Build operator
-**Session**: S00, repo setup
-**State**: Interrupted, not ended. "End shift" was never run.
+**Shift**: 23 November 2026, shift 2
+**Person and role**: Build operator, name not given
+**Session**: the repo setup task, carried over from shift 1
+**Branch**: `feat/S00-setup`, one commit, clean, not pushed
+**State**: Work complete except one check. "End shift" has not been run.
 
-## Correction to an earlier version of this file
+## Correction carried from shift 1
 
-An earlier version of this handover claimed the packages were installed, that
-the work was committed on `feat/S00-setup`, and that `typecheck`, `lint` and
-`test` had been run. None of that was true. It was filled in from the plan
-before the work was done. Nothing below is written before it is checked.
+Shift 1 wrote this file and `ops/STATUS.md` from its plan rather than from
+results. They claimed the packages were installed, the work was committed, and
+that typecheck, lint and test had been run. None of it was true at the time.
+Everything below has been checked, and each line says how.
 
-## What is actually done
+## What is done
 
-- Node 24.22.3 LTS unpacked from the official zip to `C:\ATLAS\tools`, SHA-256 verified against `SHASUMS256.txt`, added to the user PATH. Node was not on this computer at all before this shift. **Proven**: `node -v` and `npm -v` both answered.
-- Expo SDK 58 confirmed as latest stable from `docs.expo.dev`: React Native 0.88, Node 22.13+, 24.3+ or 26+.
-- Config files written: `package.json`, `app.json`, `tsconfig.json`, `jest.config.js`, `.gitignore`, `.env.example`, `README.md`.
-- Source files written: `app/_layout.tsx`, `app/index.tsx`, `src/theme.ts`, `src/theme.test.ts`.
-- Folder layout from `CLAUDE.md` created, with `.gitkeep` in each empty folder.
-- `ops/` created: STATUS, HANDOVER, DECISIONS, BLOCKERS, BUGS, ROTA, shifts.
-- No template screen, component, hook or image exists in this repo. The scaffold was generated in a temp folder and only the config files were carried over, so there was nothing to strip out afterwards.
+- Node 24.22.3 LTS, SHA-256 verified, unpacked to `C:\ATLAS\tools`, added to the user PATH. Node was not on this computer before shift 1. A new terminal will have `node` and `npx` on PATH.
+- Expo SDK 58.0.26 app, React Native 0.88.1, React 19.3.0, TypeScript 6.0.3 strict.
+- Expo Router with routes in `app/` at the root. No template screen, component, hook or image is in the repo.
+- All 21 required packages installed and verified on disk.
+- `src/theme.ts` with every CLAUDE.md token, and 14 tests guarding them.
+- `ops/` complete. The 23 Nov placeholder-content decision is D-8.
+- Typecheck, lint and test all pass. Android and web both bundle.
+- Committed: `9c2791f S00: init` on `main`, then `725c451` on `feat/S00-setup`, 41 files.
 
-## What is not done
+## The one thing not proven
 
-- **`npm install` has not finished.** It is still running. 318 packages are staged, there is no `package-lock.json`, and `node_modules/expo` does not exist yet. The app cannot start.
-- **None of the extra packages are installed**: zod, zustand, TanStack Query, AsyncStorage, Supabase, expo-video, expo-file-system, expo-crypto, expo-audio, the four font families, jest-expo and jest. `app/_layout.tsx` imports four `@expo-google-fonts` packages that are not present, so it will not compile as things stand.
-- **`npm run typecheck`, `npm run lint` and `npm test` have never been run.** No check has been executed at all.
-- **The screen has never been displayed**, in a browser or on a phone.
-- **Git is not initialised.** No branch, no commit.
-- The font export names in `app/_layout.tsx` were written from the `@expo-google-fonts` naming convention and have **not** been verified against the installed packages.
+**Nobody has seen the screen.** It compiles for both platforms, the font files
+are in the export, and the dev server returns HTTP 200 with the ATLAS title on
+both `localhost` and `192.168.0.174`. But no browser and no phone has rendered
+it. Do not tick S00 until someone does this:
+
+```
+cd c:\Users\Grace\Desktop\MOBILE-APP\ATLAS-V1
+npx expo start
+```
+
+Then press `w` for the browser, and scan the QR with Expo Go on the phone, or
+type `exp://192.168.0.174:8081`. Expect the word ATLAS in a serif face, dark
+navy on near-white. If the letters look like the system sans, the fonts did not
+load and that is a real bug.
+
+A dev server may still be running on port 8081 from this shift. Stop it first,
+or use `--port 8082`.
 
 ## Open blockers
 
-Read `ops/BLOCKERS.md` in full.
+`ops/BLOCKERS.md` has 11. The ones that matter now:
 
-- **BL-9 is the live one**: drive C has about 4.5 GB free of 107 GB. `npm install` already failed once with `ENOSPC`. This is why the install is fragile.
-- **BL-1 and BL-2**: `specs/` is empty, and `specs/data-model.md` does not exist anywhere on this computer. S05 onwards cannot start without it. Only Bright may write `specs/`.
-- **BL-5**: no Expo account or EAS project, so the B0 "Done when" cannot be proved.
-- Also open: BL-3 `content-work/` not created, BL-4 no app icon, BL-6 no `atlas-dev` Supabase project, BL-7 no R2 bucket, BL-8 no phone connected by USB.
+- **BL-1 and BL-2**: `specs/` is empty, and `specs/data-model.md`, `ai-prompts.md` and `B0.md` to `B12.md` do not exist anywhere on this computer. S05 onward cannot start. Only Bright may write `specs/`.
+- **BL-11**: this work maps onto runbook S01 and S02, not S00, and sits on `feat/S00-setup`. The runbook wants one session per branch, and says S00 is run by Bright. Bright decides whether to accept or split it.
+- **BL-5**: no Expo account or EAS project, so the B0 "Done when", a build installing on both phones from a link, cannot be reached.
+- **BL-9**: disk. 8.81 GB free now, but `ENOSPC` already killed one install and a Gradle cache is several GB.
+- **BL-10**: the network drops mid download. Three `ECONNRESET` failures, one of which rolled back packages that `package.json` still listed. If it happens again, pin every version first and run a single `npm install`.
+- Also open: BL-3 `content-work/`, BL-4 no app icon, BL-6 no `atlas-dev` Supabase project, BL-7 no R2 bucket, BL-8 no phone connected.
 
-## Decisions taken, for Bright to confirm
+## Decisions for Bright to confirm
 
-D-10 to D-13 in `ops/DECISIONS.md`. The one worth a look is **D-13**, the Android
-application id `com.atlasghana.atlas`. It cannot change after a Play Store
-publish, and the pilot APK does not depend on it, so overturn it now if you want
-a different one.
+D-10 to D-15 in `ops/DECISIONS.md`. Two worth a look:
+
+- **D-14**: the Android application id is now `com.atlas.learn`, taken from runbook S01 item 8. It replaces D-13, which invented `com.atlasghana.atlas` before the runbook was in the repo. Confirm it, because the id cannot change after a Play Store publish.
+- **D-10**: Node 24 rather than the newest Node 26. Expo SDK 58 accepts 22.13+, 24.3+ or 26+, and Node 26 became LTS only last month.
+
+## Note on git authorship
+
+The commit is authored by `ATLAS build operator <build-operator@atlas.local>`,
+set **locally** in this repo only. This computer is shared and the person on
+shift did not give a name, and committing under the owner's email would have
+misattributed the work. To correct it:
+
+```
+git config user.name "<your name>"
+git config user.email "<your email>"
+git commit --amend --reset-author --no-edit
+```
 
 ## What the next shift should do first
 
-Finish S00. In this order:
-
-1. Let `npm install` finish, or restart it. Watch disk space while it runs.
-2. `npx expo install` the packages listed under "What is not done".
-3. Check the `@expo-google-fonts` export names against `app/_layout.tsx`.
-4. Run `npm run typecheck`, `npm run lint`, `npm test`.
-5. `npx expo start`, press `w`, and scan the QR code with Expo Go on a phone.
-6. Only then `git init`, branch `feat/S00-setup`, and commit.
-
-Do not start S01 until S00 is proven.
+1. Prove or fail the screen, in the browser and on a phone. Write the result in the shift log.
+2. Get Bright's answer on BL-11 before opening a pull request, so the branch is not merged under the wrong session number.
+3. Close the S01 and S02 gap list in `ops/STATUS.md`, starting with the `src/domain` import rule, because CLAUDE.md requires it and every later session depends on `src/domain` staying pure.
