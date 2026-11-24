@@ -1,12 +1,26 @@
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 
 import { PillButton } from '@/components/common/PillButton';
-import { RoutePlaceholder } from '@/components/common/RoutePlaceholder';
+import { Screen } from '@/components/common/Screen';
+import { Heading, Label } from '@/components/common/Text';
 
+/**
+ * S04 placeholder: "Hello ATLAS" and the installed version, so a tester can
+ * see at a glance which build is on the phone. B2 replaces it with sign-in.
+ */
 export default function SignIn() {
   const router = useRouter();
+  const version = Constants.expoConfig?.version ?? 'unknown';
+  const build = Constants.expoConfig?.android?.versionCode;
+
   return (
-    <RoutePlaceholder name="sign-in">
+    <Screen>
+      <Heading size="display">Hello ATLAS</Heading>
+      <Label>
+        Version {version}
+        {build ? ` (build ${build})` : ''}
+      </Label>
       {__DEV__ ? (
         <PillButton
           variant="secondary"
@@ -14,6 +28,6 @@ export default function SignIn() {
           onPress={() => router.push('/dev/components')}
         />
       ) : null}
-    </RoutePlaceholder>
+    </Screen>
   );
 }

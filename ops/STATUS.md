@@ -1,10 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 2, Bright (S03).
+Last updated: 24 November 2026, shift 2, Bright (S04).
 
 ## Current session
 
-S03, Supabase, environment and Sentry, on `feat/S03-supabase-sentry` (cut from `feat/S02-theme`). Code done, typecheck, lint, test (126) and both exports pass. Shift ended 13:45 with S03 uncommitted; commit message proposed in the handover chat. `supabase link` not run. Secret search clean. Not proven: connection to atlas-dev and a scrubbed event in Sentry, both waiting on `.env` (needs `EXPO_PUBLIC_SENTRY_DSN` and `EXPO_PUBLIC_APP_ENV=dev`) and `supabase link`.
+S04, first EAS build, on `feat/S04-eas-build` (cut from `feat/S03-supabase-sentry`). Repo side done: `eas.json` (three APK profiles), version 0.1.0 / versionCode 1, `scripts/bumpVersion.ts` with tests, "Hello ATLAS" with version on the sign-in placeholder, `docs/install.md`. Typecheck, lint, test (136) and Android export pass. Waiting on Bright: `eas login`, `eas init`, EAS environment values, first build run by hand (keystore prompt). APK size: not known until the first build.
+
+S03 is committed (`6e44c17`, `100aea7`) and pushed to `origin/feat/S03-supabase-sentry`. Not proven: connection to atlas-dev and a scrubbed event in Sentry, both waiting on `.env` (needs `EXPO_PUBLIC_SENTRY_DSN` and `EXPO_PUBLIC_APP_ENV=dev`) and `supabase link`.
 
 Earlier today: D-16 on `chore/decision-rights` (`fb6790f`), S02 committed on `feat/S02-theme` (`fc978ff`). S02 not proven on a phone (BL-8).
 
