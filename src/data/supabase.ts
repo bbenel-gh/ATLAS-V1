@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { AppState, Platform } from 'react-native';
 
+import type { Database } from './database.types';
 import { getEnv } from './env';
 
 /**
@@ -13,7 +14,10 @@ import { getEnv } from './env';
  */
 const { supabaseUrl, supabaseAnonKey } = getEnv();
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// Typed from src/data/database.types.ts (regenerate: npx supabase gen types typescript --remote).
+// The types list pin_hash, failed_pin_count and locked_until, but the database
+// refuses them to every signed-in role. Never select them from the app.
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,

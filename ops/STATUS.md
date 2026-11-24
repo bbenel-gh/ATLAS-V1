@@ -1,10 +1,14 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 2, Bright (S04).
+Last updated: 24 November 2026, shift 3, Bright (S05).
 
 ## Current session
 
-S04, first EAS build, on `feat/S04-eas-build` (cut from `feat/S03-supabase-sentry`). Repo side done: `eas.json` (three APK profiles), version 0.1.0 / versionCode 1, `scripts/bumpVersion.ts` with tests, "Hello ATLAS" with version on the sign-in placeholder, `docs/install.md`. Typecheck, lint, test (136) and Android export pass. Waiting on Bright: `eas login`, `eas init`, EAS environment values, first build run by hand (keystore prompt). APK size: not known until the first build.
+S05, database part 1, on `feat/S05-db-people` (cut from `feat/S04-eas-build`, with `chore/decision-rights` merged in). D-24 scope change committed (`5420903`): V1 is public with self sign-up behind an admin switch. Two migrations applied to atlas-dev (`gygmyjbuzbbngsoyoubg`, D-25): people tables with RLS, and the guard trigger fix. RLS tests 32 of 32 pass on atlas-dev (D-26). Types generated. Typecheck, lint, test (139) pass. Uncommitted.
+
+## Earlier today
+
+S04, first EAS build, committed `a982ea4` and pushed. EAS project `@lumielbright/atlas`. First build still waiting on Bright: EAS environment values, then the build run by hand (keystore prompt). Before that S04 work: on `feat/S04-eas-build` (cut from `feat/S03-supabase-sentry`). Repo side done: `eas.json` (three APK profiles), version 0.1.0 / versionCode 1, `scripts/bumpVersion.ts` with tests, "Hello ATLAS" with version on the sign-in placeholder, `docs/install.md`. Typecheck, lint, test (136) and Android export pass. Waiting on Bright: `eas login`, `eas init`, EAS environment values, first build run by hand (keystore prompt). APK size: not known until the first build.
 
 S03 is committed (`6e44c17`, `100aea7`) and pushed to `origin/feat/S03-supabase-sentry`. Not proven: connection to atlas-dev and a scrubbed event in Sentry, both waiting on `.env` (needs `EXPO_PUBLIC_SENTRY_DSN` and `EXPO_PUBLIC_APP_ENV=dev`) and `supabase link`.
 
