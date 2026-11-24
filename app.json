@@ -18,7 +18,8 @@
       "expo-router",
       "expo-font",
       "expo-video",
-      "expo-audio"
+      "expo-audio",
+      "@sentry/react-native"
     ],
     "experiments": {
       "typedRoutes": true,

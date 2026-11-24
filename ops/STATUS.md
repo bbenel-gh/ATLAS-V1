@@ -1,12 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 1, Bright (S02).
+Last updated: 24 November 2026, shift 2, Bright (S03).
 
 ## Current session
 
-S02, theme and base components, on `feat/S02-theme` (cut from `feat/S01-expo-skeleton`). Code done, typecheck, lint, test and both exports pass. Uncommitted. Not proven: render on Phone A and reduced motion on a phone (BL-8).
+S03, Supabase, environment and Sentry, on `feat/S03-supabase-sentry` (cut from `feat/S02-theme`). Code done, typecheck, lint, test (126) and both exports pass. Shift ended 13:45 with S03 uncommitted; commit message proposed in the handover chat. `supabase link` not run. Secret search clean. Not proven: connection to atlas-dev and a scrubbed event in Sentry, both waiting on `.env` (needs `EXPO_PUBLIC_SENTRY_DSN` and `EXPO_PUBLIC_APP_ENV=dev`) and `supabase link`.
 
-Also this shift: D-16 on `chore/decision-rights` (commit `fb6790f`). Decisions marked for Bright may now be made by whoever is on shift. `CLAUDE.md`, `specs/` and merges stay with Bright.
+Earlier today: D-16 on `chore/decision-rights` (`fb6790f`), S02 committed on `feat/S02-theme` (`fc978ff`). S02 not proven on a phone (BL-8).
 
 ## Last merged session
 
@@ -22,9 +22,9 @@ None yet.
 
 ## Next 3 sessions
 
-1. Prove S01 and S02 on screen: browser, then Phone A with the dev gallery (sign-in screen, "Component gallery (dev only)").
-2. Merge order for `main`: `chore/decision-rights`, `feat/S01-expo-skeleton`, then `feat/S02-theme` (Bright merges).
-3. S03: Supabase, environment and Sentry. Needs BL-6 (`atlas-dev`) and the Sentry DSN.
+1. Finish `.env`, run `supabase link`, then prove S01 to S03 on screen with the dev gallery: fonts, "Check connection", "Send test error".
+2. Merge order for `main`: `chore/decision-rights`, `feat/S01-expo-skeleton`, `feat/S02-theme`, `feat/S03-supabase-sentry` (Bright merges). Expect a small `ops/DECISIONS.md` conflict: keep D-16 to D-18.
+3. S04: first EAS build. Needs BL-5 (Expo account) and BL-8 (phones). Approve `@sentry/cli` install script first (`npm install-scripts approve @sentry/cli`) so builds can upload source maps.
 
 ## Dates at risk
 

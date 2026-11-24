@@ -8,6 +8,8 @@ Anything that reaches pupils, every merge into `main`, and every change to
 
 | ID | Date | Decision | Who | Why |
 | --- | --- | --- | --- | --- |
+| D-18 | 24 Nov 2026 | The Sentry scrubber removes `name`, `pin`, `code`, `answer` and `reason` at any depth, except inside Sentry's `sdk`, `contexts.os`, `contexts.runtime` and `contexts.browser` blocks | Bright (owner), S03 | Sentry's event format needs `sdk.name`, and those blocks hold no pupil data. `contexts.device.name` is still removed because phones are often named after their owner. Free text in error messages is not scanned, so code must never put pupil words into an Error |
+| D-17 | 24 Nov 2026 | The S03 health check calls `<url>/auth/v1/health` with the anon key, not `supabase.auth.getSession()` | Bright (owner), S03 | With nobody signed in, `getSession()` only reads local storage, so it would report "Connected" with a wrong URL or no network |
 | D-15 | 23 Nov 2026 | Spacing scale is 4, 8, 12, 16, 24, 32, with no 48 step | Build operator | The runbook S02 lists the scale exactly. `CLAUDE.md` does not define one, so the runbook is the only authority. A 48 step written earlier was removed and a test now guards the scale |
 | D-14 | 23 Nov 2026 | Android application id is `com.atlas.learn`. **Supersedes D-13** | Build operator | The runbook S01 item 8 names `com.atlas.learn`. D-13 invented an id because the runbook had not been read yet. The runbook wins, and the id cannot change after a Play Store publish, so it was corrected before the first commit |
 | ~~D-13~~ | ~~23 Nov 2026~~ | ~~Android application id is `com.atlasghana.atlas`~~ | Build operator | **Superseded by D-14.** Taken before the runbook was in the repo |
