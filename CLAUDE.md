@@ -45,8 +45,11 @@ Decisions: any decision marked for Bright (in `ops/`, the runbook or `specs/`) m
 
 ATLAS V1 is an Android app (Expo) plus a web admin and teacher dashboard (Expo web export, same codebase).
 It teaches one topic: Basic 7 Integrated Science, Diversity of Matter: Materials. That is one overview plus five segments (1A to 1E).
-It is a pilot release for one class at Detieso D/A Basic School. Pilot days are 9 to 11 December 2026. V1.0 is released to the pilot class on 15 December 2026.
-It is installed directly on pilot phones as an APK. It is not a public Play Store release.
+V1 is the main ATLAS product for this topic, not only a pilot. It stays in use for one to two months until the next update.
+The pilot class at Detieso D/A Basic School uses it first: pilot days are 9 to 11 December 2026. V1.0 is released on 15 December 2026, to the pilot class and to the public.
+It is shared as an APK by public link. A public Play Store listing follows once the closed-test requirement is met (`specs/prd.md` section 4).
+Pupils join by self sign-up or with an admin-issued code, always with a 4-digit PIN and never with a child email or phone number. Admins manage pupils. Each pupil states their school; an admin may link it to a row in `schools`.
+Public self sign-up is built in full but stays off until the admin switches it on, after the data protection consultant confirms it is covered.
 
 The lesson design source of truth is `specs/framework.md`. The product source of truth is `specs/prd.md`. If this file and either of them disagree, stop and ask.
 
@@ -97,7 +100,7 @@ Video and audio files never go in the repo. They live in `C:\ATLAS\media` and on
 10. Write the tests in `src/domain` first, then the code. Never skip, delete or weaken a test to make it pass.
 11. Pupils never chat freely with the AI. There is no open chat screen anywhere.
 12. English only. Do not add language selection, translation or support for any other language.
-13. At most 120 AI calls per pupil per day across all jobs.
+13. At most 120 AI calls per pupil per day across all jobs, and never more than the admin-set global daily cap across all pupils.
 14. A safeguarding verdict shows the pupil a neutral message, shows no verdict for that answer, and creates a safeguarding flag with an alert to the admin.
 15. Never touch real pupil data or the production project from a Claude Code session. Development uses the `atlas-dev` Supabase project.
 

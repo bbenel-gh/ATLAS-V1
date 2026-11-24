@@ -8,7 +8,7 @@ In the repo this file is saved as `specs/prd.md`.
 
 ATLAS is one learning companion for each pupil. It plays the part of teacher, parent and study friend. It knows the child, teaches each concept in the way that fits them, checks understanding at every step, and calls in a human when the app alone is not enough.
 
-V1 proves this on one topic with one class. Basic 7 pupils at Detieso D/A Basic School complete Integrated Science, Diversity of Matter: Materials, from onboarding to a timed exam, on pilot phones. V1.0 is released to the pilot class on **15 December 2026**.
+V1 proves this on one topic, with the Detieso pilot class first and then any pupil who signs up. Basic 7 pupils complete Integrated Science, Diversity of Matter: Materials, from onboarding to a timed exam. V1.0 is released to the pilot class and to the public on **15 December 2026**, and stays in use for one to two months until the next update.
 
 ## 2. The problem
 
@@ -32,17 +32,19 @@ Every design choice serves these goals.
 
 ## 4. What V1 is and is not
 
-V1 is a pilot release: one topic, one school, one class, Android phones supplied by ATLAS, and a web dashboard for the admin and the class teacher.
+V1 is the main ATLAS product for this topic, not only a pilot: one topic, the Detieso pilot class first on Android phones supplied by ATLAS, then any pupil who signs up, and a web dashboard for the admin and class teachers. Admins manage pupils. Each pupil states their school, and an admin may link it to a school record.
 
-It is not a public Play Store launch. A new personal Google Play account must run a closed test with at least 12 testers opted in for 14 days in a row before it can apply for production access, so the public listing comes after 15 December.
+It is shared as an APK from a public link. A new personal Google Play account must run a closed test with at least 12 testers opted in for 14 days in a row before it can apply for production access, so the public Play Store listing comes after 15 December.
+
+Public self sign-up is built in V1 but stays switched off until the admin turns it on, after the data protection consultant confirms that registration and in-app guardian consent cover public use. Until then only the pilot class and admin-created pupils can use V1.
 
 ### Scope
 
 | Area | In V1 (15 Dec) | Later |
 | --- | --- | --- |
 | Subject and topic | Basic 7 Integrated Science, Diversity of Matter: Materials. Overview plus segments 1A to 1E | Mathematics from January, then more topics |
-| Platform | Android app installed directly on pilot phones; web dashboard for admin and teacher | iOS, public Play Store listing, pupil web app |
-| Accounts | Teacher-issued pupil code plus 4-digit PIN. No child email or phone number | Phone OTP, self sign-up |
+| Platform | Android app installed from a public APK link; pilot phones supplied by ATLAS; web dashboard for admin and teacher | iOS, public Play Store listing, pupil web app |
+| Accounts | Self sign-up (behind the admin switch) or admin-issued pupil code, plus 4-digit PIN. The pupil states their school. No child email or phone number | Phone OTP |
 | Language | English only | No other language is planned |
 | Onboarding | Name, class, interests, 3 playful choices | |
 | Lesson flow | Overview video, segment loop, "Why do you think so?" after every answer, 3 tries, flags to admin | |
@@ -56,10 +58,10 @@ It is not a public Play Store launch. A new personal Google Play account must ru
 
 | User | Who in V1 | What they need |
 | --- | --- | --- |
-| Pupil | Basic 7 pupils at Detieso, about 11 to 14 years old, with signed parent consent | To learn the topic at their own pace without being judged, on a shared low-end phone |
-| Admin | Bright | To see and act on flags, approve borderline marks, create classes and pupil codes, record consent |
-| Class teacher | The Basic 7 science teacher at Detieso | A read-only view of their own class's progress |
-| Parent or guardian | Parents of pilot pupils | A plain explanation of what ATLAS collects and that AI checks answers; a consent form they understand |
+| Pupil | Basic 7 pupils at Detieso, and any pupil who signs up, about 11 to 14 years old, with parent or guardian consent | To learn the topic at their own pace without being judged, on a shared low-end phone |
+| Admin | Bright | To see and act on flags, approve borderline marks, create classes, schools and pupil codes, record consent, see, suspend, reset or delete any pupil, and switch public sign-up on or off |
+| Class teacher | The Basic 7 science teacher at Detieso, and teachers of other classes later | A read-only view of their own class's progress |
+| Parent or guardian | Parents of pilot pupils and of pupils who sign up | A plain explanation of what ATLAS collects and that AI checks answers; a consent form or in-app consent step they understand |
 
 ## 6. Learner journey
 
@@ -67,10 +69,10 @@ The journey has eight stages. Onboarding runs once. Topic choice and the overvie
 
 ### 6.1 Sign-in and notices
 
-- FR-1. The admin creates a class and its pupils on the web dashboard. Each pupil gets a 6-character code with no ambiguous characters (no 0, O, 1 or I).
+- FR-1. The admin creates a class and its pupils on the web dashboard, or, when public sign-up is on, a pupil signs up in the app with a first name or nickname, their school in their own words and their class level. Each pupil gets a 6-character code with no ambiguous characters (no 0, O, 1 or I). A pupil may join a class with the class's join code. The admin is alerted to each new sign-up and can suspend, reset or delete any pupil.
 - FR-2. A pupil signs in with code and PIN. The PIN is set on first sign-in and stored only as a hash. Five wrong PINs lock the code for 15 minutes.
 - FR-3. After first sign-in the pupil sees the AI notice once (under 80 words, plain English). The app records when it was seen.
-- FR-4. A pupil cannot start lessons until the admin has recorded parent consent. Until then they see a polite waiting screen.
+- FR-4. A pupil cannot start lessons until consent is recorded: by the admin from a signed paper form, or by a parent or guardian in the app's consent step after reading the privacy notice. Until then they see a polite waiting screen. Every consent records its method, date and any withdrawal.
 
 ### 6.2 Stage 1: Onboarding
 
@@ -224,8 +226,9 @@ Anthropic requires organisations whose products let minors use its API to add th
 - No names go to the API: only a pupil ID, the question and the pupil's words.
 - Pupils have no email or phone number in ATLAS. They sign in with a code and PIN.
 - An AI notice screen for pupils, and a plain-language AI and privacy notice for parents, also published on a public ATLAS page.
-- A signed parent consent form for every pilot pupil, explained in person. It states what ATLAS collects, that AI checks answers, who sees the data, how long it is kept, and how to withdraw.
-- Data Protection Commission registration submitted by 1 December. The consultant confirms whether the pilot can run while registration is pending. If not, the pilot waits.
+- A signed parent consent form for every pilot pupil, explained in person. For pupils who sign up, a parent or guardian consent step in the app with the same content. Both state what ATLAS collects, that AI checks answers, who sees the data, how long it is kept, and how to withdraw.
+- Data Protection Commission registration submitted by 1 December. The consultant confirms whether the pilot can run while registration is pending. If not, the pilot waits. Public sign-up stays off until the consultant confirms that registration and in-app consent cover public use.
+- A global daily cap on AI calls across all pupils, set by the admin, on top of the 120 calls per pupil per day, and a limit on sign-ups per phone per day.
 - Safeguarding: if a pupil's text suggests danger, harm or serious distress, the pupil sees "Thank you for sharing. A teacher may check in with you.", no verdict is shown for that answer, and the admin is alerted by email the same day. Bright names who acts on alerts before the pilot.
 - Handwriting photos are deleted from the phone and the server once the text is confirmed.
 - AI logs and pupil data are kept only as long as the privacy notice says.

@@ -4,11 +4,16 @@ Source: ATLAS V1 Build Guide, Claude Code pack tab, section 3. Exported 24 Novem
 
 One row per table. Every table has Row Level Security.
 
+Amended 24 November 2026 by Bright (D-24): V1 is public, with self sign-up behind an admin switch. Added `schools`, `consents` and `app_settings`; the teacher of a class is stored only on `classes`; pupils gained school, class level, PIN lockout, sign-up source and status.
+
 | Table | Holds |
 | --- | --- |
-| `staff` | Admin and teacher accounts, role, class |
-| `classes` | Class name, school, teacher |
-| `pupils` | Class, display name, pupil code, hashed PIN, consent date, AI notice seen date |
+| `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
+| `staff` | Admin and teacher accounts, role (admin or teacher). A teacher's classes are found through `classes` |
+| `classes` | Class name, school (link to `schools`), teacher, join code |
+| `pupils` | Class (optional), display name, school as the pupil stated it, school (optional link to `schools`, set by an admin), class level, pupil code, hashed PIN, failed PIN count, locked until, signed up by (self or admin), status (active or suspended), AI notice seen date, date created |
+| `consents` | Pupil, method (paper or in-app), recorded by (staff, for paper), date given, form reference, withdrawn date |
+| `app_settings` | Public sign-up on or off, global daily AI call cap, sign-ups per phone per day. One row, admin only |
 | `profiles` | Interests, playful-choice behaviour, overview keywords and confusions |
 | `topics` | Title, class level, subject |
 | `segments` | Topic, code (1A to 1E), title, order, objective, reference meaning |
