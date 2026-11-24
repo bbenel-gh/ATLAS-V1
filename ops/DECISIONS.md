@@ -3,11 +3,14 @@
 One line per decision. Newest first. A decision here is settled. To change one,
 add a new entry that says what it replaces and why.
 
-Anything that reaches pupils, every merge into `main`, and every change to
-`CLAUDE.md` or `specs/` needs Bright.
+Since D-16, whoever is on shift may make a decision that was marked for Bright.
+Write their name, role and the date in the "Who" column. Every merge into
+`main`, and every change to `CLAUDE.md`, `specs/` or the final
+`content/materials.json`, still needs Bright.
 
 | ID | Date | Decision | Who | Why |
 | --- | --- | --- | --- | --- |
+| D-16 | 24 Nov 2026 | Any decision marked for Bright may be made by whoever is on shift, recorded here with name, role and date. Changes to `CLAUDE.md`, `specs/`, the final `content/materials.json`, and merges into `main`, stay with Bright. `CLAUDE.md` updated to match (version 24 November 2026) | Bright (owner), given in chat on the shared account during the 24 Nov S02 shift | Decisions were queuing on one person. Bright chose option A, decisions only, over opening up the source-of-truth files as well |
 | D-15 | 23 Nov 2026 | Spacing scale is 4, 8, 12, 16, 24, 32, with no 48 step | Build operator | The runbook S02 lists the scale exactly. `CLAUDE.md` does not define one, so the runbook is the only authority. A 48 step written earlier was removed and a test now guards the scale |
 | D-14 | 23 Nov 2026 | Android application id is `com.atlas.learn`. **Supersedes D-13** | Build operator | The runbook S01 item 8 names `com.atlas.learn`. D-13 invented an id because the runbook had not been read yet. The runbook wins, and the id cannot change after a Play Store publish, so it was corrected before the first commit |
 | ~~D-13~~ | ~~23 Nov 2026~~ | ~~Android application id is `com.atlasghana.atlas`~~ | Build operator | **Superseded by D-14.** Taken before the runbook was in the repo |

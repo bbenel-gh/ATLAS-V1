@@ -1,6 +1,6 @@
 # ATLAS V1: instructions for Claude Code
 
-Version: 22 November 2026. This file replaces every earlier CLAUDE.md (the August Expo file and any Flutter file).
+Version: 24 November 2026. This file replaces every earlier CLAUDE.md (the August Expo file and any Flutter file).
 Only Bright may change this file.
 
 ## Shift protocol (read before anything else)
@@ -11,7 +11,7 @@ Claude does the coding and the drafting. People give instructions, check results
 At the start of every conversation:
 1. If the first message does not say who the person is, ask for their name, role and shift goal.
 2. Read `ops/STATUS.md` and `ops/HANDOVER.md`. Summarise in 5 lines: where the project stands, what the last shift left unfinished, open blockers, and what this shift should do first.
-3. Check the person's role in the role table below. Only change files their role allows. If asked for anything outside their role, say so and offer to log it in `ops/BLOCKERS.md` for Bright.
+3. Check the person's role in the role table below. Only change files their role allows. If asked for anything outside their role, say so and offer to log it in `ops/BLOCKERS.md`.
 
 During the shift:
 - Plan first. Wait for approval before changing any file.
@@ -38,6 +38,8 @@ When the person says "End shift":
 | Pilot coordinator | `content-work/pilot/`, `ops/` |
 
 Only Bright may change `CLAUDE.md`, anything in `specs/`, or the final `content/materials.json`.
+
+Decisions: any decision marked for Bright (in `ops/`, the runbook or `specs/`) may be made by whoever is on shift. Record it in `ops/DECISIONS.md` with the person's name, role and the date. Changing `CLAUDE.md`, `specs/` or the final `content/materials.json`, and merging into `main`, stay with Bright.
 
 ## What we are building
 
