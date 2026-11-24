@@ -26,6 +26,19 @@ Then pick one:
 - Press `a` for the Android emulator. The AVD is `atlas_api36`.
 - Scan the QR code with Expo Go on an Android phone, on the same network.
 
+### On a phone over USB
+
+1. On the phone: Settings, About phone, tap Build number 7 times. Then in
+   Developer options turn on USB debugging.
+2. Install Expo Go on the phone from the Play Store.
+3. Connect the phone by USB and accept the "Allow USB debugging" prompt.
+4. On the computer, check the phone is seen: `adb devices` lists it as `device`.
+5. Run `npm run android`. Expo opens the app in Expo Go on the phone. The
+   first screen shows "sign-in".
+
+If the phone and computer are not on the same Wi-Fi, run
+`adb reverse tcp:8081 tcp:8081` before step 5.
+
 ## Checks
 
 All three must pass before any task is called done.
