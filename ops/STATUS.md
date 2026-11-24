@@ -4,7 +4,7 @@ Last updated: 24 November 2026, shift 4, Bright (S06).
 
 ## Current session
 
-S06, database part 2, on `feat/S06-db-learning` (cut from `feat/S05-db-people`). D-27 and D-28: spec table names, three tables added to `specs/data-model.md`, FR-30 amended so objective items are scored on the server. Two migrations applied to atlas-dev: 9 content tables and 8 learning, exam, mastery, flag and AI log tables, all with RLS. The answer key is in `exam_item_keys`, reachable by a pupil only through `get_exam_review` after their own attempt is submitted. RLS tests 63 of 63 pass (S05 still 32 of 32). Types regenerated. Typecheck, lint, test (139) pass. Uncommitted.
+S06, database part 2, on `feat/S06-db-learning` (cut from `feat/S05-db-people`). D-27 and D-28: spec table names, three tables added to `specs/data-model.md`, FR-30 amended so objective items are scored on the server. Two migrations applied to atlas-dev: 9 content tables and 8 learning, exam, mastery, flag and AI log tables, all with RLS. The answer key is in `exam_item_keys`, reachable by a pupil only through `get_exam_review` after their own attempt is submitted. D-29: lesson progress is owned by the server (third migration); pupils cannot write verdicts or segment status (BL-14 for S18). RLS tests 76 of 76 pass (S05 still 32 of 32). Types regenerated. Typecheck, lint, test (139) pass. Uncommitted.
 
 ## Earlier today
 

@@ -4,7 +4,7 @@
 
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(63);
+select plan(76);
 
 -- Fixtures, created as the migration owner (bypasses RLS) -------------------
 insert into auth.users (id, email) values
@@ -150,12 +150,27 @@ select is_empty(
 
 -- Pupil A: learning -----------------------------------------------------------
 select lives_ok(
-  $$insert into public.attempts (pupil_id, segment_id, try_number, video_version_id, check_item_id, answer, input_mode, reason, sure,
-                                 answer_verdict, reasoning_verdict, misconception_codes)
+  $$insert into public.attempts (pupil_id, segment_id, try_number, video_version_id, check_item_id, answer, input_mode, reason, sure)
     values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 1,
             '52000000-0000-0000-0000-000000000001', '53000000-0000-0000-0000-000000000001',
-            'A answer', 'typed', 'A reason', false, 'no', 'no', '{1A-M1}')$$,
-  'pupil records their own attempt'
+            'A answer', 'typed', 'A reason', false)$$,
+  'pupil records their own attempt, without verdicts'
+);
+select throws_ok(
+  $$insert into public.attempts (pupil_id, segment_id, try_number, answer, input_mode, answer_verdict, reasoning_verdict)
+    values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 1, 'x', 'typed', 'yes', 'yes')$$,
+  '42501', null, 'pupil cannot set an AI verdict'
+);
+select throws_ok(
+  $$insert into public.attempts (pupil_id, segment_id, try_number, answer, input_mode, misconception_codes)
+    values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 1, 'x', 'typed', '{}')$$,
+  '42501', null, 'pupil cannot set misconception codes'
+);
+select results_eq(
+  $$select status::text, tries_used, versions_seen from public.segment_status
+    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
+  $$values ('in_progress', 0, '{52000000-0000-0000-0000-000000000001}'::uuid[])$$,
+  'saving an attempt marks the segment in progress and records the version seen'
 );
 select throws_ok(
   $$insert into public.attempts (pupil_id, segment_id, try_number, answer, input_mode)
@@ -177,11 +192,15 @@ select throws_ok(
     values ('40000000-0000-0000-0000-000000000001', '50000000-0000-0000-0000-000000000001', '{}')$$,
   '42501', null, 'pupil cannot write the AI result of the overview job'
 );
-select lives_ok(
-  $$insert into public.segment_status (pupil_id, segment_id, status, tries_used, versions_seen)
-    values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 'in_progress', 1,
-            '{52000000-0000-0000-0000-000000000001}')$$,
-  'pupil records their own segment status'
+select throws_ok(
+  $$insert into public.segment_status (pupil_id, segment_id, status)
+    values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000002', 'complete')$$,
+  '42501', null, 'pupil cannot write their own segment status'
+);
+select is_empty(
+  $$update public.segment_status set status = 'complete'
+    where pupil_id = '40000000-0000-0000-0000-000000000001' returning pupil_id$$,
+  'pupil cannot change their own segment status'
 );
 select throws_ok(
   $$insert into public.segment_status (pupil_id, segment_id, status)
@@ -293,26 +312,78 @@ select is(
 );
 select is_empty('select 1 from public.exam_item_keys', 'the key table itself stays closed after submitting');
 
--- Pupil A: stalled flag raised on move-on, cleared on complete -----------------
-select lives_ok(
-  $$update public.segment_status set status = 'moved_on', tries_used = 3
-    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
-  'pupil moves on after three tries'
-);
+-- Server-owned progress: verdicts come from the server, status follows them ----
+-- "The server" here is the migration owner, which, like the service role used
+-- by the edge functions, is not limited by RLS or column privileges.
 reset role;
+select lives_ok(
+  $$update public.attempts set answer_verdict = 'no', reasoning_verdict = 'no', misconception_codes = '{1A-M1}'
+    where pupil_id = '40000000-0000-0000-0000-000000000001' and try_number = 1$$,
+  'server records a failing verdict on try 1'
+);
+select results_eq(
+  $$select status::text, tries_used from public.segment_status
+    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
+  $$values ('in_progress', 1)$$,
+  'a failing verdict uses one try'
+);
+select lives_ok(
+  $$insert into public.attempts (pupil_id, segment_id, try_number, answer, input_mode, answer_verdict, reasoning_verdict) values
+      ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 2, 'A answer', 'typed', 'yes', 'no'),
+      ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 3, 'A answer', 'tap', 'unsure', 'unsure')$$,
+  'server records failing verdicts on tries 2 and 3'
+);
+select results_eq(
+  $$select status::text, tries_used from public.segment_status
+    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
+  $$values ('moved_on', 3)$$,
+  'three failed tries move the pupil on'
+);
 select is(
   (select count(*)::int from public.flags where pupil_id = '40000000-0000-0000-0000-000000000001'
      and kind = 'stalled' and cleared_at is null),
   1, 'moving on raises one open stalled flag'
 );
+select lives_ok(
+  $$insert into public.attempts (pupil_id, segment_id, try_number, answer, input_mode, answer_verdict, reasoning_verdict)
+    values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 1, 'A answer', 'typed', 'no', 'yes')$$,
+  'server records another failing verdict when the segment returns'
+);
+select results_eq(
+  $$select status::text, tries_used from public.segment_status
+    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
+  $$values ('moved_on', 3)$$,
+  'failing again on a returned segment keeps it moved on, tries stay at 3'
+);
+
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000b001","role":"authenticated"}', true);
-select lives_ok(
+select is_empty(
   $$update public.segment_status set status = 'complete'
-    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
-  'pupil completes the segment when it returns'
+    where pupil_id = '40000000-0000-0000-0000-000000000001' returning pupil_id$$,
+  'pupil cannot mark a moved-on segment complete'
+);
+select is_empty(
+  $$update public.flags set cleared_at = now() returning id$$,
+  'pupil cannot clear their own stalled flag'
 );
 reset role;
+select is(
+  (select count(*)::int from public.flags where pupil_id = '40000000-0000-0000-0000-000000000001'
+     and kind = 'stalled' and cleared_at is null),
+  1, 'the stalled flag is still open after the pupil tried to clear it'
+);
+select lives_ok(
+  $$insert into public.attempts (pupil_id, segment_id, try_number, answer, input_mode, answer_verdict, reasoning_verdict)
+    values ('40000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', 2, 'A answer', 'typed', 'yes', 'yes')$$,
+  'server records a correct answer with sound reasoning'
+);
+select results_eq(
+  $$select status::text from public.segment_status
+    where pupil_id = '40000000-0000-0000-0000-000000000001' and segment_id = '51000000-0000-0000-0000-000000000001'$$,
+  $$values ('complete')$$,
+  'a yes and yes verdict completes the segment'
+);
 select is(
   (select count(*)::int from public.flags where pupil_id = '40000000-0000-0000-0000-000000000001'
      and kind = 'stalled' and cleared_at is not null),
@@ -328,7 +399,7 @@ reset role;
 -- Teacher of Basic 7A -----------------------------------------------------------
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000a002","role":"authenticated"}', true);
-select results_eq('select answer from public.attempts', $$values ('A answer')$$, 'teacher reads attempts for their own class only');
+select results_eq('select distinct answer from public.attempts', $$values ('A answer')$$, 'teacher reads attempts for their own class only');
 select is((select count(*)::int from public.flags), 2, 'teacher reads flags for their own class only');
 select is_empty('select 1 from public.exam_item_keys', 'teacher cannot read the exam answer key');
 select is_empty('select 1 from public.ai_calls', 'teacher cannot read the AI call log');
