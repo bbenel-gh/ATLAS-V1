@@ -1,10 +1,14 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 3, Bright (S05).
+Last updated: 24 November 2026, shift 4, Bright (S06).
 
 ## Current session
 
-S05, database part 1, on `feat/S05-db-people` (cut from `feat/S04-eas-build`, with `chore/decision-rights` merged in). D-24 scope change committed (`5420903`): V1 is public with self sign-up behind an admin switch. Two migrations applied to atlas-dev (`gygmyjbuzbbngsoyoubg`, D-25): people tables with RLS, and the guard trigger fix. RLS tests 32 of 32 pass on atlas-dev (D-26). Types generated. Typecheck, lint, test (139) pass. Uncommitted.
+S06, database part 2, on `feat/S06-db-learning` (cut from `feat/S05-db-people`). D-27 and D-28: spec table names, three tables added to `specs/data-model.md`, FR-30 amended so objective items are scored on the server. Two migrations applied to atlas-dev: 9 content tables and 8 learning, exam, mastery, flag and AI log tables, all with RLS. The answer key is in `exam_item_keys`, reachable by a pupil only through `get_exam_review` after their own attempt is submitted. RLS tests 63 of 63 pass (S05 still 32 of 32). Types regenerated. Typecheck, lint, test (139) pass. Uncommitted.
+
+## Earlier today
+
+S05 committed and pushed (`8276b9d`). S05, database part 1, on `feat/S05-db-people` (cut from `feat/S04-eas-build`, with `chore/decision-rights` merged in). D-24 scope change committed (`5420903`): V1 is public with self sign-up behind an admin switch. Two migrations applied to atlas-dev (`gygmyjbuzbbngsoyoubg`, D-25): people tables with RLS, and the guard trigger fix. RLS tests 32 of 32 pass on atlas-dev (D-26). Types generated. Typecheck, lint, test (139) pass. Uncommitted.
 
 ## Earlier today
 

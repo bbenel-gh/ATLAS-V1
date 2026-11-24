@@ -6,6 +6,8 @@ One row per table. Every table has Row Level Security.
 
 Amended 24 November 2026 by Bright (D-24): V1 is public, with self sign-up behind an admin switch. Added `schools`, `consents` and `app_settings`; the teacher of a class is stored only on `classes`; pupils gained school, class level, PIN lockout, sign-up source and status.
 
+Amended 24 November 2026 by Bright (D-27, D-28, S06): added `overview_responses`, `recheck_items` and `exam_item_keys`. The exam answer key and scheme points moved out of `exam_items` into `exam_item_keys`, which no pupil can read. A pupil gets their exam questions through a safe function, and gets the key for their own attempt only after it is submitted. Objective items are scored on the server at submission.
+
 | Table | Holds |
 | --- | --- |
 | `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
@@ -24,7 +26,10 @@ Amended 24 November 2026 by Bright (D-24): V1 is public, with self sign-up behin
 | `segment_status` | Pupil, segment, status (in progress, complete, moved on), tries used |
 | `flags` | Pupil, segment, kind (stalled, safeguarding, borderline), status, admin action, notes |
 | `exam_papers` | Topic, label (A or B), duration in minutes |
-| `exam_items` | Paper, kind (objective or theory), question, options, answer key, scheme points, marks |
+| `exam_items` | Paper, kind (objective or theory), question, options, marks. No answers |
+| `exam_item_keys` | Exam item, correct option (objective), scheme points (theory), suggested answer. Admin and service role only |
+| `recheck_items` | Topic, segment, order, question, accepted answers, tap options |
+| `overview_responses` | Pupil, topic, "tell a friend" text, "confusing" text, skipped, AI result, date |
 | `exam_attempts` | Pupil, paper, start and submit times, score, status |
 | `exam_answers` | Attempt, item, answer, marks awarded, borderline, AI notes |
 | `mastery` | Pupil, topic, status, exam score, re-check due date, re-check result |

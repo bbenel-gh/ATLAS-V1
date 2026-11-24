@@ -116,7 +116,7 @@ The journey has eight stages. Onboarding runs once. Topic choice and the overvie
 - FR-27. The exam unlocks when every segment is complete or moved on. The pupil sees the rules, the duration and a "Start exam" button.
 - FR-28. An objective section, then a theory section. Pupils can move between questions within a section. No feedback of any kind until submission.
 - FR-29. The timer is always visible but calm. It counts from a stored start time, so closing the app does not reset it. At zero a stop-work sound plays and the paper submits itself.
-- FR-30. Objective items are scored on the phone. Each theory answer goes to the ai-mark-theory job, which marks against the scheme points. Borderline marks show "Being checked by a teacher" until an admin approves.
+- FR-30. Objective items are scored on the server when the paper is submitted, so the answer key never reaches the phone before submission (D-28). Each theory answer goes to the ai-mark-theory job, which marks against the scheme points. Borderline marks show "Being checked by a teacher" until an admin approves.
 
 ### 6.8 Stage 7: Results and retakes
 
