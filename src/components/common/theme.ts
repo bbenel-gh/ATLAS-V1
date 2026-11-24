@@ -5,8 +5,10 @@
  * system from BRAND-HANDOFF.md. Do not invent a colour here. If a screen needs
  * a colour that is not in this file, raise it in ops/BLOCKERS.md first.
  *
- * This module has no imports on purpose, so src/theme.test.ts can check every
+ * This module has no imports on purpose, so theme.test.ts can check every
  * value without pulling in React Native.
+ *
+ * Usage: import { colors, typography, spacing } from '@/components/common/theme';
  */
 
 /** App colours. Used everywhere except the lesson video area. */
@@ -35,23 +37,21 @@ export const board = {
 } as const;
 
 /**
- * Font families, keyed by role. The values are the names registered by
- * useFonts() in app/_layout.tsx, so they must match the @expo-google-fonts
- * exports exactly.
+ * Font families, keyed by role. Exactly the runbook S02 set: Inter 400 and 600,
+ * Fraunces 600, IBM Plex Mono 500, Caveat 700. The values are the names
+ * registered by useFonts() in app/_layout.tsx, so they must match the
+ * @expo-google-fonts exports exactly.
  */
 export const fonts = {
   /** Body text. */
   body: 'Inter_400Regular',
-  bodyMedium: 'Inter_500Medium',
   bodySemiBold: 'Inter_600SemiBold',
   /** Headings. */
   heading: 'Fraunces_600SemiBold',
-  headingBold: 'Fraunces_700Bold',
   /** Labels. */
-  label: 'IBMPlexMono_400Regular',
-  labelMedium: 'IBMPlexMono_500Medium',
-  /** Handwriting, for the board style only. */
-  hand: 'Caveat_400Regular',
+  label: 'IBMPlexMono_500Medium',
+  /** Handwriting, for board-related text only (specs/video-board.md). */
+  hand: 'Caveat_700Bold',
 } as const;
 
 /**
@@ -60,7 +60,7 @@ export const fonts = {
  * TypeScript's `import { type Foo }` syntax.
  */
 export const typography = {
-  display: { fontFamily: fonts.headingBold, fontSize: 40, lineHeight: 48 },
+  display: { fontFamily: fonts.heading, fontSize: 40, lineHeight: 48 },
   title: { fontFamily: fonts.heading, fontSize: 28, lineHeight: 36 },
   heading: { fontFamily: fonts.heading, fontSize: 20, lineHeight: 28 },
   body: { fontFamily: fonts.body, fontSize: 16, lineHeight: 24 },

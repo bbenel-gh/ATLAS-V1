@@ -1,28 +1,30 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 1, Bright (S00).
+Last updated: 24 November 2026, shift 1, Bright (S02).
 
 ## Current session
 
-S00, repo files and specs, on `feat/S00-repo-files`. Specs exported and ops files in place. The four section 4.4 spec edits wait for Bright's approval of the diffs.
+S02, theme and base components, on `feat/S02-theme` (cut from `feat/S01-expo-skeleton`). Code done, typecheck, lint, test and both exports pass. Uncommitted. Not proven: render on Phone A and reduced motion on a phone (BL-8).
+
+Also this shift: D-16 on `chore/decision-rights` (commit `fb6790f`). Decisions marked for Bright may now be made by whoever is on shift. `CLAUDE.md`, `specs/` and merges stay with Bright.
 
 ## Last merged session
 
-None. `main` holds only `S00: init`.
+None. `main` holds only `S00: init`. S00 is merged into `feat/S01-expo-skeleton`, and S01 is committed there (`58ac937`), not merged.
 
 ## Build step (B0 to B12)
 
-B0 Setup. The setup work on `feat/S00-setup` covers parts of S01 and S02 (BL-11). `specs/` now exists, so BL-1 and BL-2 no longer block B1.
+B0 Setup. S00 and S01 committed, S02 built. `specs/` exists, so BL-1 and BL-2 no longer block B1.
 
 ## Open PRs
 
-None yet. `feat/S00-repo-files` is pushed to `origin` once Bright approves the commit.
+None yet.
 
 ## Next 3 sessions
 
-1. S00: apply the section 4.4 diffs, then Bright merges `feat/S00-repo-files` into `main`.
-2. S01: Expo skeleton. Bright decides BL-11 first: accept `feat/S00-setup` as the S01 and S02 base, or split it.
-3. S02: theme and shared components, closing the gap list below.
+1. Prove S01 and S02 on screen: browser, then Phone A with the dev gallery (sign-in screen, "Component gallery (dev only)").
+2. Merge order for `main`: `chore/decision-rights`, `feat/S01-expo-skeleton`, then `feat/S02-theme` (Bright merges).
+3. S03: Supabase, environment and Sentry. Needs BL-6 (`atlas-dev`) and the Sentry DSN.
 
 ## Dates at risk
 

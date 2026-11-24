@@ -65,6 +65,25 @@ describe('typography', () => {
     expect(fonts.hand).toMatch(/^Caveat_/);
   });
 
+  it('loads exactly the runbook S02 font set', () => {
+    expect(Object.values(fonts).sort()).toEqual(
+      [
+        'Caveat_700Bold',
+        'Fraunces_600SemiBold',
+        'IBMPlexMono_500Medium',
+        'Inter_400Regular',
+        'Inter_600SemiBold',
+      ].sort(),
+    );
+  });
+
+  it('only uses registered fonts in text styles', () => {
+    const registered = Object.values(fonts) as string[];
+    for (const style of Object.values(typography)) {
+      expect(registered).toContain(style.fontFamily);
+    }
+  });
+
   it('sets body text at 16px', () => {
     expect(typography.body.fontSize).toBe(16);
     expect(typography.body.fontFamily).toBe(fonts.body);
@@ -133,5 +152,9 @@ describe('shape', () => {
 
   it('keeps a pill radius for buttons and inputs', () => {
     expect(radius.pill).toBeGreaterThanOrEqual(999);
+  });
+
+  it('rounds cards at 16', () => {
+    expect(radius.card).toBe(16);
   });
 });

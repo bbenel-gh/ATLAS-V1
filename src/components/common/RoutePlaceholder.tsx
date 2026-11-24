@@ -1,28 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
+import type { ReactNode } from 'react';
 
-import { colors } from '@/theme';
+import { Screen } from './Screen';
+import { Body, Heading, Label } from './Text';
 
 /**
- * S01 placeholder: shows only the route name in plain text.
- * Each route replaces it with its real screen in a later session.
+ * Placeholder for a route that a later session builds. Uses Screen and
+ * Heading so the ATLAS look shows on every route from S02 on.
+ *
+ * Usage: <RoutePlaceholder name="home" />
  */
-export function RoutePlaceholder({ name }: { name: string }) {
+export function RoutePlaceholder({ name, children }: { name: string; children?: ReactNode }) {
   return (
-    <View style={styles.screen}>
-      <Text style={styles.text}>{name}</Text>
-    </View>
+    <Screen>
+      <Label>Placeholder</Label>
+      <Heading>{name}</Heading>
+      <Body muted>This screen is built in a later session.</Body>
+      {children}
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.paper,
-  },
-  text: {
-    fontSize: 16,
-    color: colors.ink,
-  },
-});
