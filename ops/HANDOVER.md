@@ -49,6 +49,12 @@ Branch `feat/S03-supabase-sentry`. Next exact steps:
 2. Bright merges into `main` in this order: `chore/decision-rights`, `feat/S01-expo-skeleton`, `feat/S02-theme`, `feat/S03-supabase-sentry`. Expect a small conflict in `ops/DECISIONS.md`: keep D-16, D-17 and D-18.
 3. Before S04: `npm install-scripts approve @sentry/cli` (npm held back its install script; builds need it for source maps), then S04 once BL-5 is cleared.
 
+## Merge note (D-19)
+
+`feat/S02-theme` has three commits: two from outside the shift (`23017a8`, `ecbb9cd`, already pushed to `origin`) and the session's `fc978ff`. Do not rewrite or force push the branch. When merging S02 into `main` on GitHub, choose **Squash and merge** and use the message from `fc978ff` ("S02: theme, fonts and base components" and its bullet list). Then merge S03 with **Squash and merge** too, so its diff shows only S03 changes.
+
+Something on this computer committed and pushed at 11:38 and 11:59 during the shift (likely the VS Code Source Control button or another session). Find out who before the next build shift. Commits belong at "End shift".
+
 ---
 
 ## Template for the next rewrite
