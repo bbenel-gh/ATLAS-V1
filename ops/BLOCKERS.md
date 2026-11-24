@@ -3,6 +3,11 @@
 Anything that stops a shift, or that needs Bright because it is outside the
 asking person's role. One row per blocker. Close a row by filling in "Closed".
 
+Since D-16 (24 Nov 2026): a row whose "Needs" is a decision by Bright can be
+decided and closed by whoever is on shift. Record the decision in
+`ops/DECISIONS.md`. Rows that need Bright's accounts or access (Expo, Supabase,
+R2, phones), or a change to `CLAUDE.md` or `specs/`, still need Bright.
+
 | ID | Raised | Raised by | Blocker | Needs | Closed |
 | --- | --- | --- | --- | --- | --- |
 | BL-1 | 23 Nov 2026 | Build operator | `specs/` is empty. The repo has `ATLAS_PRD.md`, `ATLAS_LESSON_FRAMEWORK.md` and `video-board.md` at the root, but not as `specs/prd.md`, `specs/framework.md` and `specs/video-board.md`. Only Bright may change `specs/` | Bright copies the three documents into `specs/` and applies the five edits in `ATLAS_V1_BUILD_PLAN.md` section 4.4 | 24 Nov 2026, S00: the three documents are in `specs/`. Section 4.4 edits applied |

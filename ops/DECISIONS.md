@@ -3,8 +3,10 @@
 One line per decision. Newest first. A decision here is settled. To change one,
 add a new entry that says what it replaces and why.
 
-Anything that reaches pupils, every merge into `main`, and every change to
-`CLAUDE.md` or `specs/` needs Bright.
+Since D-16, whoever is on shift may make a decision that was marked for Bright.
+Write their name, role and the date in the "Who" column. Every merge into
+`main`, and every change to `CLAUDE.md`, `specs/` or the final
+`content/materials.json`, still needs Bright.
 
 | ID | Date | Decision | Who | Why |
 | --- | --- | --- | --- | --- |
@@ -15,6 +17,7 @@ Anything that reaches pupils, every merge into `main`, and every change to
 | D-19 | 24 Nov 2026 | `feat/S02-theme` keeps its three commits (`23017a8`, `ecbb9cd`, `fc978ff`). They are squashed into one only when S02 merges into `main`, with GitHub "Squash and merge" and the S02 message from `fc978ff`. S03 is merged the same way after it | Bright (owner) | `23017a8` and `ecbb9cd` were committed and pushed to `origin` at 11:38 and 11:59 by something outside the shift, not by the session. Squashing the branch would need a force push over a published branch. Squashing at merge gives `main` one clean S02 commit with no history rewrite. Source of the outside commits not yet found |
 | D-18 | 24 Nov 2026 | The Sentry scrubber removes `name`, `pin`, `code`, `answer` and `reason` at any depth, except inside Sentry's `sdk`, `contexts.os`, `contexts.runtime` and `contexts.browser` blocks | Bright (owner), S03 | Sentry's event format needs `sdk.name`, and those blocks hold no pupil data. `contexts.device.name` is still removed because phones are often named after their owner. Free text in error messages is not scanned, so code must never put pupil words into an Error |
 | D-17 | 24 Nov 2026 | The S03 health check calls `<url>/auth/v1/health` with the anon key, not `supabase.auth.getSession()` | Bright (owner), S03 | With nobody signed in, `getSession()` only reads local storage, so it would report "Connected" with a wrong URL or no network |
+| D-16 | 24 Nov 2026 | Any decision marked for Bright may be made by whoever is on shift, recorded here with name, role and date. Changes to `CLAUDE.md`, `specs/`, the final `content/materials.json`, and merges into `main`, stay with Bright. `CLAUDE.md` updated to match (version 24 November 2026) | Bright (owner), given in chat on the shared account during the 24 Nov S02 shift | Decisions were queuing on one person. Bright chose option A, decisions only, over opening up the source-of-truth files as well |
 | D-15 | 23 Nov 2026 | Spacing scale is 4, 8, 12, 16, 24, 32, with no 48 step | Build operator | The runbook S02 lists the scale exactly. `CLAUDE.md` does not define one, so the runbook is the only authority. A 48 step written earlier was removed and a test now guards the scale |
 | D-14 | 23 Nov 2026 | Android application id is `com.atlas.learn`. **Supersedes D-13** | Build operator | The runbook S01 item 8 names `com.atlas.learn`. D-13 invented an id because the runbook had not been read yet. The runbook wins, and the id cannot change after a Play Store publish, so it was corrected before the first commit |
 | ~~D-13~~ | ~~23 Nov 2026~~ | ~~Android application id is `com.atlasghana.atlas`~~ | Build operator | **Superseded by D-14.** Taken before the runbook was in the repo |
