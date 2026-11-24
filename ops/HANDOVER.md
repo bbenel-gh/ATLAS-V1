@@ -85,3 +85,16 @@ git commit --amend --reset-author --no-edit
 1. Prove or fail the screen, in the browser and on a phone. Write the result in the shift log.
 2. Get Bright's answer on BL-11 before opening a pull request, so the branch is not merged under the wrong session number.
 3. Close the S01 and S02 gap list in `ops/STATUS.md`, starting with the `src/domain` import rule, because CLAUDE.md requires it and every later session depends on `src/domain` staying pure.
+
+---
+
+## Template for the next rewrite
+
+At "End shift", rewrite this whole file under these headings:
+
+- **Date and shift**
+- **Who**
+- **Finished**
+- **In progress** (branch and next exact step)
+- **Blockers**
+- **Do first next shift**

@@ -1,6 +1,37 @@
 # ATLAS V1 status
 
-Last updated: 23 November 2026, shift 2, build operator.
+Last updated: 24 November 2026, shift 1, Bright (S00).
+
+## Current session
+
+S00, repo files and specs, on `feat/S00-repo-files`. Specs exported and ops files in place. The four section 4.4 spec edits wait for Bright's approval of the diffs.
+
+## Last merged session
+
+None. `main` holds only `S00: init`.
+
+## Build step (B0 to B12)
+
+B0 Setup. The setup work on `feat/S00-setup` covers parts of S01 and S02 (BL-11). `specs/` now exists, so BL-1 and BL-2 no longer block B1.
+
+## Open PRs
+
+None yet. `feat/S00-repo-files` is pushed to `origin` once Bright approves the commit.
+
+## Next 3 sessions
+
+1. S00: apply the section 4.4 diffs, then Bright merges `feat/S00-repo-files` into `main`.
+2. S01: Expo skeleton. Bright decides BL-11 first: accept `feat/S00-setup` as the S01 and S02 base, or split it.
+3. S02: theme and shared components, closing the gap list below.
+
+## Dates at risk
+
+- 26 Nov: `specs/B2-ai-notice.md` and `specs/B3-playful.md` (BL-12) are needed before S10 to S14.
+- B0 "Done when" (25 Nov): needs the Expo account and EAS project (BL-5) and a phone (BL-8).
+
+---
+
+# Detail carried from 23 November, shift 2
 
 ## Where the project stands
 
