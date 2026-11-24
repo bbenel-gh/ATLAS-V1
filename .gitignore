@@ -38,6 +38,7 @@ yarn-error.*
 # secrets and local env
 .env*
 !.env.example
+!.env.test.example
 
 # typescript
 *.tsbuildinfo

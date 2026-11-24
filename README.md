@@ -49,6 +49,19 @@ npm run lint
 npm test
 ```
 
+After any change to `supabase/migrations/`, also run the Row Level Security
+suite against atlas-dev. It needs `.env` (atlas-dev URL and anon key) and the
+Supabase CLI linked to atlas-dev, and it refuses to run against any other
+project.
+
+```
+npm run seed:dev    # once, and again after the seed changes. Safe to repeat
+npm run test:rls    # every line must say PASS. Any FAIL exits with code 1
+```
+
+`seed:dev` creates fake test users and rows (ids start with `7e57`) and writes
+their passwords to `.env.test`, which is git ignored. See `.env.test.example`.
+
 ## Layout
 
 | Path | Holds |

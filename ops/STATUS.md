@@ -1,8 +1,14 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 4, Bright (S06).
+Last updated: 24 November 2026, shift 5, team with Bright (S07). Sprint mode is on (D-30).
 
 ## Current session
+
+S07, seed data and RLS tests, on `feat/S07-seed-rls-tests` (cut from `feat/S06-db-learning`). `npm run seed:dev` seeds fake test people and rows into atlas-dev (D-31, no service role key on disk). `npm run test:rls` signs in as anon, P1 to P4, both teachers and the admin: 143 of 143 PASS. With RLS switched off on `flags` it gives 10 FAIL and exit code 1. Typecheck, lint, test (157) pass. Committed and pushed.
+
+## Earlier today
+
+S06 addendum (D-29) committed `3fb232a`, D-30 committed `ee78a4e`, both on `feat/S06-db-learning`.
 
 S06, database part 2, on `feat/S06-db-learning` (cut from `feat/S05-db-people`). D-27 and D-28: spec table names, three tables added to `specs/data-model.md`, FR-30 amended so objective items are scored on the server. Two migrations applied to atlas-dev: 9 content tables and 8 learning, exam, mastery, flag and AI log tables, all with RLS. The answer key is in `exam_item_keys`, reachable by a pupil only through `get_exam_review` after their own attempt is submitted. D-29: lesson progress is owned by the server (third migration); pupils cannot write verdicts or segment status (BL-14 for S18). RLS tests 76 of 76 pass (S05 still 32 of 32). Types regenerated. Typecheck, lint, test (139) pass. Uncommitted.
 
