@@ -97,7 +97,7 @@ If any Build Guide spec is missing, S00 still runs, and Claude lists the gap in 
 
 ## Standard prompts (used in every session)
 
-These seven prompts wrap every session. Paste them as written, replacing only the angle-bracket parts.
+These seven prompts wrap every session. After S14 they are also slash commands: /start-shift, /verify, /review, /pr and /end-shift. Paste them as written, replacing only the angle-bracket parts.
 
 ### P1. Start of shift (first message of every shift)
 
@@ -673,942 +673,1046 @@ Build:
 - 3 test pupils sign in across 2 phones.
 - PIN lock and consent gate proven on the phones.
 
-## B3 Onboarding and B4 Home: S14 to S15 (27 to 28 Nov)
+## Upgrade from S14: build each piece once, to a high bar
 
-B3 is done when onboarding takes under 3 minutes, resumes after the app closes, and saves every answer. B4 is done when both Home sections open the topic, and the prerequisite nudge is tested and skippable.
+From S14 the runbook builds the shared foundations first, then every feature on top of them, finished the first time. The earlier version built screens with "simple versions" of saving, AI calls and errors, then came back in S25 to S27 and S38 to S39 to harden them. That meant reworking every screen twice. Now there is no "basic version now, hardened later" anywhere.
 
-### S14. Onboarding
+S00 to S13 are done and unchanged. The session numbers still run S14 to S41, and the release dates do not move.
 
-**Goal:** four playful screens that learn who the pupil is. Nothing is marked right or wrong.
+### What "best of its kind" means for ATLAS V1
 
-**Branch:** `feat/S14-onboarding`
+These are the bars every session is checked against. Each one is measurable on a phone or in a test.
+
+| Area | The bar |
+| --- | --- |
+| Learning design | Every answer is followed by "Why do you think so?". A wrong reason picks the next video by misconception, never at random. Spaced re-check after mastery. No points, streaks or red |
+| Nothing is ever lost | Every pupil action is written to the phone's database before anything else happens, then synced with an idempotency key. Proven by killing the app mid-sync and restarting the phone |
+| AI you can trust | One AI gateway for all jobs. Schema-constrained JSON outputs, zod checked again, 20-second limit, tap fallback, 120-call cap, every call logged with its prompt version. An evaluation set runs on every prompt change |
+| Never trapped | With the topic downloaded, the whole topic works in airplane mode. Only AI checks need the network, and they fall back to taps |
+| Fast on a 2 GB phone | Cold start, screen change and video start each under 4 seconds on Phone A. No out-of-memory crash in a 60-minute session. Peak memory recorded |
+| Safe for children | No names sent to AI. No open chat. Safeguarding text raises a flag and an email within 2 minutes, retried until sent |
+| Accessible | TalkBack labels on every control, 48 dp touch targets, text readable at 130% font size, reduced motion respected |
+| Tested like a product | Unit tests for every rule, an RLS suite for every table, Maestro end-to-end flows for every pupil path, all run on every pull request |
+| Measured from day one | An event log records every step of the journey, so the pilot success measures come straight from data, not from memory |
+
+### What the research changed in the prompts
+
+- **Structured outputs are now generally available in the Claude API.** The AI gateway asks for JSON with `output_config.format` and a JSON schema, so the reply always parses. zod still checks it (CLAUDE.md rule 3), because a valid shape can still hold a bad value.
+- **Expo SDK memory regression.** SDK 56 and early SDK 57 releases had a Hermes V1 memory regression, fixed in `expo@57.0.17`. On 2 GB phones this matters. S14 checks the SDK version first.
+- **expo-video details.** Controls are off only with `nativeControls={false}`. The `timeUpdate` event is off until `timeUpdateEventInterval` is set, which the captions need. Players made with `createVideoPlayer` must be released, or memory leaks. Picture-in-picture and background play stay off by default, which we keep.
+- **Supabase.** Alert emails run as background work (`EdgeRuntime.waitUntil`) with a database outbox and a scheduled retry, instead of one function calling another, which is now rate limited.
+- **Maestro on EAS Workflows** gives automated phone tests on every pull request. Note: the Maestro job type is still alpha on EAS. If it misbehaves, run Maestro locally against Phone A instead.
+- **Claude Code project setup.** Slash commands in `.claude/commands/`, hooks and permission rules in `.claude/settings.json`. The P1 to P7 prompts become `/start-shift`, `/verify`, `/review`, `/pr` and `/end-shift`, so nobody copies long prompts by hand after S14.
+
+### Old to new session map
+
+| New | Session | Was |
+| --- | --- | --- |
+| S14 | Health check, Claude Code tooling, CI and E2E harness | New |
+| S15 | Phone database, outbox and sync engine | S39, parts of S14 and S20 |
+| S16 | AI gateway, cap, logging, safeguarding alerts | S25, S26, S27 |
+| S17 | Reliability layer: errors, telemetry, dev tools gate, accessibility kit | Parts of S24, S39 |
+| S18 | Onboarding | S14 |
+| S19 | Home and prerequisites | S15 |
+| S20 | Topic download, content cache, storage and data size | S16 (download), S38 (cache) |
+| S21 | Board video player | S16 (player) |
+| S22 | Overview and ai-overview | S17 |
+| S23 | Routing, tries and tie-break rules | S18 |
+| S24 | ai-check job and its evaluation set | S19, gate runner from S27 |
+| S25 | Attempts, segment progress and flags | S20 |
+| S26 | Segment screen: video and "Your turn" | S21 |
+| S27 | Confidence, reason, read-back | S22 |
+| S28 | Outcomes and Recommended | S23 |
+| S29 | Path checklist, E2E flows, Sprint 1 demo | S24 |
+| S30 | Exam timer, scoring and unlock rules | S28 |
+| S31 | Exam screens | S29 |
+| S32 | Submit, theory marking, borderline | S30 |
+| S33 | Results and retake | S31 |
+| S34 | Mastery and spaced re-check | S32, S33 |
+| S35 | Admin web: classes, pupils, consent | S34 |
+| S36 | Flags and borderline review | S35 |
+| S37 | Progress, pilot measures, teacher view | S36, S37 |
+| S38 | Pilot rehearsal: offline, speed, memory, data | S38 audits |
+| S39 | Bug bash, accessibility and copy sweep | S39 audits |
+| S40 | Handwriting (optional) | S40 |
+| S41 | Release 0.9 and 1.0 | S41 |
+
+### Target dates
+
+| Sessions | Target | Gate |
+| --- | --- | --- |
+| S14 to S17 | 26 to 28 Nov | Foundations: CI green, outbox survives a restart, gateway tests pass |
+| S18 to S19 | 28 to 29 Nov | B3 and B4 gates |
+| S20 to S22 | 29 to 30 Nov | B5 gate |
+| S23 to S29 | 30 Nov to 3 Dec | B6 gate, Sprint 1 demo |
+| S30 to S34 | 3 to 5 Dec | B8 and B9 gates |
+| S35 to S37 | 5 to 6 Dec | B10 gate |
+| S38 to S39 | 6 to 7 Dec | B11 gate |
+| S40 | 7 Dec, only if all merged | B12 gate |
+| S41 | 8 Dec (0.9), 14 Dec (1.0) | Release gate |
+
+The Sprint 1 demo moves from 1 Dec to 3 Dec, because the foundations come first. In return, the old AI hardening days (2 to 3 Dec) are no longer needed. Bright records this in `ops/DECISIONS.md` and updates section 4.3 of the Build Plan.
+
+### Sources
+
+- [Claude API: structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+- [Expo SDK 57 changelog: known regressions](https://expo.dev/changelog/sdk-57)
+- [Expo SDK 55 upgrade guide: Android 7+ minimum](https://expo.dev/blog/upgrading-to-sdk-55)
+- [expo-video reference](https://docs.expo.dev/versions/latest/sdk/video)
+- [Supabase Edge Functions: background tasks](https://supabase.com/docs/guides/functions/background-tasks)
+- [Supabase: rate limits on nested Edge Function calls](https://supabase.com/changelog/43644-edge-functions-rate-limits-on-recursive-nested-edge-functions-calls)
+- [Expo: E2E tests with Maestro on EAS Workflows](https://docs.expo.dev/eas/workflows/examples/e2e-tests/)
+
+## Phase F Foundations: S14 to S17 (26 to 28 Nov)
+
+The foundations gate: CI is green on every pull request, a queued action survives an app kill and a phone restart, and the AI gateway passes all its failure tests. No feature session starts before this gate.
+
+### S14. Health check, Claude Code tooling, CI and E2E harness
+
+**Goal:** confirm what S00 to S13 built, fix the SDK if needed, and set up the tools that make every later session faster and safer.
+
+**Needs:** S13 merged. **Run by Bright**, because this session writes `.claude/` and `.github/`, which are outside the build operator's folders.
+
+**Branch:** `feat/S14-tooling`
 
 ```text
-Runbook session S14: onboarding. Read specs/framework.md stage 1, specs/prd.md FR-5 to FR-7, specs/B3.md and CLAUDE.md (Look, rule 6, rule 7).
+I am Bright, owner. Runbook session S14: health check, Claude Code tooling, CI and E2E harness.
+Read CLAUDE.md, specs/prd.md section 11, and the runbook rules. Plan first. Wait for my approval.
 
-Build app/onboarding/ as 4 screens with a quiet progress line (4 small dots, no numbers, no percentage):
-1. "What should I call you?" One TextField, max 20 characters, letters, spaces and hyphens only. PillButton "Next". This display name stays on the phone and in the pupils table. It is never sent to the AI (rule 2).
-2. "Which class are you in?" Pill choices Basic 7, Basic 8, Basic 9. Basic 7 preselected.
-3. "What do you enjoy? Pick up to 4." Pill toggles: football, music, farming, stories, cooking, market, animals, phones and computers. Picking a 5th gently says "You can pick up to 4." Next works with 1 to 4 picked.
-4. Three "would you rather" cards, one at a time. Store the question id, the choice and the time taken in milliseconds. Draft choices (keep them in src/components/common/copy.ts so Bright can replace them):
-   a. "Would you rather fix a broken radio, or find out why it broke?"
-   b. "Would you rather plant a new farm, or sell at the market?"
-   c. "Would you rather learn a new song, or write a new story?"
-5. End screen: "Thank you, <name>. Let's start." PillButton "Go to my lessons".
+Part A: health check (report only, change nothing yet)
+1. Report the exact versions of expo, react-native, expo-router, expo-video (if installed), expo-sqlite (if installed), @supabase/supabase-js and the JS engine (Hermes V1 or not).
+2. If expo is 56.x, or 57.x below 57.0.17, propose an upgrade to the latest stable Expo SDK with npx expo install --fix. Reason: a Hermes V1 memory regression fixed in expo 57.0.17 matters on our 2 GB phones. Do not upgrade until I approve.
+3. List what exists: routes in app/, files in src/domain with test counts, migrations, Edge Functions, scripts. Compare with runbook sessions S00 to S13 and list anything missing or different.
+4. Write docs/architecture.md: one page, plain English, with the folder map, the data flow (phone database, outbox, Supabase, Edge Functions, Claude API, R2) and where each rule in CLAUDE.md is enforced.
 
-Rules:
-- Save each answer to pupil_profiles as soon as it is given (not only at the end), with time taken per screen.
-- Resume: if the app closes mid-way, reopening goes to the first unanswered screen with earlier answers kept.
-- Offline: answers save to a local queue and send when the network returns (simple version; S39 hardens the queue).
-- No score, no right or wrong, no timer shown.
-- Put the resume logic (which screen is next) in src/domain/onboarding.ts with tests first.
+Part B: Claude Code project setup
+5. .claude/settings.json (committed):
+   - permissions deny: git push --force, git push to main, supabase db reset, reading .env files, any command containing atlas-prod, rm -rf outside node_modules
+   - a Stop hook (or the current equivalent; check the Claude Code hooks docs for the exact schema) that runs npm run typecheck and npm run lint and reports failures back
+   - a hook that blocks edits to CLAUDE.md and specs/ unless the person said they are Bright
+6. .claude/commands/ with these slash commands, using the exact text of the runbook's standard prompts, with $ARGUMENTS where the person's name, shift or session number goes:
+   /start-shift (P1), /verify (P4), /review (P5: tell it to use read-only tools only), /pr (P6), /end-shift (P7), /session (opens a session: reads the session block from docs/runbook/<S number>.md and plans it).
+7. docs/runbook/: one file per session S15 to S41, holding the session prompt text from the runbook doc. Bright will paste them in. Create empty files with headings now.
+
+Part C: CI on every pull request
+8. .github/workflows/ci.yml on pull_request to main: npm ci, typecheck, lint, test with coverage, content:check, a copy check (S17 adds the script; leave a step that is skipped until it exists).
+9. Database tests in CI without touching atlas-dev: start the local Supabase stack with the Supabase CLI in the workflow, apply all migrations, run the seed, run npm run test:rls against it. If test:rls needs changes to accept a local URL, make them.
+10. Coverage gate: src/domain at least 95% lines. Fail the build below that.
+11. Tell me the exact GitHub settings to require the CI check before merging into main.
+
+Part D: end-to-end test harness
+12. Install Maestro locally (tell me the commands for Windows). Add .maestro/ with a README and a first flow signin.yaml: open app, type TEST-P1 code, type PIN, reach Home or onboarding.
+13. Convention: every pressable and input gets a testID like "signin.code", "home.topic.materials". Add the testIDs the first flow needs.
+14. eas.json profile e2e-test (APK, no credentials). .eas/workflows/e2e-android.yml that builds e2e-test and runs .maestro/ flows, triggered on pull requests with the label "e2e" (to save build minutes) and by hand. Note: the Maestro job on EAS is alpha. If it fails for platform reasons, we run flows locally on Phone A.
+
+Commit in four commits, one per part.
 ```
 
 **You check**
 
-- Stopwatch a full onboarding on Phone A, reading every screen at a normal pace. Must be under 3 minutes.
-- Close the app on screen 3. Reopen and sign in. You land on screen 3 with screens 1 and 2 kept.
-- In the dashboard, `pupil_profiles` shows interests, choices and times.
-- Do onboarding in airplane mode, then turn the network on. The answers arrive.
-
-**Done when (B3 gate)**
-
-- Under 3 minutes, resumable, all answers saved.
-
-### S15. Home: Choose a topic and Recommended
-
-**Goal:** Home with both sections, and the prerequisite nudge that never blocks.
-
-**Branch:** `feat/S15-home`
-
-```text
-Runbook session S15: Home. Read specs/framework.md stage 2, specs/prd.md FR-8 and FR-9, specs/B4.md and CLAUDE.md.
-
-Build app/home/index.tsx:
-1. Greeting: "Hello, <name>." (name from the phone, never from a server call to the AI).
-2. Section "Recommended for you": cards for (a) topics the teacher has set for the class (for V1: the Materials topic, read from a class_topics row or a field on the class, follow specs/data-model.md), (b) segments waiting to be re-taught (segment_progress status moved_on, or wrong in a missed re-check), (c) a due re-check (S33 fills this in; leave a typed slot).
-3. Section "Choose a topic": subject list (Science only in V1, Mathematics shown as "Coming soon", not tappable), then the topic list for that subject.
-4. Each topic card shows the title, "5 parts" and a quiet progress line (segments complete out of 5). No percentages, no stars.
-5. Prerequisite nudge: src/domain/prerequisites.ts with a function that takes the pupil's completed topics and a topic's prerequisites and returns { ok } or { missing: [...] }. Write tests first with FAKE prerequisite data (V1 has one topic with no prerequisites). When missing is not empty, show a sheet: "I'd suggest this first, here's why." with the reason, a PillButton to the missing topic, and a secondary button "Take me to the class topic anyway". The second button always opens the topic. Never block.
-6. Add a dev-only switch on the dev screen that gives the Materials topic a fake prerequisite, so the nudge can be seen on a phone.
-7. Tapping the topic from either section opens app/topic/[id].tsx (still a placeholder until S17).
-8. Home loads from the local content cache first and refreshes in the background. Offline, it still shows.
-```
-
-**You check**
-
-- Open the topic from "Recommended for you" and from "Choose a topic". Both reach the topic screen.
-- Turn on the dev prerequisite switch. Open the topic. The nudge shows. Tap "Take me to the class topic anyway". The topic opens.
-- Airplane mode, close and reopen the app. Home still shows.
-
-**Done when (B4 gate)**
-
-- Both sections open the topic.
-- Prerequisite nudge tested in Jest and on Phone A, and skippable.
-
-## B5 Overview: S16 to S17 (28 to 29 Nov)
-
-B5 is done when the overview works offline after download, and the profile updates when the network returns.
-
-For these sessions you need at least one real test MP4, its poster JPEG and its `.vtt` file on R2. If the video producer has not delivered yet, Bright makes a 30-second test clip on a paper-coloured background and uploads it as `mat-OV-a-360.mp4`.
-
-### S16. Topic download and the board video player
-
-**Goal:** a topic's videos download once to the phone, and play in the seamless board style.
-
-**Branch:** `feat/S16-video-board`
-
-```text
-Runbook session S16: topic download and board video player. Read specs/video-board.md fully (every rule P1 to P10 and the Done when list), specs/prd.md section 11 (Offline, Data use), specs/B5.md and CLAUDE.md (Lesson video player).
-
-Build:
-1. src/data/videoCache.ts with expo-file-system:
-   - pick 360p or 480p (360p by default; 480p only if the pupil chooses "Better quality" in a later setting, not in V1 UI)
-   - download every video, poster and .vtt file for a topic into the app's document folder, one at a time, resumable after a lost connection, checking file size after download
-   - a manifest of what is downloaded, keyed by content version, so a content change re-downloads only changed files
-   - functions: getTopicDownloadSize, downloadTopic (with progress), isTopicReady, localUriFor(version)
-2. "Download this topic" screen in app/topic/[id].tsx before the overview, when the topic is not ready: "This topic needs <size> MB of data. Download it now, on Wi-Fi if you can." Progress shown as "<n> of <total> videos". Cancel and resume work.
-3. src/components/board/BoardVideo.tsx using expo-video (or expo-av if expo-video cannot meet the rules; explain in the plan). It must meet every rule in specs/video-board.md:
-   P1 no chrome, no controls, no long-press menu, no picture-in-picture, no casting
-   P2 the area background equals boardColour from the content file, plus a 4% soft fade at each edge
-   P3 plays only the local file; shows the poster until the first frame is ready
-   P4 autoplay with sound; if refused, play muted with a "Tap for sound" pill, unmute on first touch without restarting
-   P5 tap to pause or continue; paused dims slightly and shows "tap to continue" in Caveat 700
-   P6 pauses when less than half the board is on screen, and when the app goes to the background; resumes only if the pupil did not pause
-   P7 captions under the board from the .vtt file, driven by the video's current time, not a separate timer
-   P8 end state: last frame stays, onEnded callback fires so the parent screen can fade in the next section and scroll to it
-   P9 a "Watch again" control the parent can render; restarts the same version and scrolls back to the board
-   P10 header above the board: breadcrumb "Basic 7 Science · Materials", title, journey label
-4. A small .vtt parser in src/domain/vtt.ts with tests first (timestamps, multi-line cues, empty lines).
-5. Dev screen entry: "Board video test" that plays the overview test file.
-No red, no exclamation marks, no player controls of any kind.
-```
-
-**You check** (use the `specs/video-board.md` Done when list)
-
-- On both phones, look closely at the edge of the board. No visible line between video and screen.
-- Long-press the video. No menu appears.
-- Press the home button during playback. Reopen. It is paused. Scroll the board half off screen. It pauses.
-- Captions match the voice to within half a second. Check 3 lines against a stopwatch.
-- Download the topic, then airplane mode, then play. Poster, captions and end state all work.
+- Read Part A before approving anything else. If an SDK upgrade is proposed, approve it, then reinstall the dev build on both phones and re-run the S13 two-phone test.
+- Type `/start-shift` in a new conversation. It runs the start-of-shift steps.
+- Open a test pull request. The CI check runs and must pass before the merge button is enabled.
+- Run `maestro test .maestro/signin.yaml` with Phone A plugged in. It passes.
 
 **Done when**
 
-- Every line of the `specs/video-board.md` Done when list proven on both phones.
-- `vtt` parser tests pass.
+- SDK confirmed safe or upgraded.
+- Slash commands work. CI with local database tests is required on `main`.
+- First Maestro flow passes on Phone A.
 
-### S17. Overview stage and the ai-overview job
+### S15. Phone database, outbox and sync engine
 
-**Goal:** after the overview video, the pupil says what they took from it. The AI listens and updates the profile. It is never a grade.
+**Goal:** one durable local store for everything a pupil does, and one sync engine that sends it exactly once.
 
-**Branch:** `feat/S17-overview`
+**Branch:** `feat/S15-local-data`
 
 ```text
-Runbook session S17: overview stage and ai-overview. Read specs/framework.md stage 3, specs/prd.md FR-10 to FR-13 and section 8, specs/ai-prompts.md (overview listening prompt), specs/B5.md and CLAUDE.md rules 1, 2, 3, 5, 9, 11, 13.
+Runbook session S15: phone database, outbox and sync engine. Read CLAUDE.md rules 5 and 8, specs/prd.md section 11 (Offline) and specs/data-model.md. Read docs/architecture.md.
+Write the src/domain tests first, show them, wait for my OK, then build.
 
 Build:
-1. supabase/functions/ai-overview:
-   - input: { pupil_id, topic_id, summary_text, confusing_text }. Validate with zod. Both texts max 600 characters; either may be empty (skipped).
-   - check the caller is that pupil (auth.uid matches)
-   - call the Claude API with model claude-haiku-5-5, the system prompt from specs/ai-prompts.md, the segment titles and codes, and the two texts. No name, no class, nothing else about the pupil
-   - expected output, parsed with zod: { keywords: string[], interests: string[], confusions: string[], segmentsMentioned: string[] (codes OV, 1A to 1E only), safeguarding: boolean }
-   - write keywords, interests and confusions into pupil_profiles
-   - log the call in ai_calls (job ai-overview, model, pupil_id, input, output, ok, latency)
-   - the API key is read from Supabase secrets as ANTHROPIC_API_KEY. Tell me the command to set it; I will run it myself with the value
-   - 20-second limit; on timeout or bad output after one retry, return { fallback: true } (S25 adds full hardening; build the basic version now)
-2. Overview screen in app/topic/[id].tsx: BoardVideo for the overview. On end, fade in below the board:
-   - "Tell a friend what this video was about, in one or two sentences." TextField, multi-line
-   - "Which part felt confusing?" TextField, multi-line
-   - PillButton "Send" and a quiet "Skip" text button
-   - "Watch again" (P9)
-3. After Send or Skip: "Thanks. That helps me choose how to teach this." then go to the first segment (placeholder until S21). Never show anything that looks like a mark.
-4. Offline or failed call: save the texts in the local queue, show the same thanks message, continue. Send when the network returns.
-5. Save overview_responses rows in all cases.
-6. If safeguarding is true: do not show anything different to the pupil here beyond the thanks message, but create a safeguarding flag (S27 adds the alert email).
+1. expo-sqlite as the phone database (src/data/db/). Versioned migrations using PRAGMA user_version, run at app start before the first screen. Tables at minimum:
+   - outbox: id (uuid, the idempotency key), pupil_id, kind, payload json, created_at, attempt_count, next_attempt_at, last_error, status (pending, sending, done, dead)
+   - local copies the app reads from: pupil_profile, segment_progress, attempts, overview_responses, exam_sittings, exam_answers, events (S17 uses it)
+   - content cache tables (S20 fills them)
+2. One write path, src/data/repo.ts: every pupil action writes its local row AND its outbox item in ONE SQLite transaction. The UI reads local rows only. No screen ever waits for the network to save.
+3. Sync engine src/data/sync.ts:
+   - runs on app start, when the app comes to the foreground, when the network returns (expo-network or NetInfo, pick one and say why), and every 60 seconds while open
+   - sends per pupil, oldest first, in small batches, with backoff 10 s, 30 s, 2 min, 5 min, then every 10 min; marks dead after 50 tries and reports to Sentry
+   - one sync at a time (a lock), safe if the app is killed mid-send
+4. Server side: one Edge Function sync-push that accepts a batch of outbox items for the signed-in pupil, validates each kind with zod, and upserts by the client id. Add a migration giving every pupil-written table a unique client_id. A resent item changes nothing.
+5. Shared phones: several pupils may use one phone. Each pupil's items must sync under that pupil's own session. Store each signed-in pupil's refresh token in expo-secure-store, keyed by pupil_id, used only by the sync engine. Remove it when the pupil's items are all done and they have signed out for 7 days, or when the admin resets the pupil.
+6. src/domain/syncRules.ts: backoff, ordering, batch building, dead-item rule. Tests first, 100% coverage.
+7. Repository tests: run the repo against a Node SQLite adapter behind the same interface, so Jest can test transactions.
+8. A dev-only Sync screen: pending count per pupil, oldest item age, last error, "Sync now".
+9. Move any earlier ad hoc queue (for example from S11 to S13) onto the outbox, and delete the old one.
 ```
 
 **You check**
 
-- Watch the overview on Phone A, type two sentences, send. In the dashboard, `pupil_profiles` gains keywords, and `ai_calls` has one row with no pupil name in the input.
-- Repeat in airplane mode. The thanks message shows. Turn the network on, reopen the app. The profile updates within a minute.
-- Tap "Skip". You move on. No error.
+- Ask Claude for a dev action that writes 20 test events for TEST-P1. Airplane mode. Kill the app. Restart the phone. Sign in as TEST-P2, then turn the network on. Sign back in as TEST-P1. In the dashboard: exactly 20 rows under TEST-P1, none under TEST-P2.
+- Repeat with the network turning off halfway through a sync. Still exactly 20.
+
+**Done when**
+
+- Kill, restart and pupil-switch tests pass with no loss and no duplicates.
+- `syncRules` at 100% coverage.
+
+### S16. AI gateway: one safe path for every AI job
+
+**Goal:** every AI job in V1 goes through one tested gateway with schema-constrained output, limits, logging and safeguarding built in.
+
+**Needs:** Bright has set `ANTHROPIC_API_KEY`, `SAFEGUARDING_EMAIL` and the email service key as Supabase secrets on atlas-dev (Claude gives the commands without values).
+
+**Branch:** `feat/S16-ai-gateway`
+
+```text
+Runbook session S16: AI gateway. Read CLAUDE.md rules 1, 2, 3, 5, 9, 11, 13, 14, specs/prd.md sections 8 and 10, specs/ai-prompts.md.
+Check the current Claude API docs for structured outputs (output_config.format with type json_schema) and its JSON Schema limitations, and confirm that claude-sonnet-5-5 and claude-haiku-5-5 support it. Tell me what you found before building.
+
+Build supabase/functions/_shared/ai/:
+1. jobs.ts: a registry of jobs (ai-overview, ai-check, ai-mark-theory, ai-read-handwriting). Each job has: model, prompt file, prompt version string, zod output schema, JSON schema made from the zod schema, max tokens, temperature 0.
+2. prompts/: one markdown file per job, copied from specs/ai-prompts.md, with a version header. Prompt changes need Bright's approval.
+3. gateway.ts, used by every job function:
+   a. auth: the caller is that pupil, consent is recorded, the account is not locked
+   b. privacy: never send name or class. Before sending, replace the pupil's own display name if it appears in their text with "[name]", and mask phone numbers and email addresses
+   c. quota: an atomic SQL function ai_take_quota(pupil_id) that allows at most 120 calls per pupil per day (Africa/Accra day) and is safe under parallel calls. Over quota returns fallback reason daily_cap
+   d. the call: Claude API with output_config.format json_schema; one 20-second limit across everything; one retry only on network error, 5xx or a zod failure; no retry on 429
+   e. zod parses the result again; unknown misconception codes are dropped and logged
+   f. logging: every attempt into ai_calls with job, model, prompt version, pupil_id, input (after masking), output, ok, reason, latency, input and output tokens
+   g. safeguarding: every job schema has safeguarding { flag boolean, category one of harm_to_self, harm_from_others, distress, other }. When flag is true: write a safeguarding flag row and an alert_outbox row in one transaction
+   h. returns { ok: true, data } or { ok: false, fallback: true, reason } where reason is timeout, bad_output, api_error, daily_cap, not_allowed
+4. Alert sender: a function alert-send that sends pending alert_outbox rows by email (no pupil text, no name: only "A safeguarding flag needs review in the ATLAS dashboard", time and class). Called with EdgeRuntime.waitUntil right after the flag is written, and retried by a pg_cron schedule every 5 minutes. If pg_cron is not available on our plan, tell me, and also run the sender at the start of every gateway call.
+5. App side, src/data/aiClient.ts: calls a job, 22-second client timeout, any network error becomes { fallback: true, reason: "offline" }, never throws to a screen. In development builds only, a forced verdict can be requested; the server refuses forcing unless its environment is dev.
+6. scripts/aiEval.ts: a generic evaluation runner. Reads a CSV for a job, runs every row through the gateway on atlas-dev under an eval pupil id, compares with the expected columns, prints agreement and the disagreeing rows. S24 adds the ai-check set.
+7. Tests with a fake Claude API: valid output, zod failure then fixed, zod failure twice, timeout, 429, 500, empty reply, quota at 119 and 120, parallel quota calls, name masking, safeguarding flag writes both rows, alert retried after an email failure.
+No job function is built in this session except a tiny ai-ping job used by the tests.
+```
+
+**You check**
+
+- Run the gateway tests. All cases pass.
+- Call ai-ping with a text that contains TEST-P1's display name. In `ai_calls`, the input shows `[name]`.
+- Call ai-ping with a forced safeguarding result. Bright receives the email within 2 minutes, with no name or text in it.
+
+**Done when**
+
+- All gateway failure tests pass.
+- Quota, masking and the safeguarding email are proven.
+
+### S17. Reliability layer: errors, telemetry, dev tools, accessibility kit
+
+**Goal:** every screen built from now on gets calm errors, journey events, accessibility and a clean release build for free.
+
+**Branch:** `feat/S17-reliability`
+
+```text
+Runbook session S17: reliability layer. Read CLAUDE.md (rules 6, 7, Look), specs/prd.md sections 11 and 12 (success measures), specs/framework.md (Data the app records).
+
+Build:
+1. Errors: a global error boundary plus one per route group. Fallback screen: "Something went wrong on this screen. Try again." with a retry that remounts the route, and a Sentry report. src/domain/errorCopy.ts maps every error kind (offline, timeout, server, storage full, unknown) to calm copy. Tests first.
+2. Pupil copy lives only in src/copy/. A script npm run copy:check fails on "!", an em dash, the words wrong, failed, fail, incorrect, and any red colour value in the app. Turn on the CI step from S14.
+3. Telemetry: src/data/events.ts writes journey events to the local events table and the outbox (S15), never free text. Event names: app_open, signin, notice_seen, onboarding_step, home_open, topic_download, video_start, video_pause, video_complete, watch_again, check_submitted, verdict_received, fallback_used, readback_edit, segment_complete, segment_moved_on, exam_start, exam_submit, results_open, mastery, recheck_start, recheck_result. Each has pupil_id, segment or item where relevant, ms durations, and app version. A server table events with RLS like attempts. S37 builds the pilot measures from it.
+4. Sentry: release and dist set from the app version, breadcrumbs for navigation, a startup performance trace, and the beforeSend scrub from S03 kept.
+5. Dev tools gate: all dev-only screens and buttons live in src/dev/ and are reachable only through one guard. A script scripts/checkReleaseBundle.ts exports a production bundle and fails if any src/dev code or the word "forceVerdict" is inside. Add it to CI.
+6. Accessibility kit: shared components require accessibilityLabel in their TypeScript props; touch targets at least 48 dp; a dev screen showing every component at font scale 1.3 and with reduced motion. Fix any clipping now.
+7. Performance baseline on Phone A: cold start, Home render, memory after 10 minutes. Write the numbers in docs/perf-baseline.md. Every later session must not make them worse by more than 10% without a note.
+```
+
+**You check**
+
+- Add an exclamation mark to any string in `src/copy/` on a scratch branch. CI fails. Throw the branch away.
+- Use the app for 5 minutes. In the dashboard, the `events` table shows your journey in order.
+- Set Phone A's font size to the largest. Open every screen built so far. Nothing is cut off.
+
+**Done when (Foundations gate)**
+
+- CI green with copy, bundle and RLS checks.
+- Events arrive in order.
+- Performance baseline recorded.
+
+## B3 Onboarding and B4 Home: S18 to S19 (28 to 29 Nov)
+
+From here, every feature session follows the same build standard. Paste this block once at the top of each feature session, or put it in `docs/runbook/standard.md` and have `/session` include it.
+
+```text
+Build standard for this session (from the runbook, Phase F):
+- Every pupil action saves through src/data/repo.ts (local row plus outbox in one transaction). No screen waits for the network to save.
+- Every AI call goes through src/data/aiClient.ts and the S16 gateway. Every fallback shows tap options.
+- Every screen sits inside the S17 error boundary, uses copy only from src/copy/, and logs its journey events.
+- Every pressable and input has a testID and an accessibilityLabel. Touch targets at least 48 dp. Works at font scale 1.3 and with reduced motion.
+- Rules go in src/domain with tests written first.
+- Add or extend a Maestro flow in .maestro/ for this session's main path, and run it on Phone A.
+- Check docs/perf-baseline.md: no screen more than 10% slower without a note.
+```
+
+### S18. Onboarding
+
+**Goal:** four playful screens that learn who the pupil is, finished in under 3 minutes, resumable, nothing marked right or wrong.
+
+**Branch:** `feat/S18-onboarding`
+
+```text
+Runbook session S18: onboarding. Apply the build standard. Read specs/framework.md stage 1, specs/prd.md FR-5 to FR-7, specs/B3.md, CLAUDE.md rules 2, 6, 7.
+
+1. src/domain/onboarding.ts, tests first: which screen comes next from saved answers; validation of the name (1 to 20 characters, letters, spaces, hyphens, apostrophes); interests 1 to 4 from the fixed list.
+2. app/onboarding/, four screens with a quiet progress line of 4 dots (no numbers):
+   a. "What should I call you?" TextField. Stored locally and in pupils. Never sent to AI.
+   b. "Which class are you in?" pills Basic 7, Basic 8, Basic 9; Basic 7 preselected.
+   c. "What do you enjoy? Pick up to 4." pill toggles: football, music, farming, stories, cooking, market, animals, phones and computers. A 5th pick says "You can pick up to 4."
+   d. Three "would you rather" cards one at a time, texts in src/copy/onboarding.ts for Bright to replace:
+      "Would you rather fix a broken radio, or find out why it broke?"
+      "Would you rather plant a new farm, or sell at the market?"
+      "Would you rather learn a new song, or write a new story?"
+      Record choice, time to choose in ms, and whether the pupil changed their mind before confirming.
+   e. "Thank you, <name>. Let's start." PillButton "Go to my lessons".
+3. Each answer saves the moment it is given through repo.ts. Reopening resumes at the first unanswered screen.
+4. Events: onboarding_step with step and duration.
+5. Maestro flow onboarding.yaml: full run, then a run that kills the app on screen 3 and checks it resumes on screen 3.
+```
+
+**You check**
+
+- Stopwatch a full run on Phone A at a child's reading pace. Under 3 minutes.
+- Kill the app on screen 3, reopen, sign in. Screen 3, earlier answers kept.
+- Do it all in airplane mode, then turn the network on. `pupil_profiles` fills in.
+- Try it with TalkBack on. Every control is read out with a sensible label.
+
+**Done when (B3 gate)**
+
+- Under 3 minutes, resumable, every answer saved, Maestro flows pass.
+
+### S19. Home: Recommended and Choose a topic
+
+**Goal:** a calm Home that always opens instantly from the phone, with a prerequisite nudge that never blocks.
+
+**Branch:** `feat/S19-home`
+
+```text
+Runbook session S19: Home. Apply the build standard. Read specs/framework.md stage 2, specs/prd.md FR-8 and FR-9, specs/B4.md.
+
+1. src/domain/recommendations.ts, tests first: builds the Recommended list in this order: a due re-check (S34 fills the data), segments waiting to be re-taught (moved_on, or missed in a re-check, or lost marks in an exam), then topics the teacher set for the class. No duplicates. Each item carries a reason string for the card, for example "Waiting for you" or "Your class is learning this".
+2. src/domain/prerequisites.ts, tests first with fake topic data: returns ok, or missing topics with a reason.
+3. app/home/index.tsx reads only from the phone database and refreshes in the background:
+   - "Hello, <name>."
+   - "Recommended for you": cards from recommendations.ts
+   - "Choose a topic": Science, then its topics; Mathematics shown as "Coming soon", not tappable
+   - topic cards: title, "5 parts", a quiet line of 5 dots for parts done, and "Mastered" in teal after mastery. No percentages, no stars.
+4. Prerequisite sheet when missing: "I'd suggest this first, here's why." + reason + button to the missing topic + secondary "Take me to the class topic anyway", which always opens the topic.
+5. A dev-only switch (in src/dev) that gives Materials a fake prerequisite, so the sheet can be seen on a phone.
+6. Events: home_open.
+7. Maestro flow home.yaml: open the topic from both sections; with the dev switch on, open the topic through "anyway".
+```
+
+**You check**
+
+- Both sections open the topic on Phone A.
+- Dev switch on: the nudge shows, and "Take me to the class topic anyway" opens the topic.
+- Airplane mode, kill and reopen the app. Home shows at once.
+
+**Done when (B4 gate)**
+
+- Both sections open the topic. Nudge tested in Jest, Maestro and by hand. Never blocks.
+
+## B5 Topic, video and overview: S20 to S22 (29 to 30 Nov)
+
+B5 is done when the whole overview works in airplane mode after one download, and the profile updates when the network returns.
+
+You need at least one real test video set on R2: `mat-OV-a-360.mp4`, its poster JPEG and its `.vtt` file. If the producer has not delivered, Bright makes a 30-second clip on a `#F6F0E6` background with handwriting and narration, plus a 3-line `.vtt`.
+
+### S20. Topic download, content cache, storage and data size
+
+**Goal:** one download puts everything a topic needs on the phone, and the app reads content only from the phone after that.
+
+**Branch:** `feat/S20-topic-download`
+
+```text
+Runbook session S20: topic download and content cache. Apply the build standard. Read specs/prd.md section 11 (Offline, Data use), specs/video-board.md sections 2, 3 (P3) and 5, specs/B5.md, docs/architecture.md.
+
+1. Content sync: fetch the topic's content (segments, versions, check questions, worked-example cards, re-check items, exam items WITHOUT answers through the S06 safe function) into the S15 content cache tables, keyed by the topic's content version string. Re-fetch only when the version changes.
+2. Media download with the current expo-file-system API (check the docs for the SDK we use): every video at 360p, poster, .vtt file and worked-example photo, into the app's document folder. One file at a time, resumable after a lost connection, size checked against Content-Length, temp file renamed only when complete. A manifest table records each file, its size and the content version.
+3. src/domain/downloadPlan.ts, tests first: given the manifest and the new content, which files to fetch, keep or delete. Old files from a previous content version are deleted after the new ones are complete.
+4. Download screen (topic opens it when not ready): "This topic needs <n.n> MB of data. Download it now, on Wi-Fi if you can." Progress "<n> of <total> files". Cancel and resume. Storage check first: if free space is below need plus 50 MB, "This phone needs <n> MB more space. Ask your teacher for help."
+5. Phone preparation for the pilot: an admin-only action "Prepare this phone" (reached by a staff PIN from the sign-in screen, set by Bright in the dashboard later; for now a dev setting) that downloads every topic file before any pupil signs in. Files are shared by all pupils on the phone.
+6. Data measurement: count bytes for content, media and API per topic; write to the events log (topic_download with bytes and seconds).
+7. Maestro flow download.yaml: download with the network on, then airplane mode, then open the topic.
+```
+
+**You check**
+
+- Turn the network off halfway through a download, then on. It resumes, it does not restart.
+- After download, airplane mode, kill and reopen. The topic and its parts all open.
+- The size shown before download matches the real total within 5%.
+
+**Done when**
+
+- Resumable download, content read only from the phone, storage check and size proven.
+
+### S21. Board video player
+
+**Goal:** the lesson video looks like a page being written on, never like a video player, and meets every rule in `specs/video-board.md`.
+
+**Branch:** `feat/S21-board-player`
+
+```text
+Runbook session S21: board video player. Apply the build standard. Read specs/video-board.md completely (P1 to P10 and Done when) and CLAUDE.md (Lesson video player). Check the current expo-video docs for the SDK we use before planning.
+
+Build src/components/board/BoardVideo.tsx with expo-video:
+1. Player setup: useVideoPlayer with the local file URI from the S20 manifest. VideoView with nativeControls={false}. Do NOT enable supportsPictureInPicture or supportsBackgroundPlayback in the config plugin; allowsPictureInPicture false, staysActiveInBackground false, showNowPlayingNotification false. Fullscreen not offered.
+2. P1 no chrome: nothing but the picture. Wrap in a Pressable that handles tap (P5) and swallows long-press, so no system menu appears.
+3. P2 seamless edge: the container background is the version's boardColour; a soft 4% fade at each edge drawn over the video. On Android, try surfaceType="textureView" so the fade and the pause dim layer draw over the video correctly; if it costs smoothness on Phone A, explain the trade-off and propose the fix.
+4. P3 poster: show the poster image over the video until the player status is ready and playing has started; useExoShutter stays false.
+5. P4 autoplay with sound; if the phone blocks sound, play muted with a "Tap for sound" pill and unmute on first touch without restarting.
+6. P5 tap pauses or continues; paused dims the board slightly and shows "tap to continue" in Caveat 700.
+7. P6 pause when the app leaves the foreground (AppState) and when less than half of the board is visible in the scroll view; resume only if the pupil had not paused it.
+8. P7 captions: set player.timeUpdateEventInterval to 0.1 and pick the cue for currentTime from the parsed .vtt (src/domain/vtt.ts, tests first: timestamps, multi-line cues, gaps, overlapping cues). Show the cue under the board. Captions are also readable by TalkBack.
+9. P8 on playToEnd: the last frame stays; onEnded fires so the parent fades in the next section and scrolls to it.
+10. P9 Watch again: seek to 0, play, scroll back to the board; does not count as a try. Log watch_again.
+11. P10 header above the board: breadcrumb "Basic 7 Science · Materials", title, journey label.
+12. Switching version (for a retry) reuses the same player with replace, not a new player. Release any player created outside the hook on unmount. Log video_start, video_pause, video_complete with positions.
+13. Accessibility: the board has the label "Lesson video. Tap to pause or continue."
+14. A dev screen in src/dev to play any downloaded version.
+Measure memory on Phone A after playing 5 videos in a row. Write it in docs/perf-baseline.md.
+```
+
+**You check** (the `specs/video-board.md` Done when list, on both phones)
+
+- Look hard at the board edge in daylight. No line between video and screen.
+- Long-press the video. Nothing appears.
+- Home button during play: paused on return. Scroll half the board away: it pauses.
+- Captions match the voice within half a second on 3 checked lines.
+- Airplane mode: poster, captions and end state all work.
+- Play 5 videos in a row on Phone A. No stutter, no crash, memory written down.
+
+**Done when**
+
+- Every `specs/video-board.md` Done when line proven on both phones. `vtt` tests pass.
+
+### S22. Overview and the ai-overview job
+
+**Goal:** after the overview video, the pupil says what they took from it. The AI listens to build the profile. It is never a grade.
+
+**Branch:** `feat/S22-overview`
+
+```text
+Runbook session S22: overview and ai-overview. Apply the build standard. Read specs/framework.md stage 3, specs/prd.md FR-10 to FR-13, specs/ai-prompts.md (overview listening), specs/B5.md.
+
+1. Job ai-overview in the S16 registry: model claude-haiku-5-5. Input: the two texts (each up to 600 characters, either may be empty) plus the topic's segment codes and titles. Output schema: { keywords: string[] (max 10), interests: string[] from the fixed interest list only, confusions: string[] (max 5, short), segmentsMentioned: codes OV and 1A to 1E only, safeguarding }.
+2. Overview screen in app/topic/[id].tsx: BoardVideo with the overview. On end, fade in below the board:
+   "Tell a friend what this video was about, in one or two sentences." multi-line TextField
+   "Which part felt confusing?" multi-line TextField
+   PillButton "Send", quiet "Skip", and "Watch again".
+3. On Send or Skip: save overview_responses through repo.ts first, then call the job. Whatever happens, the pupil sees "Thanks. That helps me choose how to teach this." and continues to part 1A. Offline or fallback: the outbox sends the job later during sync (outbox kind ai_overview), and the result updates pupil_profiles when it arrives.
+4. Safeguarding true: the pupil sees "Thank you for sharing. A teacher may check in with you." instead of the thanks line; the gateway has already raised the flag and the alert.
+5. src/domain/profileMerge.ts, tests first: merge keywords, interests and confusions into the profile without duplicates, newest first, capped lengths.
+6. Maestro flow overview.yaml: watch (dev: skip to end), type two sentences, send, reach 1A. Second run in airplane mode.
+```
+
+**You check**
+
+- Send two real sentences on Phone A. `pupil_profiles` gains keywords. `ai_calls` shows the prompt version and no name.
+- Repeat in airplane mode. The thanks line shows at once. Turn the network on. The profile updates within a minute.
+- Type the pupil's own name in the answer. `ai_calls` input shows `[name]`.
 
 **Done when (B5 gate)**
 
-- Overview works offline after download.
-- Profile updates when the network returns.
-- `ai_calls` logs every call, with no names.
+- Overview works offline after download. Profile updates when the network returns. Nothing looks like a grade.
 
-## B6 Segment loop: S18 to S24 (29 Nov to 1 Dec)
+## B6 Segment loop: S23 to S29 (30 Nov to 3 Dec)
 
-B6 is done when the routing and tries tests pass, and every path has been forced on a phone. This is the heart of ATLAS. Do not rush it. The Sprint 1 demo on 1 Dec is the whole learner flow on a test phone.
-
-The loop, in one picture of rules (from `specs/prd.md` FR-14 to FR-26):
+B6 is done when every rule is unit tested, every path is covered by a Maestro flow, and the Sprint 1 demo runs the whole learner flow on Phone A. This is the heart of ATLAS.
 
 | Result of a try | What happens |
 | --- | --- |
 | Answer correct and reasoning sound | Segment complete. "Well reasoned." |
-| Anything else (wrong answer, or right answer with a wrong reason) | One try used. Before try 2 and try 3, `routing.ts` picks the next unseen version. No unseen version: worked-example card |
-| Right answer, wrong reason | Also logged as lucky guess or hidden misconception |
-| Either verdict "unsure" | Tie-break with the read-back and the tap reason options. A borderline flag goes to the admin |
-| Third failed try | "We'll come back to this one. You're not behind." Stalled flag. Segment goes to Recommended. Move on |
+| Anything else | One try used. Before tries 2 and 3, `routing.ts` picks the next unseen version by misconception. None left: worked-example card |
+| Right answer, wrong reason | Logged as a lucky guess or hidden misconception |
+| Sure and wrong | Logged as a misconception. The next version opens with a line that tests the idea (conflict and repair) |
+| Not sure and right | Logged as fragile knowledge |
+| Either verdict "unsure" | Tie-break with the read-back and tap reasons. Borderline flag to the admin |
+| Third failed try | "We'll come back to this one. You're not behind." Stalled flag. Segment to Recommended. Move on |
 
-### S18. Routing and tries rules (pure logic, tests first)
+### S23. Learning rules: routing, tries, confidence, tie-break
 
-**Goal:** the rules that decide the next video and count tries, fully tested, with no screens.
+**Goal:** every learning decision in the loop is a tested pure rule. No screens.
 
-**Branch:** `feat/S18-routing`
+**Branch:** `feat/S23-learning-rules`
 
 ```text
-Runbook session S18: routing and tries rules. Read specs/prd.md 6.5, 6.6 and 8.2, specs/framework.md stages 4 and 5, specs/B6.md and CLAUDE.md rules 4 and 10.
-This session writes only pure TypeScript in src/domain with Jest tests. No React, no Supabase, no screens. Write all tests first, show them to me, wait for my OK, then write the code.
+Runbook session S23: learning rules. Read specs/prd.md 6.5, 6.6 and 8.2, specs/framework.md stages 1, 4 and 5, specs/B6.md, CLAUDE.md rules 4 and 10.
+Pure TypeScript in src/domain only. Write all tests first, show me the test names, wait for my OK, then write the code. 100% line and branch coverage.
 
-1. src/domain/routing.ts
-   chooseFirstVersion(versions, pupilInterests): the version whose interestTags overlap the pupil's interests most. Tie: version a.
-   chooseNextVersion(versions, seenLabels, misconceptionCodes, pupilInterests): from unseen versions, the one whose misconceptionTags match the most codes. Tie: most interest overlap. Still tied: alphabetical label. No unseen version: return { kind: "workedExample" }. Otherwise { kind: "version", label }.
-   Codes are collected from both the answer and the reason, without duplicates.
-2. src/domain/tries.ts
-   A reducer over a segment's state: { status, triesUsed, versionsSeen, lastCodes }. Events: started, attemptJudged { answerCorrect, reasoningSound, codes }, movedOn, returnedLater.
-   Rules: max 3 tries. answerCorrect yes and reasoningSound yes ends with status complete. Anything else uses one try. After the 3rd failed try, status moved_on and a stalled flag is required (return it as an effect). A right answer with a wrong reason returns an effect logLuckyGuess.
-   Verdicts arrive already resolved to yes or no (the unsure tie-break happens in S22 before this reducer).
-   returnedLater on a moved_on segment starts a fresh 3 tries and keeps versionsSeen; the stalled flag clears only on complete (effect clearStalledFlag).
-3. Tests must cover at least: first version by interests and tie; next version by codes, by interests on tie, by label on double tie; no unseen version; codes from answer plus reason with duplicates; complete on try 1, 2 and 3; three failures; lucky guess; returning later then completing clears the flag; returning later and failing again keeps the flag; impossible events are rejected.
-4. 100% line coverage for both files. Show me the coverage report.
+1. routing.ts
+   chooseFirstVersion(versions, profile): most overlap between interestTags and the pupil's interests plus overview keywords; tie: version a.
+   chooseNextVersion(versions, seenLabels, codes, profile): unseen version matching the most misconception codes; tie: interest overlap; tie: label order; none unseen: { kind: "workedExample" }.
+   Codes are the union of answer and reason codes, without duplicates.
+2. tries.ts: a reducer over { status, triesUsed, versionsSeen, lastCodes } with events started, attemptJudged, movedOn, returnedLater. Max 3 tries. Effects returned, never performed: raiseStalledFlag, clearStalledFlag, addToRecommended, logLuckyGuess, logMisconception, logFragile. returnedLater starts 3 fresh tries and keeps versionsSeen. Impossible events are rejected.
+3. confidence.ts: classify each judged attempt as solid, lucky_guess, misconception (sure and wrong), fragile (not sure and right) or gap (not sure and wrong). Baseline: the framework says the app learns each child's confidence habit before trusting it. trustConfidence(history) is false until the pupil has 5 judged attempts; until then misconception and fragile are logged but do not change routing or messages.
+4. tieBreak.ts: turns "unsure" verdicts plus the pupil's taps into yes or no, and says whether a borderline flag is needed.
+5. repairLine.ts: when an attempt is a trusted misconception, returns the opening line for the next version: "Here's a case to test that idea." Otherwise "Let's look at it another way."
+Tests must cover every row of the outcome table in the runbook, plus confidence before and after 5 attempts.
 ```
 
 **You check**
 
-- Read the list of test names Claude shows before writing code. Every row of the table above has a test. If one is missing, say which.
-- `npm test -- --coverage`. Both files at 100%.
+- Read the test names before the code is written. Every row of the outcome table has a test.
+- Coverage report: 100% for all five files.
 
 **Done when**
 
-- All routing and tries tests pass with 100% coverage.
+- All learning rules pass with 100% coverage.
 
-### S19. The ai-check job
+### S24. The ai-check job and its evaluation set
 
-**Goal:** the server function that judges the answer and the reason, returning a fixed shape.
+**Goal:** a server judge of answer and reason that is fast, private and measured from day one.
 
-**Branch:** `feat/S19-ai-check`
+**Needs:** Bright and the content reviewer have started `content-work/eval/ai-check.csv` with at least 30 rows. It grows to 100 for the 7 Dec quality gate.
+
+**Branch:** `feat/S24-ai-check`
 
 ```text
-Runbook session S19: ai-check Edge Function. Read specs/prd.md FR-17 and section 8, specs/ai-prompts.md (answer and reason check prompt), specs/framework.md (The AI check, The reasoning check), CLAUDE.md rules 1, 2, 3, 9, 11, 13, 14.
+Runbook session S24: ai-check and its evaluation. Apply the build standard. Read specs/prd.md FR-15 to FR-17, FR-21, FR-22 and 8.4, specs/ai-prompts.md (answer and reason check), specs/framework.md (The AI check, The reasoning check).
 
-Build supabase/functions/ai-check:
-1. Input (zod): { pupil_id, segment_code, try_number, question_id, answer_text, answer_mode typing or tap, reason_text, reason_mode typing or tap }. Max 600 characters each.
-2. Check that auth.uid is that pupil and that consent is recorded. If not, refuse.
-3. Load from the database, not from the client: the question, accepted answers, reference meaning, reference reasoning, and the segment's misconception list with codes.
-4. Call claude-sonnet-5-5 with the system prompt from specs/ai-prompts.md. Send only the question, the references, the misconception list and the pupil's two texts. Never the name or class.
-5. Output shape, parsed with zod (put the schema in src/domain/aiSchemas.ts so the app shares it):
-   { answerCorrect: "yes"|"no"|"unsure", reasoningSound: "yes"|"no"|"unsure", misconceptionCodes: string[] (only codes from this segment), readBack: string (one sentence, max 200 characters, second person, starting with "You think" or "You said"), safeguarding: boolean }
-   Unknown codes are dropped and logged, not passed on.
-6. Tap answers and tap reasons are judged without AI where possible: a tap answer is correct if it equals an accepted answer; a tap reason maps directly to sound or its misconception code. If both are taps, make no AI call at all and build the read-back from the chosen texts.
-7. Log every call in ai_calls. Basic timeout 20 seconds and one retry on bad output; return { fallback: true } otherwise. (S25 finishes hardening.)
-8. scripts/tryCheck.ts: runs 6 fixed sample answers for segment 1B against atlas-dev and prints the verdicts. Samples: correct with sound reason; correct with wrong reason (heavy means strong); wrong with sound-sounding reason; nonsense text; an empty reason; a text in another language.
+1. Job ai-check in the S16 registry, model claude-sonnet-5-5. The client sends only ids and the pupil's texts: { segment_code, try_number, question_id, answer_text, answer_mode, reason_text, reason_mode, sure }. The server loads the question, accepted answers, reference meaning, reference reasoning and the misconception list from the database.
+2. Output schema: { answerCorrect: yes|no|unsure, reasoningSound: yes|no|unsure, misconceptionCodes: codes from this segment only, readBack: one sentence, max 200 characters, second person, starting "You think" or "You said", safeguarding }.
+3. No AI when it is not needed: tap answers are judged by matching accepted answers; tap reasons map straight to sound or their misconception code; if both are taps, build the read-back from the chosen texts and make no call. Questions marked tapOnly never call the AI and hide typing.
+4. Add tapOnly to the content schema and database (a migration plus a zod field, default false). Bright sets it per question after the quality gate.
+5. Evaluation: content-work/eval/ai-check.csv columns id, segment, try, answer, reason, expected_answer, expected_reasoning, expected_codes, source (adult or pupil). Run with npm run eval:check through scripts/aiEval.ts. Print: answer agreement %, reasoning agreement %, a 3 by 3 table for each, code precision, unsure rate, median and slowest latency, per-question results, and PASS if answer >= 85% and reasoning >= 80% (PRD 8.4). Save results to content-work/eval/results/<date>-<prompt version>.csv. These files are git-ignored.
+6. Run the eval on the rows that exist. Report the numbers and the 5 worst disagreements with your reading of why.
 ```
 
 **You check**
 
-- Run `scripts/tryCheck.ts`. Read each verdict. Does it match what a teacher would say? Write any disagreement in the shift log for Bright and the content reviewer.
-- In `ai_calls`, the input has no names.
+- Run `npm run eval:check` yourself. Write the two agreement numbers and the prompt version in the shift log.
+- Read the 5 worst disagreements with Bright or the reviewer. Decide: fix the prompt (Bright), fix the reference reasoning (content), or mark the question tapOnly.
+- A tap-only attempt leaves no new row in `ai_calls`.
 
 **Done when**
 
-- The output always matches the zod shape.
-- Tap-only attempts make no AI call.
+- ai-check returns the schema every time. The eval runs with one command and reports agreement.
 
-### S20. Segment progress and attempt saving
+### S25. Attempts, segment progress and flags
 
-**Goal:** every try is saved with all its fields, and the segment state lives in one place.
+**Goal:** every try is saved with every field, and the rules' effects become real rows, safely.
 
-**Branch:** `feat/S20-attempts-data`
+**Branch:** `feat/S25-attempts`
 
 ```text
-Runbook session S20: segment progress and attempts. Read specs/prd.md FR-23, specs/data-model.md (segment_progress, attempts, flags) and specs/B6.md.
+Runbook session S25: attempts, progress and flags. Apply the build standard. Read specs/prd.md FR-23 to FR-26, specs/data-model.md (segment_progress, attempts, flags).
 
-Build:
-1. src/data/segmentRepo.ts: load and save segment_progress, insert attempts, create flags through a server function (pupils cannot insert flags directly; add supabase/functions/raise-flag that checks the pupil and the kind).
-2. A hook useSegment(segmentCode) that runs the tries reducer from S18, saves every state change, and applies its effects (flags, lucky guess logging, Recommended).
-3. Each attempt row records every FR-23 field: try number, version shown, answer, input mode, reason, reason mode, sure or not sure, time taken in ms (from question shown to submit), changed answer (true if the pupil edited their answer after first typing it, or changed tap), AI verdicts, misconception codes, fallback used, read-back confirmed or edited.
-4. All writes go through the offline queue (local first, sent when online). Use a client-generated id per attempt so a resend never creates a duplicate.
-5. Tests for the mapping from reducer effects to repository calls, with a fake repository.
+1. src/data/segmentRepo.ts on top of repo.ts: load progress, save each state change, insert attempts. Each attempt stores every FR-23 field plus: confidence class (S23), fallback reason if any, read-back confirmed or edited, prompt version.
+2. A hook useSegment(code) that runs the tries reducer and performs its effects through the repository.
+3. Flags are never written by the phone directly. sync-push (S15) validates an attempt batch on the server, recomputes the tries state from the pupil's stored attempts, and only then writes stalled flags, clears them, and writes borderline flags. A forged batch cannot raise or clear a flag the attempts do not justify. Add server tests for this.
+4. Recommended entries come from progress and results through recommendations.ts (S19), not a separate list.
+5. Events: check_submitted, verdict_received, fallback_used, segment_complete, segment_moved_on.
+6. Jest tests for effect handling with a fake repository; server tests for flag recomputation.
 ```
 
 **You check**
 
-- Ask Claude to run a scripted attempt for TEST-P1 on 1A. In the dashboard, one attempt row with every field filled.
-- Run it twice with the same id. Still one row.
+- Run a scripted attempt for TEST-P1. One attempt row with every field filled.
+- Send the same batch twice. Still one row.
+- Ask Claude to send a forged batch claiming a stalled flag with only one failed try. The server refuses to write the flag.
 
 **Done when**
 
-- Every FR-23 field saved.
-- No duplicate attempts on resend.
+- Every FR-23 field saved. Flags only from server-checked attempts.
 
-### S21. Segment screen: video and "Your turn"
+### S26. Segment screen: video and "Your turn"
 
-**Goal:** the pupil watches the chosen version, then answers the check question by typing or tapping.
+**Goal:** the pupil watches the right version, then answers by typing or tapping, on one calm scrolling screen.
 
-**Branch:** `feat/S21-segment-screen`
+**Branch:** `feat/S26-segment-screen`
 
 ```text
-Runbook session S21: segment screen part 1. Read specs/video-board.md section 4, specs/framework.md stage 4, specs/prd.md FR-14 and FR-15, specs/B6.md. The video player follows specs/video-board.md.
+Runbook session S26: segment screen part 1. Apply the build standard. Read specs/video-board.md section 4, specs/framework.md stage 4, specs/prd.md FR-14 and FR-15, specs/B6.md. The video player follows specs/video-board.md.
 
-Build app/segment/[id].tsx, top to bottom on one scrolling screen:
-1. Header (P10): breadcrumb, segment title, journey label like "Part 2 of 5".
-2. BoardVideo playing the version chosen by routing.ts (first version from interests).
-3. When the video ends: fade in a section headed "Your turn" in Caveat 700, then the check question for this try number. Scroll it into view.
-4. Answer input: a multi-line TextField first, with the hint "Type your answer". Under it a text button "Choose an answer instead" that shows the 3 tap options as pill buttons. The pupil can switch back to typing.
-5. Track: time from question shown, and whether the answer was changed.
-6. "Watch again" restarts the same version (P9) and does not use a try.
-7. PillButton "Next" is enabled once an answer exists. It leads to the S22 steps (placeholder for now).
-8. The question for try 2 is the try-2 question, for try 3 the try-3 question. Never repeat a question within the same 3 tries.
+Build app/segment/[id].tsx as one scrolling screen:
+1. Header (P10) with "Part <n> of 5".
+2. BoardVideo with the version from routing.ts.
+3. On video end: "Your turn" in Caveat 700, then the question for this try, scrolled into view. The question for try 2 and try 3 is always that try's question.
+4. Answer: multi-line TextField first, hint "Type your answer"; a text button "Choose an answer instead" shows the 3 tap options; the pupil can switch back. tapOnly questions show taps only.
+5. Track time from question shown, and whether the answer changed (typing edits after a pause, or a different tap).
+6. Kill and reopen mid-question: return to the same try and version with the typed draft kept (drafts save locally every few seconds).
+7. "Watch again" (P9) does not use a try.
+8. PillButton "Next" when an answer exists.
 No right or wrong is shown on this screen. No red.
 ```
 
 **You check**
 
-- On Phone A, open 1A. Video plays, ends, "Your turn" fades in and scrolls into view.
-- Switch to tap options and back to typing. Both work.
-- "Watch again" restarts the same video.
+- Open 1A on Phone A. Video ends, "Your turn" fades in and scrolls into view.
+- Type half an answer, kill the app, reopen. The draft is still there.
+- Switch between typing and taps.
 
 **Done when**
 
-- Video to question flow works on both phones.
+- Video to question works on both phones, drafts survive a kill.
 
-### S22. Sure or not sure, "Why do you think so?" and the read-back
+### S27. Sure or not sure, "Why do you think so?", read-back
 
-**Goal:** after every answer, the confidence tap, the reason, the AI check and the read-back the pupil can correct once.
+**Goal:** every answer gets a confidence tap and a reason, then a check the pupil can see and correct once.
 
-**Branch:** `feat/S22-why-readback`
+**Branch:** `feat/S27-why-readback`
 
 ```text
-Runbook session S22: confidence, reason, check and read-back. Read specs/prd.md FR-15 to FR-18 and FR-22, specs/framework.md (The reasoning check), specs/B6.md and CLAUDE.md rules 3, 5, 7.
+Runbook session S27: confidence, reason, check and read-back. Apply the build standard. Read specs/prd.md FR-15 to FR-18 and FR-22, specs/framework.md (The reasoning check).
 
-Build, continuing the segment screen:
-1. After "Next": "How sure are you?" two pills "Sure" and "Not sure". Required.
-2. Then "Why do you think so?" Every time, right or wrong. TextField first; "Choose a reason instead" shows the 3 reason options. PillButton "Check my thinking".
-3. Call ai-check. While waiting: LoadingCalm "Reading your answer". After 20 seconds or on { fallback: true }: "I could not check that just now. Pick the one closest to what you meant." then show the tap answer options (if the answer was typed) and the tap reason options; judge those taps locally; queue the typed text for later review.
-4. Read-back: "Here's what I understood: <readBack> Is that right?" Two pills "Yes" and "Not quite". "Not quite" lets the pupil edit their reason once and re-check. After one edit, accept the second result.
-5. Unsure tie-break (put the rule in src/domain/tieBreak.ts with tests first): if answerCorrect or reasoningSound is "unsure", ask "Which of these is closest to what you meant?" with the tap reason options (and tap answer options if the answer verdict is unsure). The tapped options decide yes or no. Then raise a borderline flag with the AI output attached.
-6. Safeguarding true: show "Thank you for sharing. A teacher may check in with you." Show no verdict for this answer, do not use a try, raise a safeguarding flag, and let the pupil continue the segment.
-7. Pass the final yes or no verdicts and codes to the tries reducer. Save the attempt.
+1. After Next: "How sure are you?" pills "Sure" and "Not sure". Required.
+2. "Why do you think so?" every time. TextField first; "Choose a reason instead" shows the 3 reason options. PillButton "Check my thinking".
+3. Save the attempt locally first, then call ai-check through aiClient. While waiting, LoadingCalm "Reading your answer".
+4. Fallback of any reason: "I could not check that just now. Pick the one closest to what you meant." then the tap answer options (if the answer was typed) and the tap reason options, judged on the phone. The typed text is queued and checked later for the record and for safeguarding only.
+5. Read-back: "Here's what I understood: <readBack> Is that right?" pills "Yes" and "Not quite". Not quite allows one edit of the reason and one re-check, then the second result stands.
+6. Unsure: tieBreak.ts asks "Which of these is closest to what you meant?" and decides; a borderline flag follows through sync.
+7. Safeguarding: "Thank you for sharing. A teacher may check in with you." No verdict for this answer and no try used; the pupil carries on with the same try.
+8. Final yes or no verdicts go to the tries reducer.
+Maestro flow segment-check.yaml with dev forced verdicts for each branch.
 ```
 
 **You check**
 
-- Type a correct answer with a wrong reason (for 1B: "Iron is strong because it is heavy"). The read-back states your idea. A try is used.
-- Tap "Not quite", edit the reason, re-check. Only one edit allowed.
-- Airplane mode, then check. The tap fallback appears within 20 seconds and you can continue.
+- For 1B, type a right answer with the reason "Iron is strong because it is heavy". The read-back states that idea. A try is used.
+- "Not quite", edit, re-check. Only one edit allowed.
+- Airplane mode, check. Tap fallback appears at once (no 20-second wait when the phone knows it is offline).
 
 **Done when**
 
-- `tieBreak` tests pass.
-- Fallback never traps the pupil.
+- Every branch reachable on a phone. Fallback never traps the pupil.
 
-### S23. Outcomes: complete, retry, worked example, move on
+### S28. Outcomes, worked example, move on, return later
 
-**Goal:** what the pupil sees after each judged try, including the 3-try ceiling.
+**Goal:** what the pupil sees after each judged try, through to the 3-try ceiling and the return from Recommended.
 
-**Branch:** `feat/S23-outcomes`
+**Branch:** `feat/S28-outcomes`
 
 ```text
-Runbook session S23: segment outcomes. Read specs/prd.md FR-19 to FR-26, specs/framework.md stage 5, specs/B6.md and CLAUDE.md rules 6 and 7. The video player follows specs/video-board.md.
+Runbook session S28: outcomes. Apply the build standard. Read specs/prd.md FR-19 to FR-26, specs/framework.md stage 5, CLAUDE.md rules 6 and 7.
 
-Build:
-1. Complete: a calm card "Well reasoned." plus one sentence from the reference reasoning, and PillButton "Next part". Next part opens the next segment, or the exam unlock screen after 1E.
-2. Try used (try 1 or 2 failed): "Let's look at it another way." Then the next version chosen by chooseNextVersion plays on the same screen (scroll back to the board), followed by the next try's question.
-3. No unseen version left: show the worked-example card (text plus photo, in a Card, under 120 words) instead of a video, then the next try's question.
-4. Third failed try: "We'll come back to this one. You're not behind." and PillButton "Next part". The reducer effects raise the stalled flag and put the segment in Recommended.
-5. A segment opened again from Recommended starts a fresh 3 tries with versions already seen excluded where possible, and shows on Home as "Waiting for you".
-6. Topic screen shows each part's status quietly: done, in progress, waiting for you. No ticks in red or green.
-Copy only as written above or in the specs.
+1. Complete: a calm card "Well reasoned." plus one sentence of the reference reasoning; "Next part" goes to the next segment, or to the exam unlock screen after the last segment.
+2. Try used: the line from repairLine.ts, then the next version plays on the same screen (scroll to the board), then the next try's question.
+3. No unseen version: the worked-example card (text under 120 words plus photo, in a Card), then the next try's question.
+4. Third failed try: "We'll come back to this one. You're not behind." and "Next part".
+5. Return from Recommended: "Waiting for you" card opens the segment with 3 fresh tries, unseen versions first. Completing it clears the stalled flag through sync.
+6. Topic screen shows each part quietly: done, in progress, waiting for you. No ticks in red or green.
+7. The exam unlock screen is a placeholder until S31.
 ```
 
 **You check**
 
-- Fail 1A three times on purpose on Phone A. You see the second version, then the worked-example card, then the kind message. Home shows 1A under Recommended. A stalled flag row exists.
-- Open 1A from Recommended and answer well. The segment completes and the flag shows cleared.
+- Fail 1A three times on Phone A. You see the second version with its opening line, then the worked example, then the kind message. Home shows 1A under Recommended. A stalled flag exists.
+- Open 1A from Recommended and answer well. The flag shows cleared.
 
 **Done when**
 
-- All five outcomes seen on a phone.
+- All outcomes seen on a phone, and the flag clears only by the pupil's success.
 
-### S24. Path checklist and Sprint 1 demo
+### S29. Every path tested, and the Sprint 1 demo
 
-**Goal:** every path of the loop is forced and ticked on a phone, and the whole learner flow runs end to end.
+**Goal:** every path of the loop is covered by an automated flow and ticked by hand on both phones.
 
-**Branch:** `feat/S24-path-checklist`
+**Branch:** `feat/S29-path-tests`
 
 ```text
-Runbook session S24: path checklist. Read specs/B6.md, specs/prd.md 6.5 and 6.6, docs/path-checklist.md.
+Runbook session S29: path tests. Apply the build standard. Read specs/B6.md, docs/path-checklist.md, the outcome table in the runbook.
 
-Build:
-1. A dev-only "Force verdict" panel (only when __DEV__ is true, never in preview or production builds) on the segment screen: buttons that make the next check return a chosen verdict: correct+sound, correct+wrong reason, wrong+sound, wrong+wrong, unsure answer, unsure reasoning, fallback, timeout, safeguarding. It must not call the AI when forcing.
-2. A build-time check that the panel code is stripped from preview builds. Prove it by searching the preview bundle.
-3. docs/path-checklist.md: one row per path with columns Path, How to force, Expected result, Phone A result, Phone B result, Date, Tester. Paths: every row of the outcome table in this runbook, every force button, Watch again, typing to tap switch, read-back edit, return from Recommended, app killed mid-question (resumes at the same try), airplane mode at each step.
-4. Fix anything the checklist finds before the PR.
+1. Maestro flows in .maestro/segment/, one per path, using dev forced verdicts in the e2e-test build only: complete first try; complete on try 3; three failures then move on; lucky guess; misconception after the baseline; fragile; unsure answer; unsure reasoning; read-back edit; fallback; offline; safeguarding; return from Recommended; kill mid-question.
+2. The e2e-test build profile enables dev tools; preview and production never do. scripts/checkReleaseBundle.ts (S17) runs on both release profiles in CI.
+3. docs/path-checklist.md: every flow above as a row, with Phone A result, Phone B result, date and tester.
+4. Fix everything the flows find before the PR.
 ```
 
 **You check**
 
-- Fill in every row of `docs/path-checklist.md` on both phones yourself.
-- Sprint 1 demo: sign in, onboarding, overview, all 5 segments with at least one retry, reach the exam unlock screen. Record the time and any confusion in the shift log for Bright.
+- Run all segment flows on Phone A: `maestro test .maestro/segment/`. All pass.
+- Fill in `docs/path-checklist.md` by hand on Phone B.
+- **Sprint 1 demo with Bright:** sign in, onboarding, overview, all 5 parts with at least one retry, reach the exam unlock screen. Note every hesitation.
 
 **Done when (B6 gate)**
 
-- Routing and tries tests pass.
-- Every path in the checklist is ticked on both phones.
-- Force panel is absent from the preview build.
+- All learning rule tests pass. Every path has a passing flow and a hand tick on both phones. No dev tools in release bundles.
 
-## B7 AI hardening: S25 to S27 (2 to 3 Dec)
+## B8 Exam: S30 to S33 (3 to 5 Dec)
 
-B7 is done when bad JSON, timeout, the daily cap and safeguarding are all tested, and network loss never traps a pupil.
+B8 is done when the paper hands itself in at zero even after an app restart or a wrong phone clock, offline included, and the results match a teacher's hand-marked copy. Exam length is Bright's decision (draft: 10 objective, 3 theory). Until then the app reads `durationMinutes` from the content.
 
-### S25. One safe AI wrapper for every job
+### S30. Exam rules: timer, scoring, unlock
 
-**Goal:** all AI jobs share one tested wrapper: strict parsing, one retry, a 20-second limit, a clean fallback.
+**Goal:** a timer nobody can reset or stretch, and scoring that matches the scheme exactly.
 
-**Branch:** `feat/S25-ai-wrapper`
+**Branch:** `feat/S30-exam-rules`
 
 ```text
-Runbook session S25: shared AI wrapper. Read CLAUDE.md rules 1, 3, 5, 9, 13, specs/prd.md 8.3 and specs/B7.md.
+Runbook session S30: exam rules. Read specs/prd.md FR-27 to FR-30, specs/framework.md stage 6, specs/B8.md, CLAUDE.md rule 10.
+Pure TypeScript in src/domain. Tests first, show the names, wait for my OK. 100% coverage.
 
-Build:
-1. supabase/functions/_shared/callClaude.ts used by ai-overview, ai-check and (later) ai-mark-theory and ai-read-handwriting:
-   - inputs: job name, model, system prompt, user content, zod schema, pupil_id
-   - asks for JSON only; extracts the JSON object even if wrapped in text or code fences; parses with the zod schema
-   - bad output: retry once with a short reminder of the shape; second failure returns { fallback: true, reason: "bad_output" }
-   - 20-second limit across both tries; timeout returns { fallback: true, reason: "timeout" }
-   - API error 429 or 5xx: no retry storm; return { fallback: true, reason: "api_error" }
-   - logs every attempt in ai_calls with ok true or false and latency
-   - never logs the API key, never includes a name
-2. Refactor ai-overview and ai-check to use it. Behaviour must not change for valid outputs.
-3. Tests (Deno test or Jest with a fake fetch) for: valid JSON; JSON inside text; JSON in code fences; wrong shape then fixed on retry; wrong shape twice; missing fields; extra fields stripped; invalid misconception code dropped; timeout; 429; 500; empty response.
-4. App side, src/data/aiClient.ts: every AI call from the app has its own 22-second client timeout and treats any network error as fallback, never as a crash.
+1. examTimer.ts: remaining(startedAt, durationSeconds, now) never below 0. The start time is the server's, fetched when "Start exam" is tapped; if offline, the phone's monotonic clock since app start is used and the server reconciles on submit. A phone clock changed by hours does not change time left. Tests: normal; app closed 5 minutes; reopened after time is over; clock moved forward and back; offline start.
+2. scoring.ts: objective marks; theory marks as the sum of awarded scheme points capped at the item's max; total and whole-number percentage rounded down; provisional flag if any theory mark awaits approval.
+3. examUnlock.ts: unlocked when every segment is complete or moved on.
+4. paperChoice.ts: first sitting Paper A, second Paper B, third and later Paper A in a new fixed order with repeatPaper true.
 ```
 
 **You check**
 
-- Run the wrapper tests. All 12 cases pass.
-- On Phone A, use the force panel "fallback" and "timeout". Tap options appear each time.
+- The test names include the clock-change and offline-start cases.
 
 **Done when**
 
-- All AI jobs use the wrapper.
-- All 12 failure cases tested.
+- All exam rules pass at 100% coverage.
 
-### S26. Daily cap, spend guard and AI log checks
+### S31. Exam screens
 
-**Goal:** no pupil can make more than 120 AI calls a day, and every call is logged.
+**Goal:** a real exam with the app as a calm invigilator.
 
-**Branch:** `feat/S26-ai-cap`
+**Branch:** `feat/S31-exam-screens`
 
 ```text
-Runbook session S26: daily AI cap. Read CLAUDE.md rules 9 and 13, specs/prd.md 8.3 and specs/B7.md.
+Runbook session S31: exam screens. Apply the build standard. Read specs/prd.md FR-27 to FR-29, specs/framework.md stage 6, specs/B8.md. CLAUDE.md rule 6 allows a timer only here.
 
-Build:
-1. In callClaude.ts, before any API call: count today's ai_calls for this pupil (Africa/Accra day, which is UTC). At 120 or more, do not call the API; return { fallback: true, reason: "daily_cap" } and log a row with ok false and job "cap_reached".
-2. Make the count safe when two calls arrive at once (a database function or a lock). Explain your choice in the plan.
-3. The app treats daily_cap like any fallback: tap options, no scary message. Copy: "Let's use the choices for now."
-4. A SQL view for the admin: ai_usage_daily (date, job, calls, failures, average latency, pupils at cap). No pupil text in the view.
-5. Test script scripts/capTest.ts against atlas-dev: sets TEST-P2's count to 119 with fake log rows, makes 2 calls, shows the second is refused. Then deletes the fake rows.
-6. Add to docs/install.md a note for Bright: set the monthly spend limit in the Anthropic Console and check it weekly.
+1. Unlock screen: "You have worked through every part. When you are ready, you can take the topic exam." Rules card: questions per section, time, "You can move between questions in a section", "You will see your results after you finish", "When time is up, a sound plays and your paper is handed in". PillButton "Start exam".
+2. Start: create the sitting through repo.ts with the paper from paperChoice.ts; items come from the phone cache, without answers.
+3. Objective section: one question per screen, 4 option pills, Previous, Next, question dots to jump. Then "Go to the theory section", with a note that objective answers are then closed.
+4. Theory section: one question per screen, multi-line TextField, marks shown.
+5. Every answer saves locally as it changes (debounced to about 1 second) and queues through the outbox.
+6. Timer always visible, IBM Plex Mono, ink colour, no flashing, no colour change, no ticking.
+7. At zero: a short stop-work sound (our own or royalty-free, licence noted in docs/licences.md), "Time is up. Your paper has been handed in.", submit. Reopened after time ran out: submit at once.
+8. "Hand in my paper" with a confirm sheet showing the number unanswered.
+9. Back button during the exam: "Leave the exam? Your time keeps running."
+10. Offline submit: "Your paper is saved. Results will show when you are back online."
+11. No feedback of any kind before submission.
+12. Maestro flow exam.yaml with a 2-minute dev duration: answer some, kill the app, wait, reopen, confirm auto-submit.
 ```
 
 **You check**
 
-- Run `scripts/capTest.ts`. Call 120 is allowed, call 121 is refused.
-- On Phone B, signed in as TEST-P2 at the cap, a check gives tap options calmly.
+- 3-minute exam on Phone A. Kill the app, wait 4 minutes, reopen. The paper is handed in at once.
+- Move the phone clock 1 hour during an exam. Time left does not jump.
+- Run an exam fully in airplane mode. The "saved" message shows; results arrive when online.
 
 **Done when**
 
-- Cap enforced on the server and proven by the script.
+- Auto-submit proven after restart, clock change and offline.
 
-### S27. Safeguarding alerts, offline queue for checks, and the quality gate runner
+### S32. Submit, theory marking, borderline
 
-**Goal:** safeguarding works end to end with an email to the admin, typed answers made offline are checked later, and the 7 Dec quality gate can be run with one command.
+**Goal:** the server marks every paper, theory answers against scheme points, with doubtful marks held for a teacher.
 
-**Branch:** `feat/S27-safeguarding-gate`
+**Branch:** `feat/S32-marking`
 
 ```text
-Runbook session S27: safeguarding, offline checks and quality gate runner. Read CLAUDE.md rules 2, 5, 14, specs/prd.md section 10 and 8.4, specs/ai-prompts.md and specs/B7.md.
+Runbook session S32: submit and theory marking. Apply the build standard. Read specs/prd.md FR-30 and 8.4, specs/framework.md (AI marking of theory answers), specs/ai-prompts.md (theory marking).
 
-Build:
-1. Safeguarding:
-   - every AI job's output includes safeguarding true or false (already in the schemas)
-   - when true: create a safeguarding flag with the job, the pupil_id and the exact text; the pupil sees only "Thank you for sharing. A teacher may check in with you."; no verdict shown for that answer
-   - supabase/functions/alert-admin sends an email the same minute to the address in Supabase secret SAFEGUARDING_EMAIL (Bright sets it). Use a transactional email service available from Edge Functions (for example Resend); tell me what account Bright needs. The email says "A safeguarding flag needs review in the ATLAS dashboard" plus the time and class. No pupil text and no name in the email.
-   - if the email fails, retry 3 times over 10 minutes and log each failure
-2. Offline checks: a typed answer made while offline, or that hit fallback, is queued with its attempt id. When the network returns, it is sent to ai-check in the background for the record and for safeguarding. The result never changes what the pupil already saw, except that a safeguarding result still raises the flag and the email.
-3. Quality gate runner scripts/qualityGate.ts (npm run gate):
-   - reads content-work/pilot/gate-sample.csv with columns id, segment, try, answer, reason, reviewer_answer (yes or no), reviewer_reasoning (yes or no)
-   - runs each row through ai-check on atlas-dev with a gate test pupil id
-   - writes content-work/pilot/gate-results-<date>.csv and prints: answer agreement %, reasoning agreement %, unsure count, and the item ids that disagree, grouped by question
-   - pass mark printed: answer at least 85%, reasoning at least 80% (specs/prd.md 8.4)
-   - gate-sample.csv and results are git-ignored, because they may contain pupil words
-4. A way to make a question tap-only: a tapOnly flag per check question in the content schema and the database; when true the app hides typing for that question and makes no AI call. Add schema tests.
+1. submit-exam (Edge Function, also reached through sync-push for offline papers): checks the time on the server, marks objective items with scoring.ts (never trusting the phone), then runs ai-mark-theory for each theory answer through the gateway, then writes the total and the provisional flag. Idempotent by sitting id.
+2. Job ai-mark-theory, model claude-sonnet-5-5. Input: question, scheme points with marks, the pupil's answer. Output: { points: [{ index, awarded, evidence (a short quote from the answer, or empty) }], borderline, credited, missing, safeguarding }.
+3. Borderline also when: the answer is under 5 words but not empty; any awarded point has empty evidence; the gateway fell back (then 0 provisional marks).
+4. Mark once and store. Never re-mark automatically, so the same answer keeps the same mark.
+5. Evaluation: content-work/eval/ai-mark-theory.csv (id, question, answer, expected marks per point) and npm run eval:theory. Report exact-match rate per point, total-mark agreement, and borderline rate.
+6. scripts/approveMark.ts for testing until the dashboard (S36) exists. Approval recalculates the total and re-runs mastery (S34 will plug in here).
 ```
 
 **You check**
 
-- Force "safeguarding" on Phone A. The calm message shows, no verdict. Bright receives the email within 2 minutes. The email has no name and no pupil text.
-- Answer a question in airplane mode by typing. Turn the network on. A new `ai_calls` row appears for it.
-- Run `npm run gate` with a 5-row test CSV. The percentages print.
-
-**Done when (B7 gate)**
-
-- Bad JSON, timeout, cap and safeguarding all tested.
-- Network loss never traps a pupil (re-run the airplane mode rows of `docs/path-checklist.md`).
-- `npm run gate` works and tap-only works.
-
-## B8 Exam: S28 to S31 (3 to 5 Dec)
-
-B8 is done when the exam auto-submits at zero even after an app restart, and the results match a hand-marked copy. Exam length is Bright's decision (draft: 10 objective, 3 theory). Until he settles it, use `durationMinutes` from the content file.
-
-### S28. Exam timer and scoring rules (pure logic, tests first)
-
-**Goal:** a timer that cannot be reset by closing the app, and scoring that matches the scheme.
-
-**Branch:** `feat/S28-exam-rules`
-
-```text
-Runbook session S28: exam timer and scoring rules. Read specs/prd.md FR-27 to FR-30, specs/framework.md stage 6, specs/B8.md and CLAUDE.md rule 10.
-Pure TypeScript in src/domain with Jest tests. Write all tests first, show them, wait for my OK, then write the code.
-
-1. src/domain/examTimer.ts
-   remaining(startedAtServer, durationSeconds, nowServer): seconds left, never below 0.
-   Time comes from a server timestamp saved when "Start exam" is tapped, plus a server-offset estimate so a wrong phone clock does not change the time. shouldAutoSubmit(remaining) is true at 0.
-   Tests: normal countdown; app closed for 5 minutes then reopened; phone clock set 1 hour wrong; reopened after time is over (submit at once); duration 0 rejected.
-2. src/domain/scoring.ts
-   scoreObjective(items, answers): 1 mark per correct option unless the item says otherwise; unanswered is 0.
-   totalScore(objectiveMarks, theoryMarks, maxMarks): total and percentage rounded down to a whole number.
-   theoryItemMarks(schemePointResults, itemMax): sum of awarded scheme points, never above itemMax.
-   Tests for each, including all unanswered, all correct, partial theory, and a theory result above the max.
-3. src/domain/examUnlock.ts: unlocked when every segment of the topic is complete or moved_on. Tests first.
-```
-
-**You check**
-
-- Read the test names. The phone clock case and the reopen-after-time case are both there.
-- All tests pass.
+- Run `npm run eval:theory` on at least 12 hand-marked answers. Write the agreement in the shift log.
+- Submit a paper with a 3-word theory answer. It is held as borderline.
 
 **Done when**
 
-- Timer, scoring and unlock tests pass.
+- Server marking is idempotent and matches the scheme. Theory evaluation runs with one command.
 
-### S29. Exam screens: rules, objective, theory, timer, auto-submit
+### S33. Results and retake
 
-**Goal:** a calm, real exam with the app as invigilator.
+**Goal:** results that teach, and a fair retake.
 
-**Branch:** `feat/S29-exam-screens`
+**Branch:** `feat/S33-results`
 
 ```text
-Runbook session S29: exam screens. Read specs/prd.md FR-27 to FR-29, specs/framework.md stage 6, specs/B8.md and CLAUDE.md (rule 6: time pressure is allowed only in the exam).
+Runbook session S33: results and retake. Apply the build standard. Read specs/prd.md FR-31 and FR-32, specs/framework.md stage 7.
 
-Build app/exam/[id].tsx:
-1. Unlock screen (after the last segment): "You have worked through every part. When you are ready, you can take the topic exam." Rules card: number of questions per section, the time, "You can move between questions in a section", "You will see your results after you finish", "When time is up, a sound plays and your paper is handed in". PillButton "Start exam".
-2. Start: create exam_sittings with Paper A on first sitting, Paper B on a retake. Save the server start time. Fetch items without answers (the S06 safe function).
-3. Objective section: one question per screen, 4 option pills, "Previous" and "Next", a small row of question dots to jump. Then "Go to the theory section" with a reminder that they cannot return to objective questions afterwards.
-4. Theory section: one question per screen, multi-line TextField, marks shown, same navigation.
-5. Timer: always visible at the top in IBM Plex Mono, calm ink colour, no flashing, no colour change, no ticking sound. Uses examTimer.ts.
-6. Every answer is saved to the phone at once and queued to the server.
-7. At zero: play a short stop-work sound (bundled audio file, under 2 seconds, our own or royalty-free with licence noted in docs/), show "Time is up. Your paper has been handed in." and submit. If the app was closed and reopened after time ran out, submit at once on reopening.
-8. Manual submit: "Hand in my paper" with a confirm sheet showing unanswered count.
-9. No feedback of any kind until submission. The back button during the exam asks "Leave the exam? Your time keeps running."
-10. Submission works offline: the paper is saved and handed in when the network returns, and the pupil sees "Your paper is saved. Results will show when you are back online."
+1. Results come from the server after marking (the phone never held the answers): "You scored <marks> out of <max>." If provisional: "Some answers are being checked by a teacher. Your score may go up."
+2. One Card per question where marks were lost: the question, the pupil's answer, "What you got credit for", "What was missing", "A good answer", and "Watch part <code> again". Wrong options in inkSoft, correct in teal. Never red.
+3. Buttons: "Revise weak parts" (adds those segments to Recommended through recommendations.ts) and "Retake now" (paperChoice.ts).
+4. If a retake without revision did not improve: once, "It might help to look at <parts> again before your next try."
+5. Events results_open and exam_submit with score.
+6. docs/test-script.md: "Exam hand-mark check" steps for the content reviewer.
 ```
 
 **You check**
 
-- Start an exam on Phone A with a 3-minute test duration. Answer some, then kill the app. Wait 4 minutes. Reopen. The paper submits at once.
-- Change the phone clock by 1 hour during an exam. The time left does not jump.
-- Let the timer reach zero with the app open. The sound plays and the paper submits.
-
-**Done when**
-
-- Auto-submit at zero after an app restart, proven on Phone A.
-
-### S30. Theory marking and borderline review
-
-**Goal:** theory answers are marked against scheme points by the AI, and borderline marks wait for the admin.
-
-**Branch:** `feat/S30-ai-mark-theory`
-
-```text
-Runbook session S30: ai-mark-theory. Read specs/prd.md FR-30 and section 8, specs/framework.md (AI marking of theory answers), specs/ai-prompts.md (theory marking prompt), specs/B8.md and CLAUDE.md rules 2, 3, 9, 13, 14.
-
-Build:
-1. supabase/functions/submit-exam: called on submission. Marks objective items on the server with scoring.ts logic (the client score is never trusted), stores marks, then calls ai-mark-theory for each theory answer, then writes the total.
-2. supabase/functions/ai-mark-theory using callClaude.ts and claude-sonnet-5-5:
-   - input: the question, the scheme points with marks, the pupil's answer. No name.
-   - output (zod): { points: [{ pointIndex, awarded: 0 or the point's marks, evidence: short quote from the answer or "" }], borderline: boolean, credited: string, missing: string, safeguarding: boolean }
-   - borderline is true when the model is not confident about any point, and also whenever the answer is under 5 words but not empty, or any point's evidence is empty but the point was awarded
-   - fallback or bad output: mark the answer borderline with 0 provisional marks
-3. Borderline answers: the exam total is shown as provisional, and those answers show "Being checked by a teacher" until an admin approves (S35 builds the admin side; for now scripts/approveMark.ts --answer <id> --marks <n>).
-4. When every borderline answer in a sitting is approved, recompute the total.
-5. Same answer, same mark: run each theory answer once and store it. Never re-mark automatically.
-6. Test script scripts/markSample.ts: 6 fixed theory answers for one question (full marks, partial, wrong, empty, very short, off topic) and prints the marks.
-```
-
-**You check**
-
-- Run `scripts/markSample.ts`. Compare each mark with what Bright or the content reviewer would give. Write the comparison in the shift log.
-- Submit an exam with one very short theory answer. It shows "Being checked by a teacher".
-
-**Done when**
-
-- Theory marks stored per scheme point.
-- Borderline answers wait for approval.
-
-### S31. Results, revision and retake with Paper B
-
-**Goal:** a results screen that teaches, and a fair retake.
-
-**Branch:** `feat/S31-results`
-
-```text
-Runbook session S31: results and retakes. Read specs/prd.md FR-31 and FR-32, specs/framework.md stage 7, specs/B8.md and CLAUDE.md rules 6 and 7.
-
-Build app/results/[id].tsx:
-1. Top: "You scored <marks> out of <max>." If any mark is provisional: "Some answers are being checked by a teacher. Your score may go up."
-2. Then every question where marks were lost, one Card each: the question, the pupil's answer, "What you got credit for", "What was missing", "A good answer", and a link "Watch part <code> again" that opens the segment video. Wrong options are shown in inkSoft, never red. Correct options in teal.
-3. Two buttons: "Revise weak parts" (marks those segments as Recommended) and "Retake now" (starts Paper B). A third sitting reuses Paper A in a new order with a flag "repeat paper" in the results (cut list item 5 applies if Paper B content is not ready).
-4. Compare attempts: if a retake without revision did not improve, show once: "It might help to look at <parts> again before your next try."
-5. Results feed the profile: segments with lost marks go to Recommended.
-6. docs/test-script.md: add "Exam hand-mark check": print a completed paper, have the content reviewer mark it by hand, and compare with the app's results line by line.
-```
-
-**You check**
-
-- Finish a full exam as TEST-P1. Print the answers. Mark them by hand with the scheme. Compare with the app. Every objective mark must match. Theory marks must match or be borderline.
-- Tap "Retake now". The questions are from Paper B.
+- Finish a full paper as TEST-P1. The content reviewer marks a printed copy by hand. Every objective mark matches. Every theory mark matches or is held as borderline.
+- "Retake now" serves Paper B.
 
 **Done when (B8 gate)**
 
-- Auto-submit at zero after restart proven.
-- Results match a hand-marked copy.
-- Retake uses Paper B.
+- Auto-submit proven. Results match the hand-marked copy. Retake uses Paper B.
 
-## B9 Mastery: S32 to S33 (5 to 6 Dec)
+## B9 Mastery and re-check: S34 (5 Dec)
 
-B9 is done when the pass, fail and re-check paths are all tested. The 80% threshold is a draft. Keep it in one constant so Bright can change it without a code change elsewhere.
+B9 is done when the pass, not-yet, approval and re-check paths are all tested on a phone. The 80% threshold and the re-check pass rule are drafts, each held in one constant Bright can change.
 
-### S32. Mastery rule and celebration
+### S34. Mastery and spaced re-check
 
-**Goal:** the app decides mastery by the rule, shows a calm celebration, and sets the re-check for 3 days later.
+**Goal:** mastery is decided by the rule on the server, celebrated calmly, and confirmed 3 days later.
 
-**Branch:** `feat/S32-mastery`
+**Branch:** `feat/S34-mastery`
 
 ```text
-Runbook session S32: mastery. Read specs/prd.md FR-33 and FR-34, specs/framework.md stage 8, specs/B9.md and CLAUDE.md rules 6, 7, 10.
+Runbook session S34: mastery and re-check. Apply the build standard. Read specs/prd.md FR-33 to FR-35, specs/framework.md stage 8, specs/B9.md.
 
-Build:
-1. src/domain/mastery.ts, tests first:
-   MASTERY_THRESHOLD = 80 (one exported constant, with a comment that Bright sets the final value with teachers).
-   isMastered({ examPercent, anyProvisional, segments }): true only if examPercent >= threshold, no mark is still provisional, and no segment is at moved_on with 3 failed tries still open.
-   recheckDueAt(achievedAt): exactly 3 days later, start of that day in Africa/Accra.
-   Tests: 79 and 80 and 100; provisional marks block mastery until approved; a moved_on segment blocks; a moved_on segment later completed no longer blocks.
-2. Mastery is decided on the server after submit-exam and again after each borderline approval. Write mastery_records with achieved_at and recheck_due_at.
-3. Celebration screen, shown once after results when mastery is reached: "You have mastered Materials." then "You worked through every part and explained your thinking." A quiet drawing of a tick in the board style (static, or a short stroke animation that respects reduced motion). PillButton "Back to my lessons". No confetti, no badge, no points, no sound.
-4. Not mastered yet: results stay as in S31, with no "failed" word anywhere.
-5. Home: the topic card shows "Mastered" in teal text after mastery. Nothing is locked.
+1. src/domain/mastery.ts, tests first, 100% coverage:
+   MASTERY_THRESHOLD = 80 and RECHECK_PASS = 2 (of 3), each with a comment that Bright sets the final value with teachers.
+   isMastered: percent >= threshold, no provisional marks, no segment still moved_on with an open stalled flag.
+   recheckDueAt: 3 days after mastery, start of that day, Africa/Accra.
+   recheckResult: pass when at least RECHECK_PASS items have a correct answer and sound reasoning.
+2. Mastery is decided on the server after marking and again after each borderline approval (S32 hook). It writes mastery_records.
+3. Celebration, once: "You have mastered Materials." then "You worked through every part and explained your thinking." A still tick drawn in the board style, or a short stroke that respects reduced motion. "Back to my lessons". No confetti, badge, points or sound.
+4. Re-check: when due, before Home: "Quick check on Materials. 3 questions. It takes about 2 minutes." with "Start" and "Later today" (returns after 4 hours, and sits first in Recommended). The 3 items use the same answer, sure, why and ai-check path as the segment loop, with every fallback.
+5. Pass: "Your learning has stayed with you. Well done for coming back to it." Miss: "Let's look at a few parts again." Mastery quietly set back, missed items' segments to Recommended. No score, no "failed".
+6. Home shows "Mastered" in teal text. Nothing is ever locked.
+7. Dev-only "Make re-check due now" in src/dev.
+8. Maestro flows mastery.yaml and recheck.yaml (pass and miss).
 ```
 
 **You check**
 
-- As TEST-P1, reach 80% with no stalled segment. The celebration shows once.
-- As TEST-P2, reach 85% with one segment still moved on. No celebration.
-- Use `scripts/approveMark.ts` on a provisional answer that pushes a pupil over 80%. Mastery appears after approval.
-
-**Done when**
-
-- Mastery tests pass.
-- Pass and not-yet paths seen on a phone.
-
-### S33. Spaced re-check after 3 days
-
-**Goal:** 3 days after mastery, the app checks that the learning stayed.
-
-**Branch:** `feat/S33-recheck`
-
-```text
-Runbook session S33: re-check. Read specs/prd.md FR-35, specs/framework.md stage 8, specs/B9.md.
-
-Build:
-1. When recheck_due_at has passed, the next time the pupil opens the app, before Home: "Quick check on Materials. 3 questions. It takes about 2 minutes." Two buttons: "Start" and "Later today". "Later today" shows it again after 4 hours or on the next app open after that, and it shows as the first card in Recommended.
-2. The 3 re-check items from the content file. Same answer input as the segment loop: answer, sure or not sure, "Why do you think so?", ai-check (with all fallbacks). No read-back edit needed here; keep the read-back display.
-3. Pass rule (src/domain/mastery.ts, tests first): at least 2 of 3 with a correct answer and sound reasoning. Bright may change this in one constant.
-4. Pass: "Your learning has stayed with you. Well done for coming back to it." Mastery confirmed.
-5. Miss: "Let's look at a few parts again." Mastery is set back quietly, the topic returns to revision, and the segments of the missed items go to Recommended. No score shown, no "failed".
-6. Dev-only: on the dev screen, "Make re-check due now" for the signed-in test pupil, so it can be tested without waiting 3 days. Stripped from preview builds.
-```
-
-**You check**
-
-- Use "Make re-check due now". Reopen the app. The re-check shows before Home.
-- Tap "Later today". It sits first in Recommended.
-- Pass it once (as TEST-P1) and miss it once (as TEST-P2 after mastering). Check the messages and Recommended.
+- TEST-P1 reaches 80% with no stalled part: the celebration shows once.
+- TEST-P2 reaches 85% with a part still moved on: no celebration.
+- Approve a borderline mark that lifts a pupil over 80%: mastery appears.
+- "Make re-check due now": pass it as one pupil, miss it as another. Check the messages and Recommended.
 
 **Done when (B9 gate)**
 
-- Pass, fail and re-check paths all tested on a phone.
-- Dev trigger absent from the preview build.
+- Pass, not-yet, approval and re-check paths proven on a phone and in Maestro.
 
-## B10 Dashboard: S34 to S37 (2 to 7 Dec)
+## B10 Dashboard: S35 to S37 (5 to 6 Dec)
 
-B10 is done when Bright clears a flag and approves a mark from a laptop, and teachers see only their own class.
+B10 is done when Bright handles a safeguarding flag, clears a stalled flag and approves a mark from a laptop, the pilot measures show live, and a teacher sees only their own class. All dashboard numbers come from SQL views with Row Level Security, never computed in the browser.
 
-The Build Plan dates B10 at 2 to 7 Dec, overlapping B7 to B9. The rule "never start a session before the one before it is merged" still holds by default. If Bright wants B10 run in parallel in shift 3, he records that as a decision in `ops/DECISIONS.md` first. Then B10 runs on its own branches, and never edits files in `app/segment`, `app/exam` or `src/domain`.
+### S35. Admin web: sign-in, classes, pupils, consent, phones
 
-### S34. Admin web: sign-in, shell, classes, pupils, consent
+**Goal:** Bright runs the pilot class from a laptop.
 
-**Goal:** Bright signs in on a laptop and manages classes, pupils, code sheets and consent.
-
-**Branch:** `feat/S34-admin-shell`
+**Branch:** `feat/S35-admin-shell`
 
 ```text
-Runbook session S34: admin web shell. Read specs/prd.md section 9 (items 6) and FR-1, FR-4, specs/B10.md and CLAUDE.md (Stack, rule 8).
+Runbook session S35: admin web. Apply the build standard (web: keyboard focus visible, works at 1280 px and on a tablet). Read specs/prd.md section 9 and FR-1, FR-4, specs/B10.md.
 
-Build app/admin/ for Expo web only (the routes must not be reachable in the Android build):
-1. Staff sign-in with email and a magic link (Supabase Auth). Only users with a staff profile get in. Pupils get "This page is for teachers."
-2. Layout for a laptop: left menu (Flags, Pupils, Progress, Classes, AI usage), main area, a signed-in-as line. Same paper and ink look. Tables with 1px line borders, no shadows.
-3. Classes: list, create (name, level, teacher), edit.
-4. Pupils: per class, add one or paste a list of first names; each gets a code from pupilCode.ts; "Print code sheet" opens the same printable sheet as S13 in the browser. Reset a PIN (clears the hash so the pupil sets a new one). Unlock a locked code.
-5. Consent: per pupil, record a consent date and a form reference, or withdraw. Withdrawing sends the pupil back to the waiting screen at their next sign-in.
-6. Every admin action is written to an audit table: who, what, when. No pupil text in the audit.
-7. Deploy the web export to a static host chosen in the plan (EAS Hosting or Cloudflare Pages); tell me what Bright must set up. Use atlas-dev only.
+1. app/admin/ for Expo web only; the routes do not exist in the Android build.
+2. Staff sign-in by email magic link. Only staff profiles get in. Pupils see "This page is for teachers."
+3. Laptop layout: left menu (Flags, Progress, Pupils, Classes, AI, Phones), signed-in-as line. Paper and ink look, 1px line borders, no shadows.
+4. Classes: list, create, edit, assign teacher.
+5. Pupils per class: add one or paste a list of first names; codes from pupilCode.ts; "Print code sheet" (same sheet as S13); reset PIN; unlock code.
+6. Consent per pupil: consent date, form reference, withdraw. Withdrawal returns the pupil to the waiting screen at the next sign-in.
+7. Phones: set the staff PIN used by "Prepare this phone" (S20); list phones that have synced recently with app version and pending outbox count (sent with each sync).
+8. An audit table for every admin action (who, what, when, no pupil text).
+9. Deploy the web export to a static host (EAS Hosting or Cloudflare Pages; say which and what Bright must set up). atlas-dev only.
 ```
 
 **You check**
 
-- On a laptop, Bright signs in, creates a test class with 3 pupils, prints the code sheet, records consent for 2.
-- Sign in on Phone A with one new code. Consent gate behaves as recorded.
-- Try opening `/admin` in the Android app. It is not there.
+- Bright, on a laptop: create a class of 3, print codes, record consent for 2. Sign in on Phone A with a new code. The consent gate behaves as recorded.
+- The Phones page lists both test phones with their pending counts.
 
 **Done when**
 
-- Classes, pupils, code sheets and consent work from a laptop.
+- Classes, pupils, codes, consent and phones work from a laptop.
 
-### S35. Flags and borderline marks
+### S36. Flags, borderline review and safeguarding handling
 
-**Goal:** Bright sees every flag, acts on it, and approves or changes borderline marks.
+**Goal:** every flag reaches Bright, is acted on, and leaves a record.
 
-**Branch:** `feat/S35-admin-flags`
+**Branch:** `feat/S36-admin-flags`
 
 ```text
-Runbook session S35: flags and borderline review. Read specs/prd.md section 9 items 1 to 3, FR-22, FR-25, FR-26, FR-30, section 10 (safeguarding), specs/framework.md stage 5 and specs/B10.md.
+Runbook session S36: flags and review. Apply the build standard. Read specs/prd.md section 9 items 1 to 3, FR-22, FR-25, FR-26, FR-30, section 10.
 
-Build app/admin/flags:
-1. Safeguarding section pinned at the top, always, in its own box. Each shows time, class, pupil display name (admin only), the job and the pupil's exact text. Actions: "Mark as handled" with a required note on what was done. Unhandled count shows in the menu.
-2. Stalled flags, newest first: pupil, segment, tries, versions seen, the last reasons given. Actions: "Content fix needed" or "Human help suggested", each with a note. A stalled flag clears by itself when the pupil completes the segment (show it as "Cleared by pupil" with the date).
-3. Borderline flags from segment checks: the question, the pupil's answer and reason, the AI output, and what the tie-break decided. Action: "Agree" or "Disagree" with a note. Disagreements are counted for the pilot success measure.
-4. Borderline theory marks: question, scheme points, pupil answer, AI points with evidence. Actions: "Approve" or change marks per point, then save. Saving recomputes the sitting total and mastery (call the same server logic as S32).
-5. Filters: by kind, class, segment, open or done.
-6. Admin only. Teachers never see flags in V1 except the progress view.
+1. Safeguarding box pinned at the top: time, class, pupil display name (admin only), job, the pupil's exact text. "Mark as handled" requires a note of what was done and by whom. Unhandled count in the menu. Unhandled flags older than 24 hours show "Overdue".
+2. Stalled flags, newest first: pupil, segment, tries, versions seen, last reasons. Actions "Content fix needed" or "Human help suggested" with a note. "Cleared by pupil" with date when the pupil completes it.
+3. Borderline segment checks: question, answer, reason, AI output, tie-break decision. "Agree" or "Disagree" with a note. Disagreements feed the AI agreement measure and can be exported as new eval rows for content-work/eval/ai-check.csv.
+4. Borderline theory marks: question, scheme points, answer, AI points with evidence. Approve, or change marks per point, then save. Saving recalculates the total and mastery on the server.
+5. Filters: kind, class, segment, open or done.
+6. Admin only.
 ```
 
 **You check**
 
-- Force a stalled, a borderline and a safeguarding flag from Phone A. All three show on the laptop within a minute, safeguarding on top.
-- Approve a borderline theory mark. The pupil's results on the phone update and "Being checked by a teacher" disappears.
+- Force a stalled, a borderline and a safeguarding flag on Phone A. All three appear on the laptop within a minute, safeguarding on top.
+- Approve a borderline theory mark. On the phone, "Being checked by a teacher" disappears and the score updates.
+- Export disagreements. The rows open as a valid eval CSV.
 
 **Done when**
 
-- Bright clears a flag and approves a mark from a laptop.
+- Bright handles a safeguarding flag, clears a stalled flag and approves a mark from a laptop.
 
-### S36. Progress table and stall counts
+### S37. Progress, pilot measures and the teacher view
 
-**Goal:** one table that shows where every pupil is.
+**Goal:** one honest picture of every pupil, the pilot measures from real data, and a read-only view for the class teacher.
 
-**Branch:** `feat/S36-admin-progress`
+**Branch:** `feat/S37-progress-teacher`
 
 ```text
-Runbook session S36: progress table and stall counts. Read specs/prd.md section 9 items 4 and 5, section 12 (success measures), specs/B10.md.
+Runbook session S37: progress, pilot measures, teacher view. Apply the build standard. Read specs/prd.md section 9 items 4 and 5, section 12 (success measures), section 5.
 
-Build app/admin/progress:
-1. Table per class: pupil, onboarding done, overview done, each segment 1A to 1E (complete, moved on, in progress, not started, with tries used), exam score (latest, and best), mastery, re-check result, last active.
-2. Text labels, not colours alone. No red.
-3. Stall counts per segment: number of pupils who moved on, and the share of wrong-reason retries that ended in sound reasoning after the second video.
-4. Pilot measures box: share who finished onboarding to exam, share of segments completed within 3 tries, Paper A scores, re-check scores, AI agreement (borderline flags agreed unchanged).
-5. Export CSV of the progress table (no pupil text, display names only), for the pilot report.
-6. Build all counts as SQL views with RLS, not in the browser.
+1. Progress table per class: pupil; onboarding; overview; each segment 1A to 1E as complete, moved on, in progress or not started with tries; latest and best exam score; mastery; re-check; last active; pending sync on the phone. Text labels, not colour alone.
+2. Pilot measures, from the events and attempts tables through SQL views:
+   - share of pupils who finished onboarding to exam
+   - share of segments completed within 3 tries; stall counts per segment
+   - share of wrong-reason retries that ended in sound reasoning after the second video
+   - Paper A scores and re-check scores
+   - AI agreement: borderline flags agreed unchanged
+   - median minutes per segment, fallback rate, offline share of attempts
+3. Misconception map: per segment, how often each misconception code appeared, and how often the targeted version fixed it on the next try. This is the content team's main tool after the pilot.
+4. AI page: ai_usage_daily (calls, failures, median latency, pupils at cap, prompt versions in use). No pupil text.
+5. CSV export of the progress table and measures (display names only, no answers).
+6. Teacher view: a teacher sees only Progress for their own classes, read-only, no flags, AI page or exports of other classes. Typing /admin/flags shows "This page is for the admin."
+7. Extend npm run test:rls: teacher A cannot read class B, flags, ai_calls, audit or events of other classes; cannot write anything; pupils get nothing from admin views.
+8. docs/dashboard-guide.md for the class teacher: one page, calm second person.
 ```
 
 **You check**
 
-- Compare the table with what you know TEST-P1 to TEST-P3 did. Every cell is right.
-- Download the CSV. Open it in a spreadsheet. No answers or reasons inside.
-
-**Done when**
-
-- Progress and stall counts correct for the test pupils.
-
-### S37. Teacher view and dashboard privacy tests
-
-**Goal:** the class teacher sees their own class, read-only, and nothing else.
-
-**Branch:** `feat/S37-teacher-view`
-
-```text
-Runbook session S37: teacher view. Read specs/prd.md section 9 (class teacher), section 5, specs/B10.md, CLAUDE.md rule 8.
-
-Build:
-1. A teacher signing in sees only Progress for their own class or classes. No Flags, no Pupils admin, no AI usage, no export of other classes. Read-only: no buttons that change anything.
-2. Extend npm run test:rls with dashboard cases: teacher of 7A cannot read 7B progress, cannot read flags, cannot read ai_calls, cannot read audit rows, cannot write anything; admin can do all; a pupil token calling the admin views gets nothing.
-3. Also test the web routes: a teacher typing /admin/flags in the address bar sees "This page is for the admin."
-4. A short docs/dashboard-guide.md for the class teacher: how to sign in, what each column means, in under one page, calm second-person copy.
-```
-
-**You check**
-
-- Sign in as the 7A test teacher on a laptop. Only 7A shows. Type `/admin/flags` in the address bar. Refused.
-- `npm run test:rls` all PASS.
+- Compare the progress table with what TEST-P1 to TEST-P3 did. Every cell is right.
+- Sign in as the 7A teacher. Only 7A. Typing `/admin/flags` is refused.
+- `npm run test:rls` all PASS, locally and in CI.
 
 **Done when (B10 gate)**
 
-- Bright clears a flag and approves a mark from a laptop.
-- Teachers see only their class, proven by the RLS suite and by hand.
+- Live pilot measures and misconception map. Teacher isolation proven by tests and by hand.
 
-## B11 Low data: S38 to S39 (6 to 7 Dec)
+## B11 Pilot readiness: S38 to S39 (6 to 7 Dec)
 
-B11 is done when the whole topic runs with only the AI checks needing the network, and no raw error is ever shown.
+B11 is done when a full pilot day has been rehearsed on the real phones, every non-functional bar in the quality table is measured and met, and the 7 Dec quality gate has run on the full 100-answer sample. These sessions measure and fix. They do not add features.
 
-### S38. Whole topic offline and data measurement
+### S38. Pilot rehearsal: offline, speed, memory, battery, data
 
-**Goal:** after one download, a pupil can do the whole topic in airplane mode, and we know how much data it costs.
+**Goal:** prove the app survives a real school day on the cheapest phone.
 
-**Branch:** `feat/S38-offline-topic`
+**Branch:** `feat/S38-rehearsal`
 
 ```text
-Runbook session S38: whole topic offline. Read specs/prd.md section 11 (Offline, Data use, Speed), specs/video-board.md (P3), specs/B11.md and CLAUDE.md rule 5.
+Runbook session S38: pilot rehearsal. Apply the build standard. Read specs/prd.md section 11 and the runbook quality table. Read docs/perf-baseline.md.
 
-Build:
-1. Content cache: the full topic content (all segments, questions, cards, exam items without answers, re-check items, worked-example photos) is stored on the phone after download, keyed by content version. Every lesson screen reads from the cache first.
-2. Download screen shows the total size of videos plus posters plus captions plus photos before starting, in MB with one decimal.
-3. Storage check: if the phone has less free space than the topic needs plus 50 MB, say "This phone needs <n> MB more space. Ask your teacher for help." No crash.
-4. Data measurement: a dev-only counter of bytes downloaded per topic and per session (content plus videos plus API), and a report in docs/data-use.md filled in by running the full topic once on Phone A. Include: download size, data per segment for AI checks, total for one pupil end to end.
-5. Offline audit: go through every screen in airplane mode after download. List any screen that needs the network for anything other than an AI check, exam submit or sync, and fix it.
-6. Speed: measure cold start, screen change and video start on Phone A. Write the numbers in docs/data-use.md. Anything over 4 seconds gets a fix or a logged reason in ops/BLOCKERS.md.
+Write docs/rehearsal.md as a script I run, then fix what it finds:
+1. Offline: fresh install on Phone B, "Prepare this phone" on Wi-Fi, then airplane mode for the whole topic, overview to exam submit. List every screen that needed the network for anything other than AI checks, exam marking or sync.
+2. Speed on Phone A: cold start, Home, segment open, video start, check round trip on the router. Each under 4 seconds except the check (target: median under 6 seconds online).
+3. Memory and stability: a 60-minute session on Phone A (all 5 parts plus the exam). Record peak memory. No out-of-memory crash, no stutter in the last video.
+4. Battery: percentage used in that 60 minutes, screen on. Keep the screen awake during videos and the exam only (expo-keep-awake), if not already done.
+5. Shared phone: 3 test pupils take turns on Phone B with the network off, then sync. Every row under the right pupil.
+6. School network: 5 phones (or 2 phones repeated) syncing at once on the pilot router. No failed batches.
+7. Data use per pupil end to end, written into docs/data-use.md with the topic download size.
+8. Compare everything with docs/perf-baseline.md and the quality table. Anything over a bar gets a fix in this session, or a logged reason and owner in ops/BLOCKERS.md.
 ```
 
 **You check**
 
-- Phone B: fresh install, sign in, download the topic on Wi-Fi. Then airplane mode. Do the whole topic, overview to exam submit. Only AI checks fall back to tap options. Nothing else stops you.
-- Read `docs/data-use.md`. The numbers are filled in.
+- Run `docs/rehearsal.md` yourself, step by step, on the real phones. Fill in every number.
 
 **Done when**
 
-- Whole topic runs offline after download, on Phone B.
-- Data use and speed written down.
+- Every bar in the quality table measured. Every miss fixed or logged with an owner.
 
-### S39. Offline queue hardening and the no-raw-errors sweep
+### S39. Quality gate, bug bash, accessibility and copy sweep
 
-**Goal:** nothing a pupil does offline is ever lost, and every error is calm.
+**Goal:** the AI meets its agreement targets on the full sample, and every known bug that could hurt a pupil is fixed.
 
-**Branch:** `feat/S39-queue-errors`
+**Needs:** the full 100-answer sample in `content-work/eval/ai-check.csv` (60 adult-written, 40 from 5 consented volunteer pupils, hand-marked by the reviewer without seeing the AI).
+
+**Branch:** `feat/S39-gate-bugbash`
 
 ```text
-Runbook session S39: offline queue and error sweep. Read specs/prd.md section 11 (Offline, Errors), CLAUDE.md rules 5, 6, 7 and specs/B11.md.
+Runbook session S39: quality gate, bug bash, sweeps. Apply the build standard. Read specs/prd.md 8.4 and section 12, ops/BUGS.md.
 
-Build:
-1. src/data/offlineQueue.ts, hardened:
-   - stored on the phone in a durable store (survives app kill and phone restart)
-   - every item has a client id; sending is idempotent on the server
-   - sends in order per pupil, with backoff (10 s, 30 s, 2 min, 5 min, then every 10 min)
-   - sends on app open, on network return, and every few minutes while open
-   - items for one pupil are never sent with another pupil's session (shared phones); if a pupil signs out with items pending, they stay and send at that pupil's next sign-in, or with a server function that accepts them by pupil id and client id
-   - a small dev-only queue view: count, oldest item age, last error
-   Tests in src/domain for the backoff and ordering rules, written first.
-2. Error sweep: find every place an error can reach the screen (fetch, Supabase, file system, video, JSON parse, unknown route). Replace each with CalmError and a retry. Add a global error boundary with "Something went wrong on this screen. Try again." and a button that reloads the screen, plus a Sentry report.
-3. Search the code for alert(, console.error shown to users, raw error.message in JSX, and red colours. Show me the list and the fixes.
-4. Add to docs/test-script.md a "Bad network" section: weak signal, network lost mid-upload, airplane mode mid-exam, phone restart with items queued, two pupils on one phone with queued items.
+1. Run npm run eval:check on the full sample with the final prompt version. Report the numbers against 85% answer and 80% reasoning. List every question whose items disagree more than once. For each, propose: prompt wording (Bright decides), reference reasoning (content team), or tapOnly. Apply only what Bright approves, then re-run the eval and report again.
+2. Run npm run eval:theory on all hand-marked theory answers. Report.
+3. Bug bash: work through ops/BUGS.md by severity (crash, wrong mark, blocks pupil first). For each fix, a failing test first where the cause is a rule or a server function.
+4. Accessibility sweep with TalkBack on every pupil screen; font scale 1.3; reduced motion. Fix what fails.
+5. Copy sweep: npm run copy:check, then read every pupil-facing string aloud with Bright for tone (calm, second person, short).
+6. Full Maestro run of every flow on Phone A. All pass.
 ```
 
 **You check**
 
-- Do 3 segment attempts and an exam in airplane mode as TEST-P1. Restart the phone. Sign in as TEST-P2 and then back as TEST-P1. Turn the network on. Every item arrives once, under the right pupil.
-- Run the "Bad network" section of `docs/test-script.md`. No raw error text anywhere.
+- Write the final eval numbers in `ops/DECISIONS.md` with the prompt version, and Bright's decision for each failing question.
+- Every crash, wrong-mark and blocks-pupil bug in `ops/BUGS.md` is closed or has Bright's written decision.
 
 **Done when (B11 gate)**
 
-- Whole topic runs with only AI checks needing the network.
-- No raw errors.
-- Queued items survive a restart and a pupil switch.
+- The quality gate has passed, or the failing items are tapOnly by Bright's decision.
+- No open crash, wrong-mark or blocks-pupil bugs. All Maestro flows pass.
 
 ## B12 Handwriting and Release: S40 to S41 (7 to 14 Dec)
 
-S40 runs only if S00 to S39 are all merged by 7 Dec. It is first on the cut list. If it is cut, skip straight to S41 and write "S40 cut" in `ops/DECISIONS.md`.
+S40 runs only if S14 to S39 are all merged by 7 Dec. It is first on the cut list. If cut, write "S40 cut" in `ops/DECISIONS.md` and go to S41.
 
 ### S40. Photo of handwriting (optional)
 
-**Goal:** a pupil can photograph a written answer. The app reads it, the pupil confirms the text, and the photo is deleted.
+**Goal:** a pupil photographs a written answer, confirms what the app read, and the photo is gone.
 
 **Branch:** `feat/S40-handwriting`
 
 ```text
-Runbook session S40: handwriting photo. Read specs/prd.md (Answer input, section 8.1 handwriting, section 10 photos), specs/framework.md (Response formats), specs/B12.md and CLAUDE.md rules 2, 3, 9, 13.
+Runbook session S40: handwriting. Apply the build standard. Read specs/prd.md (answer input, 8.1 handwriting, section 10 photos), specs/framework.md (Response formats), specs/B12.md.
 
-Build:
-1. A third input option on segment answers and reasons only (not the exam): "Take a photo of my writing". Uses expo-image-picker camera, compresses to max 1280 px on the long side and under 400 KB.
-2. supabase/functions/ai-read-handwriting with callClaude.ts and claude-sonnet-5-5: input the image and the question text only. Output (zod): { text: string, confidence: "high"|"low", safeguarding: boolean }.
-3. The pupil always sees "I read: <text>. Is that right?" with an editable TextField holding the text, and "Use this" / "Take another photo". Nothing is checked until the pupil confirms.
-4. The confirmed text then goes through the normal ai-check path, with input mode "photo".
-5. Photos: never written to the gallery. Sent to the function directly, not stored in Supabase Storage. Deleted from the phone's temp folder as soon as the text is confirmed or the pupil leaves the screen. Prove this in the plan.
-6. Offline: the photo option is hidden. Typing and taps remain.
-7. Counts toward the 120 daily AI calls.
+1. A third option for segment answers and reasons only (never the exam): "Take a photo of my writing". Camera only (expo-image-picker), resized to at most 1280 px on the long side and under 400 KB (expo-image-manipulator). Hidden when offline.
+2. Job ai-read-handwriting in the gateway, claude-sonnet-5-5, input: the image and the question text only. Output: { text, confidence high or low, safeguarding }. Counts toward the daily cap.
+3. Always: "I read: <text>. Is that right?" with an editable field, "Use this" and "Take another photo". Nothing is checked until the pupil confirms. Then the normal ai-check path with input mode photo.
+4. Photos are never saved to the gallery or to Supabase Storage. The image goes to the function in the request body only. The temp file is deleted when the text is confirmed or the screen is left. Prove each point in the plan.
+5. Maestro flow handwriting.yaml with a test image injected in the e2e build.
 ```
 
 **You check**
 
-- Write 10 real answers on paper (mixed neat and messy handwriting). Photograph each on Phone A. Record in the shift log: read correctly, or corrected by the pupil. All 10 end with the right text after confirmation.
-- Check the phone's gallery and file manager. No photos stored.
+- 10 real written answers, neat and messy, on Phone A. Each ends with the right text after confirmation. Write how many needed editing.
+- Gallery and file manager: no photos.
 
 **Done when (B12 gate)**
 
-- 10 real answers read or corrected.
-- No photos stored on the phone or the server.
+- 10 real answers read or corrected. No photo stored anywhere.
 
-### S41. Release builds 0.9 (8 Dec) and 1.0 (14 Dec)
+### S41. Release 0.9 (8 Dec) and 1.0 (14 Dec)
 
-**Goal:** the production project is set up, final content is imported, and the release build is on every pilot phone.
+**Goal:** production is set up safely, final content is in, and the release build is on every pilot phone.
 
-**Needs:** content freeze done (5 Dec), quality gate run (7 Dec), consent forms collected, DPC registration submitted. **Bright runs the production steps himself.** The build operator runs everything else.
+**Needs:** content freeze (5 Dec), quality gate decisions (7 Dec), signed consent forms, DPC registration submitted. **Bright runs every production step.**
 
-**Branch:** `release/0.9` (then `release/1.0`)
+**Branch:** `release/0.9`, then `release/1.0`
 
 ```text
-Runbook session S41: release build <0.9 or 1.0>. Read CLAUDE.md, specs/prd.md section 12 (Definition of done) and the Build Plan pilot checklist.
-The production project atlas-prod is used for the first time in this session. Stop before every step that touches atlas-prod and wait for Bright to type "go prod".
+Runbook session S41: release <0.9 or 1.0>. Read CLAUDE.md, specs/prd.md section 12, the Build Plan pilot checklist, docs/rehearsal.md.
+Stop before every step that touches atlas-prod and wait for Bright to type "go prod".
 
-Part A: checks on atlas-dev
-1. Run typecheck, lint, test, test:rls and content:check. All pass.
-2. Confirm the dev-only screens (dev components, force verdict, re-check trigger, queue view, data counter) are stripped from the production profile. Search the production bundle and show me.
-3. Confirm every check question marked tapOnly by the 7 Dec quality gate has tapOnly true in content/materials.json.
+Part A: checks on main
+1. CI green on main: typecheck, lint, tests with coverage, content:check, copy:check, RLS suite, release bundle check on the production profile.
+2. Full Maestro run on Phone A: all flows pass.
+3. Every question Bright marked tapOnly is tapOnly in content/materials.json.
+4. Prompt versions in use match the versions in ops/DECISIONS.md from the quality gate.
 
 Part B: atlas-prod (Bright types "go prod" before each step)
-4. Push all migrations to atlas-prod. Show the command first.
-5. Deploy every Edge Function to atlas-prod. Bright sets the secrets himself: ANTHROPIC_API_KEY, SAFEGUARDING_EMAIL, email service key. Give him the exact commands without values.
-6. Run npm run content:import -- --prod with the typed confirmation. Show the summary.
-7. Run test:rls against atlas-prod with temporary test users, then delete those users.
-8. Bright creates the real pilot class and pupils in the admin dashboard on atlas-prod and records consent from the signed forms. Never create real pupils from this chat.
+5. Push all migrations. Show the command first.
+6. Deploy every Edge Function. Bright sets secrets himself (ANTHROPIC_API_KEY, SAFEGUARDING_EMAIL, email service key); give the commands without values.
+7. Enable the alert retry schedule (pg_cron) on atlas-prod, or confirm the fallback from S16.
+8. npm run content:import -- --prod with the typed confirmation. Show the summary.
+9. Run the RLS suite against atlas-prod with temporary test users, then delete them.
+10. Send one test safeguarding alert from a temporary test pupil. Bright confirms the email, then the test pupil and flag are deleted.
+11. Bright creates the real class and pupils in the dashboard and records consent from the signed forms. Never create real pupils from this chat.
 
 Part C: build and install
-9. Bump the version to <0.9.0 or 1.0.0> with scripts/bumpVersion.ts.
-10. eas build --platform android --profile production. Give me the install link.
-11. Write docs/release-<version>.md: version, date, content version string, migration list, function versions, known issues, and the install checklist below.
-12. Write the pilot install checklist: per phone, install, open, sign-in screen shows, download the topic on the router, confirm "Topic ready", play 5 seconds of the overview with sound, airplane mode test, battery charged to 100%, phone labelled with a number.
+12. Bump to <0.9.0 or 1.0.0>. Sentry release set to the same version.
+13. eas build --platform android --profile production. Keep the previous APK link in docs/release-<version>.md as the rollback.
+14. Over-the-air updates stay off for V1: every fix ships as a new APK. Write this in docs/release-<version>.md.
+15. Write docs/release-<version>.md: version, date, content version, prompt versions, migrations, function versions, known issues, rollback link, and the phone checklist below.
+16. Phone checklist, per numbered phone: install; open; sign-in screen shows; "Prepare this phone" on the router until "Topic ready"; play 5 seconds of the overview with sound; airplane mode check; Android app pinning turned on for ATLAS; battery 100%; label on the back.
 ```
 
 **You check**
 
-- Every pilot phone passes the install checklist. Tick each phone by number on paper and in the shift log.
-- On one pilot phone, sign in with a real pupil code, do onboarding, and play the overview. Then have Bright reset that pupil in the dashboard.
-- For 1.0 on 14 Dec: only fixes from the 12 to 14 Dec window are in the build (crashes, wrong marks, the top 3 problems). Compare the git log against `ops/BUGS.md`.
+- Every pilot phone passes the checklist. Tick each by number on paper and in the shift log.
+- On one phone, sign in with a real code, do onboarding, play the overview. Bright then resets that pupil in the dashboard.
+- For 1.0 on 14 Dec: only fixes from the 12 to 14 Dec window (crashes, wrong marks, top 3 problems). Compare the git log with `ops/BUGS.md`.
 
 **Done when (Release gate)**
 
-- Release build installed on every pilot phone.
-- Every item in `specs/prd.md` section 12 is either ticked or has a named reason and owner in `ops/STATUS.md`.
+- Release build on every pilot phone, prepared and pinned.
+- Every item in `specs/prd.md` section 12 ticked, or with a named reason and owner in `ops/STATUS.md`.
 
 ## When things go wrong: recovery prompts
 
