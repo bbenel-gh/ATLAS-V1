@@ -22,11 +22,18 @@ export default function SignIn() {
         {build ? ` (build ${build})` : ''}
       </Label>
       {__DEV__ ? (
-        <PillButton
-          variant="secondary"
-          label="Component gallery (dev only)"
-          onPress={() => router.push('/dev/components')}
-        />
+        <>
+          <PillButton
+            variant="secondary"
+            label="Component gallery (dev only)"
+            onPress={() => router.push('/dev/components')}
+          />
+          <PillButton
+            variant="secondary"
+            label="Materials segments (dev only)"
+            onPress={() => router.push('/dev/segments')}
+          />
+        </>
       ) : null}
     </Screen>
   );
