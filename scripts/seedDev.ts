@@ -74,6 +74,12 @@ const pupilIds = PUPIL_LIST.map((p) => p.id);
 const sql: string[] = [
   'begin;',
 
+  '-- Remove pupils and classes made by npm run pupils:create (S13, ids start 7e57c0de),',
+  '-- and the auth users pupil-signin made for them at first sign-in (D-36).',
+  "delete from public.pupils where id::text like '7e57c0de-%';",
+  "delete from auth.users where email like 'pupil-7e57c0de-%@pupils.atlas.invalid';",
+  "delete from public.classes where id::text like '7e57c0de-%';",
+
   '-- Remove earlier test rows. Deleting the auth users cascades to staff, pupils',
   '-- and every pupil-owned row (profiles, consents, attempts, exams, flags, ai_calls).',
   `delete from public.pupils where id in (${list(pupilIds)});`,

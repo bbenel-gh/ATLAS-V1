@@ -18,7 +18,8 @@
     "seed:dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seedDev.ts",
     "test:signin": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/testSignin.ts",
     "test:rls": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/rlsTests.ts",
-    "version:bump": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bumpVersion.ts"
+    "version:bump": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bumpVersion.ts",
+    "pupils:create": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/createPupils.ts"
   },
   "dependencies": {
     "@expo-google-fonts/caveat": "^0.4.2",
