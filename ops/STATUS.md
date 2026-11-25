@@ -4,7 +4,7 @@ Last updated: 25 November 2026, team with Bright (S09). Sprint mode is on (D-30)
 
 ## Current session
 
-S12, AI notice, consent gate and PIN lock, on `feat/S12-notice-consent-lock` (cut from `feat/S11-signin-screens`). D-38, BL-15. AI notice (draft text in `src/components/common/copy.ts`) saved once per pupil; every lesson route in `app/(lessons)/` behind `PupilGuard` (`src/domain/routeGuard.ts`); waiting screen with "Check again"; PIN lock after a cold start or more than 5 minutes away (`src/domain/lockRule.ts`), "Not you?". `npm run consent:set`. Seed: P3 has no profile (reseeded). Probe as P3: notice, waiting, consent on to onboarding, withdrawn back to waiting, other columns refused: 11 of 11. RLS 166, test:signin all PASS, web bundle builds. Typecheck, lint, test (394) pass. Not proven: the device checks.
+S12, AI notice, consent gate and PIN lock, on `feat/S12-notice-consent-lock` (cut from `feat/S11-signin-screens`). D-38, BL-15. AI notice (draft text in `src/components/common/copy.ts`) saved once per pupil; every lesson route in `app/(lessons)/` behind `PupilGuard` (`src/domain/routeGuard.ts`); waiting screen with "Check again"; PIN lock after a cold start or more than 5 minutes away (`src/domain/lockRule.ts`), "Not you?". `npm run consent:set`. Seed: P3 has no profile (reseeded). Probe as P3: notice, waiting, consent on to onboarding, withdrawn back to waiting, other columns refused: 11 of 11. RLS 166, test:signin all PASS, web bundle builds. Typecheck, lint, test (394) pass. Device checks passed on the test device (P3 waiting then onboarding, PIN after 6 minutes away, "Not you?" to TEST-P2).
 
 ## Earlier
 
