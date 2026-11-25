@@ -86,6 +86,12 @@ npx supabase functions deploy pupil-signin --remote=gygmyjbuzbbngsoyoubg --use-a
 npm run test:signin   # every line must say PASS. Wait a minute between two runs
 ```
 
+Development only, to test the consent gate on a phone:
+
+```
+npm run consent:set -- --code TEST-P3 --on    # or --off
+```
+
 `seed:dev` creates fake test users and rows (ids start with `7e57`) and writes
 their passwords to `.env.test`, which is git ignored. See `.env.test.example`.
 

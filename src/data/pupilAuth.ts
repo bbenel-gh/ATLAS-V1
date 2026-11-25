@@ -54,6 +54,15 @@ export async function startSession(session: SigninSession): Promise<void> {
 
 export class OfflineError extends Error {}
 
+/**
+ * The auth user id saved on this phone, read locally (no network). Pupil
+ * lookups filter on it, because a staff test account can read many pupil rows.
+ */
+async function signedInUserId(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user.id ?? null;
+}
+
 async function withTimeout<T>(run: (signal: AbortSignal) => PromiseLike<T>): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -72,7 +81,11 @@ async function withTimeout<T>(run: (signal: AbortSignal) => PromiseLike<T>): Pro
  * Throws OfflineError when the network fails.
  */
 export async function fetchPupilGate(): Promise<PupilGate | null> {
-  const pupil = await withTimeout((signal) => supabase.from('pupils').select('id, ai_notice_seen_at').abortSignal(signal).maybeSingle());
+  const userId = await signedInUserId();
+  if (!userId) return null;
+  const pupil = await withTimeout((signal) =>
+    supabase.from('pupils').select('id, ai_notice_seen_at').eq('user_id', userId).abortSignal(signal).maybeSingle(),
+  );
   if (pupil.error) throw new OfflineError(pupil.error.message);
   if (!pupil.data) return null;
   const id = pupil.data.id;
@@ -86,6 +99,31 @@ export async function fetchPupilGate(): Promise<PupilGate | null> {
     hasConsent: consent.data.length > 0,
     onboardingDone: profile.data.length > 0,
   };
+}
+
+/** FR-3: records that this pupil saw the AI notice. Once per pupil, kept in the database. */
+export async function markNoticeSeen(): Promise<void> {
+  const userId = await signedInUserId();
+  if (!userId) throw new OfflineError('Not signed in');
+  const own = await withTimeout((signal) => supabase.from('pupils').select('id').eq('user_id', userId).abortSignal(signal).maybeSingle());
+  if (own.error || !own.data) throw new OfflineError('Could not find the pupil');
+  const id = own.data.id;
+  const res = await withTimeout((signal) =>
+    supabase.from('pupils').update({ ai_notice_seen_at: new Date().toISOString() }).eq('id', id).abortSignal(signal),
+  );
+  if (res.error) throw new OfflineError(res.error.message);
+}
+
+/**
+ * The signed-in pupil's own code, for the PIN lock (RLS: a pupil reads their
+ * own row). null when nobody, or a staff member, is signed in.
+ */
+export async function fetchOwnCode(): Promise<string | null> {
+  const userId = await signedInUserId();
+  if (!userId) return null;
+  const own = await withTimeout((signal) => supabase.from('pupils').select('code').eq('user_id', userId).abortSignal(signal).maybeSingle());
+  if (own.error) throw new OfflineError(own.error.message);
+  return own.data?.code ?? null;
 }
 
 /** Signs out on this phone only. Other phones stay signed in. */

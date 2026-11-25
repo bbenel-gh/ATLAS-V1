@@ -194,7 +194,8 @@ async function signinFunctionChecks(who: string, client: SupabaseClient) {
 
 // Seeded owners per pupil table, so "sees only" knows which test pupils have rows.
 const OWNERS: Record<(typeof PUPIL_TABLES)[number], string[]> = {
-  profiles: PUPIL_IDS,
+  // P3 has no profile and no consent, on purpose (seedDev: the new pupil).
+  profiles: [P1, P2, P4],
   consents: [P1, P2, P4],
   attempts: PUPIL_IDS,
   segment_status: PUPIL_IDS,
@@ -336,7 +337,7 @@ async function adminChecks(admin: SupabaseClient) {
     { table: 'staff', column: 'id', ids: staffIds, count: 3 },
     { table: 'classes', column: 'id', ids: [CLASSES.A.id, CLASSES.B.id], count: 2 },
     { table: 'pupils', column: 'id', ids: PUPIL_IDS, count: 4 },
-    { table: 'profiles', column: 'pupil_id', ids: PUPIL_IDS, count: 4 },
+    { table: 'profiles', column: 'pupil_id', ids: PUPIL_IDS, count: 3 },
     { table: 'consents', column: 'pupil_id', ids: PUPIL_IDS, count: 3 },
     { table: 'attempts', column: 'pupil_id', ids: PUPIL_IDS, count: 4 },
     { table: 'segment_status', column: 'pupil_id', ids: PUPIL_IDS, count: 4 },

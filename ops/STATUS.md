@@ -4,6 +4,10 @@ Last updated: 25 November 2026, team with Bright (S09). Sprint mode is on (D-30)
 
 ## Current session
 
+S12, AI notice, consent gate and PIN lock, on `feat/S12-notice-consent-lock` (cut from `feat/S11-signin-screens`). D-38, BL-15. AI notice (draft text in `src/components/common/copy.ts`) saved once per pupil; every lesson route in `app/(lessons)/` behind `PupilGuard` (`src/domain/routeGuard.ts`); waiting screen with "Check again"; PIN lock after a cold start or more than 5 minutes away (`src/domain/lockRule.ts`), "Not you?". `npm run consent:set`. Seed: P3 has no profile (reseeded). Probe as P3: notice, waiting, consent on to onboarding, withdrawn back to waiting, other columns refused: 11 of 11. RLS 166, test:signin all PASS, web bundle builds. Typecheck, lint, test (394) pass. Not proven: the device checks.
+
+## Earlier
+
 S11, sign-in screens, on `feat/S11-signin-screens` (cut from `feat/S10-pupil-signin-fn`). D-37. `app/(auth)/sign-in.tsx`: code (6 boxes, IBM Plex Mono, 0 O 1 I ignored), choose PIN, type it again, PIN (number pad, dots), all runbook copy, calm offline message with "Try again". Session saved by the Supabase client; `app/index.tsx` sends a returning pupil where `src/domain/nextScreen.ts` says. pupil-signin takes `{ code }` alone (redeployed); seed gives test pupils no PIN (reseeded). nextScreen tests 7, auth tests 68 in all; `test:signin` 25 of 25; a Node probe of the app flow for P1 reached `/notice` as expected; web bundle builds. Typecheck, lint, test (348) pass. You check run by Bright on the test device: stay signed in after reopening, lock after 5 wrong PINs with the minutes shown, calm no-connection message: all PASS. Still to repeat on Phone A, Android 9 or 10 (BL-8).
 
 ## Earlier

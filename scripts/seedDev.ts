@@ -113,8 +113,14 @@ const sql: string[] = [
     `insert into public.pupils (id, user_id, class_id, display_name, school_given, school_id, code, signed_up_by)
      values (${t(p.id)}, ${t(p.user.authId)}, ${t(p.classId)}, ${t(p.name)}, ${t(SCHOOL.name)}, ${t(SCHOOL.id)},
        ${t(p.code)}, 'admin');`,
-    `insert into public.profiles (pupil_id, interests, playful_choices)
-     values (${t(p.id)}, array['football', 'cooking'], '{"seed": true}');`,
+    // P3 has no profile, on purpose: the new pupil who has not done onboarding
+    // yet (S12 check: consent on, then onboarding opens).
+    ...(p.id === PUPILS.p3.id
+      ? []
+      : [
+          `insert into public.profiles (pupil_id, interests, playful_choices)
+           values (${t(p.id)}, array['football', 'cooking'], '{"seed": true}');`,
+        ]),
   ]),
   ...PUPIL_LIST.filter((p) => p.consent !== null).map((p, i) => {
     const n = pupilIds.indexOf(p.id) + 1;
@@ -209,7 +215,7 @@ console.log(`  1 school "${SCHOOL.name}", classes "${CLASSES.A.name}" and "${CLA
 console.log('  1 admin, 2 teachers (one per class)');
 console.log('  P1, P2, P3 in 7A and P4 in 7B. Consent for P1, P2, P4. P3 has none, on purpose.');
 console.log('  1 test topic with 1 segment, 1 video, 1 check item, paper A and its key');
-console.log('  Each pupil: profile, attempt, segment status, overview answer. P1, P2, P4: exam attempt, answer, flag, AI call, mastery');
+console.log('  Each pupil: profile (not P3), attempt, segment status, overview answer. P1, P2, P4: exam attempt, answer, flag, AI call, mastery');
 if (Object.keys(generated).length > 0) {
   console.log(`  New passwords written to .env.test for: ${Object.keys(generated).join(', ')}`);
 }

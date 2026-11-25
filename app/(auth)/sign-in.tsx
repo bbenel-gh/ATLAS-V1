@@ -6,11 +6,13 @@ import { BackHandler, StyleSheet, View } from 'react-native';
 import { CodeBoxes, PinDots } from '@/components/auth/CodeAndPin';
 import type { SlotInputHandle } from '@/components/auth/SlotInput';
 import { CalmError } from '@/components/common/CalmError';
+import { COPY as SHARED } from '@/components/common/copy';
 import { LoadingCalm } from '@/components/common/LoadingCalm';
 import { PillButton } from '@/components/common/PillButton';
 import { Screen } from '@/components/common/Screen';
 import { Body, Heading, Label } from '@/components/common/Text';
 import { spacing } from '@/components/common/theme';
+import { useLockStore } from '@/data/lockStore';
 import { callPupilSignin, fetchPupilGate, OfflineError, startSession, type SigninResult } from '@/data/pupilAuth';
 import { CODE_LENGTH, type SigninSession } from '@/domain/auth';
 import { nextScreen, ROUTES } from '@/domain/nextScreen';
@@ -23,27 +25,13 @@ import { nextScreen, ROUTES } from '@/domain/nextScreen';
  *   confirmPin  "Type it again."
  *   pin         "Type your PIN."
  * On success the session is saved (AsyncStorage) and src/domain/nextScreen.ts
- * picks the next screen. Copy is from the runbook; new lines are listed in D-37.
+ * picks the next screen. Copy is from the runbook (copy.ts); new lines are listed in D-37.
  */
 
 type Step = 'code' | 'choosePin' | 'confirmPin' | 'pin';
 
-const COPY = {
-  welcome: 'Welcome to ATLAS',
-  typeCode: 'Type the code your teacher gave you.',
-  next: 'Next',
-  choosePin: 'Choose a 4-digit PIN. Keep it secret.',
-  again: 'Type it again.',
-  noMatchTwice: 'Those did not match. Try again.',
-  typePin: 'Type your PIN.',
-  wrong: 'That code and PIN did not match. Try again.',
-  offline: 'No connection. Check the data and try again.',
-  rateLimited: 'Too many tries. Please wait a minute and try again.',
-  failed: 'Something went wrong on our side. Try again.',
-  changeCode: 'Change code',
-  locked: (minutes: number) =>
-    `Too many tries. Please wait ${minutes} ${minutes === 1 ? 'minute' : 'minutes'}, or ask your teacher.`,
-};
+/** Wording lives in src/components/common/copy.ts (S12). */
+const COPY = { ...SHARED.signIn, offline: SHARED.offline };
 
 export default function SignIn() {
   const router = useRouter();
@@ -56,6 +44,7 @@ export default function SignIn() {
   // A retry for "No connection": repeats exactly the call that failed.
   const [retry, setRetry] = useState<(() => void) | null>(null);
   const pinInput = useRef<SlotInputHandle>(null);
+  const unlock = useLockStore((st) => st.unlock);
 
   const toCode = useCallback(() => {
     setStep('code');
@@ -84,6 +73,7 @@ export default function SignIn() {
     setRetry(null);
     try {
       if (session) await startSession(session);
+      unlock();
       const gate = await fetchPupilGate();
       if (!gate) {
         setMessage(COPY.failed);
