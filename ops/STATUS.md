@@ -4,7 +4,7 @@ Last updated: 25 November 2026, shift 1, team with Bright (S08). Sprint mode is 
 
 ## Current session
 
-S08, content schema and draft content, on `feat/S08-content-schema` (cut from `feat/S07-seed-rls-tests`). `src/data/contentSchema.ts` with the cross-field rules (D-32), `content/materials.json` as a full DRAFT that passes, `npm run content:check` with JSON paths in plain English. Schema tests 37 of 37, every cross-field rule has a failing case. Typecheck, lint, test (197) pass. Committed and pushed. Real content waits for the signed-off packs (freeze 5 Dec).
+S08, content schema and draft content, on `feat/S08-content-schema` (cut from `feat/S07-seed-rls-tests`). `src/data/contentSchema.ts` with the cross-field rules (D-32), `content/materials.json` as a full DRAFT that passes, `npm run content:check` with JSON paths in plain English. D-33: a topic may have any number of segments (1A to 1Z, then 1AA), not only 1A to 1E. Schema tests 48 of 48, every cross-field rule has a failing case. Typecheck, lint, test (208) pass. Committed and pushed. Real content waits for the signed-off packs (freeze 5 Dec).
 
 ## Earlier
 

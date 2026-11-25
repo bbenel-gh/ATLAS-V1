@@ -1,6 +1,13 @@
 import draft from '../../content/materials.json';
 
-import { contentSchema, formatContentIssues, validateContent, type Content } from './contentSchema';
+import {
+  contentSchema,
+  formatContentIssues,
+  segmentCodeFor,
+  validateContent,
+  type Content,
+  type ContentSegment,
+} from './contentSchema';
 
 /** A fresh copy of the draft file, safe to change in one test. */
 const valid = (): Content => structuredClone(draft) as Content;
@@ -14,6 +21,27 @@ function errorPaths(data: unknown): string[] {
 function errorFor(data: unknown, path: string): string | undefined {
   const result = validateContent(data);
   return result.ok ? undefined : result.errors.find((e) => e.path === path)?.message;
+}
+
+/** A copy of a segment under a new code, with its misconception codes renamed to match. */
+function renameSegment(s: ContentSegment, code: string): ContentSegment {
+  const copy = structuredClone(s);
+  const fix = (m: string) => m.replace(/^[0-9A-Z]+-/, `${code}-`);
+  copy.code = code;
+  copy.misconceptions.forEach((m) => { m.code = fix(m.code); });
+  copy.versions.forEach((v) => { v.misconceptionTags = v.misconceptionTags.map(fix); });
+  copy.checkQuestions.forEach((q) => q.reasonOptions.forEach((o) => {
+    if (o.misconceptionCode) o.misconceptionCode = fix(o.misconceptionCode);
+  }));
+  return copy;
+}
+
+/** The draft with n segments, all copies of 1A, coded 1A, 1B, and so on. */
+function withSegments(n: number): Content {
+  const c = valid();
+  c.segments = Array.from({ length: n }, (_, i) => renameSegment(c.segments[0]!, segmentCodeFor('1', i)));
+  c.recheck.forEach((r) => { r.segmentCode = '1A'; });
+  return c;
 }
 
 const seg = (c: Content, code: string) => {
@@ -175,16 +203,22 @@ describe('cross-field rules', () => {
     expect(errorPaths(c)).toEqual(['segments[3].versions[1].label']);
   });
 
-  it('needs the segments 1A to 1E, in order', () => {
+  it('needs the segments in order', () => {
     const c = valid();
     [c.segments[0], c.segments[1]] = [c.segments[1]!, c.segments[0]!];
     expect(errorPaths(c)).toEqual(expect.arrayContaining(['segments[0].code', 'segments[1].code']));
   });
 
+  it('refuses a gap in the segment codes', () => {
+    const c = withSegments(3);
+    c.segments[2] = renameSegment(c.segments[2]!, '1D');
+    expect(errorPaths(c)).toEqual(['segments[2].code']);
+  });
+
   it('needs every re-check item to name a real segment', () => {
     const c = valid();
-    c.recheck[2]!.segmentCode = '1F' as '1A';
-    expect(errorPaths(c)).toContain('recheck[2].segmentCode');
+    c.recheck[2]!.segmentCode = '1F';
+    expect(errorPaths(c)).toEqual(['recheck[2].segmentCode']);
   });
 
   it('needs the scheme points of a theory item to cover its marks', () => {
@@ -204,6 +238,47 @@ describe('cross-field rules', () => {
     const c = valid();
     c.topic.prerequisites = [c.topic.id];
     expect(errorPaths(c)).toEqual(['topic.prerequisites[0]']);
+  });
+});
+
+describe('number of segments', () => {
+  it.each([1, 4, 5, 10, 26])('accepts a topic with %i segments', (n) => {
+    expect(errorPaths(withSegments(n))).toEqual([]);
+  });
+
+  it('carries on past Z: the 27th and 28th segments are 1AA and 1AB', () => {
+    const c = withSegments(28);
+    expect(c.segments.slice(24).map((s) => s.code)).toEqual(['1Y', '1Z', '1AA', '1AB']);
+    expect(errorPaths(c)).toEqual([]);
+  });
+
+  it('refuses a topic with no segments', () => {
+    const c = valid();
+    c.segments = [];
+    c.recheck = [];
+    expect(errorPaths(c)).toContain('segments');
+  });
+
+  it('accepts another topic number, like 2A, 2B', () => {
+    const c = valid();
+    c.segments = c.segments.map((s, i) => renameSegment(s, `2${String.fromCharCode(65 + i)}`));
+    c.recheck.forEach((r) => { r.segmentCode = `2${r.segmentCode.slice(1)}`; });
+    expect(errorPaths(c)).toEqual([]);
+  });
+
+  it('refuses segments that mix topic numbers', () => {
+    const c = valid();
+    c.segments[1] = renameSegment(c.segments[1]!, '2B');
+    c.recheck = c.recheck.filter((r) => r.segmentCode !== '1B');
+    c.recheck.push(structuredClone(c.recheck[0]!));
+    expect(errorPaths(c)).toEqual(['segments[1].code']);
+  });
+
+  it('matches segment codes in code order, not text order, for codes after Z', () => {
+    expect(segmentCodeFor('1', 0)).toBe('1A');
+    expect(segmentCodeFor('1', 25)).toBe('1Z');
+    expect(segmentCodeFor('1', 26)).toBe('1AA');
+    expect(segmentCodeFor('12', 701)).toBe('12ZZ');
   });
 });
 

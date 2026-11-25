@@ -7,7 +7,7 @@
  *      field is an error rather than silently ignored.
  *   2. Cross-field rules (superRefine), which run once the shape is right:
  *      misconception codes, reason options, tap options, version labels,
- *      segment order, worked example length, scheme marks, and no exclamation mark or em
+ *      segment codes in order (any number of segments, D-33), worked example length, scheme marks, and no exclamation mark or em
  *      dash anywhere (CLAUDE.md rule 7).
  *
  * Text limits match the database columns (S06), so a file that passes here
@@ -20,7 +20,22 @@ import { z } from 'zod';
 
 // Building blocks ----------------------------------------------------------------
 
-export const SEGMENT_CODES = ['1A', '1B', '1C', '1D', '1E'] as const;
+/**
+ * A topic has as many segments as it needs (D-33): at least 1, no fixed upper
+ * limit. Codes are the topic number then letters, in order with no gaps:
+ * 1A, 1B ... 1Z, then 1AA, 1AB ... The database allows 4 characters per code
+ * (S06), so a topic can hold up to 702 segments.
+ */
+export function segmentCodeFor(prefix: string, index: number): string {
+  let n = index + 1;
+  let letters = '';
+  while (n > 0) {
+    const r = (n - 1) % 26;
+    letters = String.fromCharCode(65 + r) + letters;
+    n = Math.floor((n - 1) / 26);
+  }
+  return `${prefix}${letters}`;
+}
 
 /** specs/prd.md and runbook S08. "phones and computers" is one tag. */
 export const INTEREST_TAGS = [
@@ -40,8 +55,8 @@ export const MAX_VIDEO_SECONDS = 180;
 const text = (max: number) => z.string().trim().min(1).max(max);
 const httpsUrl = z.string().regex(/^https:\/\/\S+$/, 'must be a web address starting with https://');
 const topicId = z.string().regex(/^[A-Z0-9-]{2,24}$/, 'must be 2 to 24 capital letters, digits or dashes, like B7-MATERIALS');
-const misconceptionCode = z.string().regex(/^1[A-E]-M[0-9]{1,2}$/, 'must be a misconception code like 1B-M1');
-const segmentCode = z.enum(SEGMENT_CODES);
+const misconceptionCode = z.string().regex(/^[0-9]{1,2}[A-Z]{1,2}-M[0-9]{1,3}$/, 'must be a misconception code like 1B-M1');
+const segmentCode = z.string().regex(/^[0-9]{1,2}[A-Z]{1,2}$/, 'must be a segment code like 1A: the topic number, then letters');
 
 const videoVersionSchema = z.strictObject({
   label: z.string().regex(/^[a-e]$/, 'must be one small letter from a to e'),
@@ -115,7 +130,7 @@ const shapeSchema = z.strictObject({
     prerequisites: z.array(topicId),
     overview: videoVersionSchema,
   }),
-  segments: z.array(segmentSchema).length(SEGMENT_CODES.length),
+  segments: z.array(segmentSchema).min(1),
   exam: z.strictObject({ paperA: paperSchema, paperB: paperSchema }),
   recheck: z.array(recheckItemSchema).length(3),
 });
@@ -153,10 +168,15 @@ export const contentSchema = shapeSchema.superRefine((content, ctx) => {
     if (p === content.topic.id) add(['topic', 'prerequisites', i], 'must not be the topic itself');
   });
 
-  // Segments 1A to 1E, in order.
+  // Segment codes in order with no gaps, all with the first segment's topic number.
+  const prefix = content.segments[0]?.code.match(/^[0-9]+/)?.[0] ?? '1';
   content.segments.forEach((s, i) => {
-    if (s.code !== SEGMENT_CODES[i]) add(['segments', i, 'code'], `must be ${SEGMENT_CODES[i]} (segments go 1A to 1E, in order)`);
+    const expected = segmentCodeFor(prefix, i);
+    if (s.code !== expected) {
+      add(['segments', i, 'code'], `must be ${expected} (segments go ${prefix}A, ${prefix}B, ${prefix}C in order, no gaps or repeats)`);
+    }
   });
+  const segmentCodes = new Set(content.segments.map((s) => s.code));
 
   const allCodes = new Set(content.segments.flatMap((s) => s.misconceptions.map((m) => m.code)));
 
@@ -210,6 +230,7 @@ export const contentSchema = shapeSchema.superRefine((content, ctx) => {
   });
 
   content.recheck.forEach((item, ri) => {
+    if (!segmentCodes.has(item.segmentCode)) add(['recheck', ri, 'segmentCode'], `${item.segmentCode} is not a segment in this file`);
     checkTapOptions(item.tapOptions, item.acceptedAnswers, ['recheck', ri, 'tapOptions'], add);
   });
 });
