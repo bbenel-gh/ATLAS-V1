@@ -4,7 +4,7 @@ Last updated: 25 November 2026, team with Bright (S09). Sprint mode is on (D-30)
 
 ## Current session
 
-S11, sign-in screens, on `feat/S11-signin-screens` (cut from `feat/S10-pupil-signin-fn`). D-37. `app/(auth)/sign-in.tsx`: code (6 boxes, IBM Plex Mono, 0 O 1 I ignored), choose PIN, type it again, PIN (number pad, dots), all runbook copy, calm offline message with "Try again". Session saved by the Supabase client; `app/index.tsx` sends a returning pupil where `src/domain/nextScreen.ts` says. pupil-signin takes `{ code }` alone (redeployed); seed gives test pupils no PIN (reseeded). nextScreen tests 7, auth tests 68 in all; `test:signin` 25 of 25; a Node probe of the app flow for P1 reached `/notice` as expected; web bundle builds. Typecheck, lint, test (348) pass. Not proven: anything on Phone A (BL-8).
+S11, sign-in screens, on `feat/S11-signin-screens` (cut from `feat/S10-pupil-signin-fn`). D-37. `app/(auth)/sign-in.tsx`: code (6 boxes, IBM Plex Mono, 0 O 1 I ignored), choose PIN, type it again, PIN (number pad, dots), all runbook copy, calm offline message with "Try again". Session saved by the Supabase client; `app/index.tsx` sends a returning pupil where `src/domain/nextScreen.ts` says. pupil-signin takes `{ code }` alone (redeployed); seed gives test pupils no PIN (reseeded). nextScreen tests 7, auth tests 68 in all; `test:signin` 25 of 25; a Node probe of the app flow for P1 reached `/notice` as expected; web bundle builds. Typecheck, lint, test (348) pass. You check run by Bright on the test device: stay signed in after reopening, lock after 5 wrong PINs with the minutes shown, calm no-connection message: all PASS. Still to repeat on Phone A, Android 9 or 10 (BL-8).
 
 ## Earlier
 
