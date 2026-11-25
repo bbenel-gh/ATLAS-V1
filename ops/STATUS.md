@@ -1,8 +1,13 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 5, team with Bright (S07). Sprint mode is on (D-30).
+Last updated: 25 November 2026, shift 1, team with Bright (S08). Sprint mode is on (D-30).
 
 ## Current session
+
+S08, content schema and draft content, on `feat/S08-content-schema` (cut from `feat/S07-seed-rls-tests`). `src/data/contentSchema.ts` with the cross-field rules (D-32), `content/materials.json` as a full DRAFT that passes, `npm run content:check` with JSON paths in plain English. Schema tests 37 of 37, every cross-field rule has a failing case. Typecheck, lint, test (197) pass. Committed and pushed. Real content waits for the signed-off packs (freeze 5 Dec).
+
+## Earlier
+
 
 S07, seed data and RLS tests, on `feat/S07-seed-rls-tests` (cut from `feat/S06-db-learning`). `npm run seed:dev` seeds fake test people and rows into atlas-dev (D-31, no service role key on disk). `npm run test:rls` signs in as anon, P1 to P4, both teachers and the admin: 143 of 143 PASS. With RLS switched off on `flags` it gives 10 FAIL and exit code 1. Typecheck, lint, test (157) pass. Committed and pushed.
 

@@ -49,6 +49,10 @@ npm run lint
 npm test
 ```
 
+After any change to `content/materials.json`, run `npm run content:check`. It
+prints every error with its JSON path and exits 1 on any error. To check a
+copy: `npm run content:check -- path/to/copy.json`.
+
 After any change to `supabase/migrations/`, also run the Row Level Security
 suite against atlas-dev. It needs `.env` (atlas-dev URL and anon key) and the
 Supabase CLI linked to atlas-dev, and it refuses to run against any other
