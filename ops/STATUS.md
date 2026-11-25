@@ -1,8 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 25 November 2026, shift 1, team with Bright (S08). Sprint mode is on (D-30).
+Last updated: 25 November 2026, team with Bright (S09). Sprint mode is on (D-30).
 
 ## Current session
+
+S09, content import, on `feat/S09-content-import` (cut from `feat/S08-content-schema`). `npm run content:import` validates, reads atlas-dev, upserts only what changed on stable keys in one transaction, then reads back and checks. D-34: CLI login, no service role key; migration `20261125090000` adds `topics.prerequisites`, `topics.content_version`, `segments.misconceptions` (applied to atlas-dev, types regenerated). Draft loaded: 95 rows. Second run: "No changes". A one-word edit updates exactly 2 rows (the segment and the topic version). RLS 143 of 143 PASS. Import tests 38 of 38. Typecheck, lint, test (246) pass. B1 gate met except the temporary segment list screen in `specs/B1.md` task 6, which the runbook leaves to S15. Watch: the very first write failed once with no message and rolled back cleanly; four writes since passed. The script now prints the CLI's full output on failure.
+
+## Earlier
 
 S08, content schema and draft content, on `feat/S08-content-schema` (cut from `feat/S07-seed-rls-tests`). `src/data/contentSchema.ts` with the cross-field rules (D-32), `content/materials.json` as a full DRAFT that passes, `npm run content:check` with JSON paths in plain English. D-33: a topic may have any number of segments (1A to 1Z, then 1AA), not only 1A to 1E. Schema tests 48 of 48, every cross-field rule has a failing case. Typecheck, lint, test (208) pass. Committed and pushed. Real content waits for the signed-off packs (freeze 5 Dec).
 

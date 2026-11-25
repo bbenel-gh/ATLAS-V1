@@ -8,6 +8,8 @@ Amended 24 November 2026 by Bright (D-24): V1 is public, with self sign-up behin
 
 Amended 24 November 2026 by Bright (D-27, D-28, S06): added `overview_responses`, `recheck_items` and `exam_item_keys`. The exam answer key and scheme points moved out of `exam_items` into `exam_item_keys`, which no pupil can read. A pupil gets their exam questions through a safe function, and gets the key for their own attempt only after it is submitted. Objective items are scored on the server at submission.
 
+Amended 25 November 2026 by Bright with the team (D-34, S09): `topics` gained prerequisites and content version; `segments` gained the misconception list that ai-check sends to the model.
+
 | Table | Holds |
 | --- | --- |
 | `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
@@ -17,8 +19,8 @@ Amended 24 November 2026 by Bright (D-27, D-28, S06): added `overview_responses`
 | `consents` | Pupil, method (paper or in-app), recorded by (staff, for paper), date given, form reference, withdrawn date |
 | `app_settings` | Public sign-up on or off, global daily AI call cap, sign-ups per phone per day. One row, admin only |
 | `profiles` | Interests, playful-choice behaviour, overview keywords and confusions |
-| `topics` | Title, class level, subject |
-| `segments` | Topic, code (1A to 1E), title, order, objective, reference meaning |
+| `topics` | Code (like B7-MATERIALS), title, class level, subject, prerequisites (topic codes), content version (import date and short hash of the content file) |
+| `segments` | Topic, code (OV for the overview, then 1A, 1B and on, D-33), title, order, objective, reference meaning, misconceptions (list of code and text) |
 | `video_versions` | Segment, label (a or b), 360p and 480p URLs, example world, misconception tags, interest tags, poster URL (`poster_url` text), captions URL (`captions_url` text), board colour (`board_colour` text, hex like #F6F0E6), duration in seconds (`duration_seconds` integer) |
 | `check_items` | Segment, try number, question, accepted answers, tap options, reason options, reference reasoning, misconception codes |
 | `worked_examples` | Segment, text, image URL |

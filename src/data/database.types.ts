@@ -1000,6 +1000,7 @@ export type Database = {
           code: string
           created_at: string
           id: string
+          misconceptions: Json
           objective: string
           reference_meaning: string
           sort_order: number
@@ -1010,6 +1011,7 @@ export type Database = {
           code: string
           created_at?: string
           id?: string
+          misconceptions?: Json
           objective?: string
           reference_meaning?: string
           sort_order: number
@@ -1020,6 +1022,7 @@ export type Database = {
           code?: string
           created_at?: string
           id?: string
+          misconceptions?: Json
           objective?: string
           reference_meaning?: string
           sort_order?: number
@@ -1064,24 +1067,30 @@ export type Database = {
         Row: {
           class_level: string
           code: string
+          content_version: string | null
           created_at: string
           id: string
+          prerequisites: string[]
           subject: string
           title: string
         }
         Insert: {
           class_level: string
           code: string
+          content_version?: string | null
           created_at?: string
           id?: string
+          prerequisites?: string[]
           subject: string
           title: string
         }
         Update: {
           class_level?: string
           code?: string
+          content_version?: string | null
           created_at?: string
           id?: string
+          prerequisites?: string[]
           subject?: string
           title?: string
         }

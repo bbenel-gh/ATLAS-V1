@@ -13,6 +13,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "content:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validateContent.ts",
+    "content:import": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/importContent.ts",
     "seed:dev": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seedDev.ts",
     "test:rls": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/rlsTests.ts",
     "version:bump": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bumpVersion.ts"

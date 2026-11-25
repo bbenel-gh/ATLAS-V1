@@ -53,6 +53,21 @@ After any change to `content/materials.json`, run `npm run content:check`. It
 prints every error with its JSON path and exits 1 on any error. To check a
 copy: `npm run content:check -- path/to/copy.json`.
 
+To load the content file into atlas-dev:
+
+```
+npm run content:import -- --dry-run   # shows what would change, writes nothing
+npm run content:import                # validates, then writes only what changed
+```
+
+It validates first and stops on any error. It writes in one transaction, then
+reads back and checks the database matches the file. A second run must say
+"No changes". It never deletes: rows that are in the database but not in the
+file are listed for a person to deal with. Like the seed, it uses the Supabase
+CLI login, so no service role key is stored on this computer (D-34). It refuses
+any project but atlas-dev, unless run with `--prod`, the prod ref in
+`.env.import` and the typed confirmation `IMPORT TO PROD` (S41 only).
+
 After any change to `supabase/migrations/`, also run the Row Level Security
 suite against atlas-dev. It needs `.env` (atlas-dev URL and anon key) and the
 Supabase CLI linked to atlas-dev, and it refuses to run against any other
