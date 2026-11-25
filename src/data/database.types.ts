@@ -1039,6 +1039,24 @@ export type Database = {
           },
         ]
       }
+      signin_rate: {
+        Row: {
+          hits: number
+          key: string
+          minute: string
+        }
+        Insert: {
+          hits?: number
+          key: string
+          minute: string
+        }
+        Update: {
+          hits?: number
+          key?: string
+          minute?: string
+        }
+        Relationships: []
+      }
       staff: {
         Row: {
           created_at: string
@@ -1193,6 +1211,13 @@ export type Database = {
         Args: { p_attempt_id: string; p_item_id: string }
         Returns: boolean
       }
+      check_pupil_pin: {
+        Args: { p_pin: string; p_pupil_id: string }
+        Returns: {
+          failed_count: number
+          ok: boolean
+        }[]
+      }
       current_pupil_class_id: { Args: never; Returns: string }
       current_pupil_id: { Args: never; Returns: string }
       current_pupil_school_id: { Args: never; Returns: string }
@@ -1221,7 +1246,33 @@ export type Database = {
       is_signed_in_user: { Args: never; Returns: boolean }
       is_teacher_of: { Args: { p_class_id: string }; Returns: boolean }
       is_teacher_of_pupil: { Args: { p_pupil_id: string }; Returns: boolean }
+      link_pupil_user: {
+        Args: { p_pupil_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      lock_pupil: {
+        Args: { p_pupil_id: string; p_until: string }
+        Returns: undefined
+      }
       public_signup_enabled: { Args: never; Returns: boolean }
+      pupil_signin_lookup: {
+        Args: { p_code: string }
+        Returns: {
+          has_pin: boolean
+          locked_until: string
+          pupil_id: string
+          status: Database["public"]["Enums"]["pupil_status"]
+          user_id: string
+        }[]
+      }
+      set_pupil_pin: {
+        Args: { p_pin: string; p_pupil_id: string }
+        Returns: boolean
+      }
+      signin_rate_hit: {
+        Args: { p_key: string; p_limit: number; p_minute: string }
+        Returns: boolean
+      }
     }
     Enums: {
       ai_job: "overview" | "check" | "mark_theory" | "read_handwriting"

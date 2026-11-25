@@ -78,6 +78,14 @@ npm run seed:dev    # once, and again after the seed changes. Safe to repeat
 npm run test:rls    # every line must say PASS. Any FAIL exits with code 1
 ```
 
+After any change to `supabase/functions/pupil-signin` or `src/domain/auth.ts`,
+deploy it to atlas-dev and run the end-to-end sign-in check with TEST-P1:
+
+```
+npx supabase functions deploy pupil-signin --remote=gygmyjbuzbbngsoyoubg --use-api --no-verify-jwt
+npm run test:signin   # every line must say PASS. Wait a minute between two runs
+```
+
 `seed:dev` creates fake test users and rows (ids start with `7e57`) and writes
 their passwords to `.env.test`, which is git ignored. See `.env.test.example`.
 

@@ -400,6 +400,12 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# S10 (D-36): the pupil has no session yet when signing in, and publishable keys
+# are not JWTs, so the gateway JWT check is off. The function checks everything itself.
+[functions.pupil-signin]
+verify_jwt = false
+import_map = "./functions/pupil-signin/deno.json"
+
 [analytics]
 enabled = true
 port = 54327

@@ -10,6 +10,8 @@ Amended 24 November 2026 by Bright (D-27, D-28, S06): added `overview_responses`
 
 Amended 25 November 2026 by Bright with the team (D-34, S09): `topics` gained prerequisites and content version; `segments` gained the misconception list that ai-check sends to the model.
 
+Amended 25 November 2026 by Bright with the team (D-36, S10): added `signin_rate`. A pupil's auth user is created at first sign-in with an internal email `pupil-<pupil id>@pupils.atlas.invalid` that the pupil never sees; `pin_hash` is bcrypt (cost 10) made inside Postgres.
+
 | Table | Holds |
 | --- | --- |
 | `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
@@ -36,3 +38,4 @@ Amended 25 November 2026 by Bright with the team (D-34, S09): `topics` gained pr
 | `exam_answers` | Attempt, item, answer, marks awarded, borderline, AI notes |
 | `mastery` | Pupil, topic, status, exam score, re-check due date, re-check result |
 | `ai_calls` | Job, model, pupil ID, input, output, success, time taken, date |
+| `signin_rate` | Sign-in calls per code per minute: keyed hash of the code (never the code), minute, count. Service role only, no policies (D-36) |

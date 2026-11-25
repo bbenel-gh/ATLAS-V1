@@ -5,7 +5,8 @@ const expoConfig = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', 'node_modules/*', '.expo/*', 'coverage/*'],
+    // supabase/functions is Deno code (Deno globals, npm: imports), checked by the deploy bundler.
+    ignores: ['dist/*', 'node_modules/*', '.expo/*', 'coverage/*', 'supabase/functions/**'],
   },
   {
     // CLAUDE.md: src/domain is pure TypeScript. No React, React Native or Expo.

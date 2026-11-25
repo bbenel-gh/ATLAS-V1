@@ -164,8 +164,33 @@ const ALL_TABLES = [
   'schools', 'staff', 'classes', 'pupils', 'consents', 'app_settings', 'profiles', 'topics', 'segments',
   'video_versions', 'check_items', 'worked_examples', 'exam_papers', 'exam_items', 'exam_item_keys',
   'recheck_items', 'overview_responses', 'attempts', 'segment_status', 'flags', 'exam_attempts',
-  'exam_answers', 'mastery', 'ai_calls',
+  'exam_answers', 'mastery', 'ai_calls', 'signin_rate',
 ] as const;
+
+/**
+ * S10 (D-31, D-36): the pupil-signin database functions are for the service
+ * role only. Nobody signed in, and nobody signed out, may run them: they would
+ * let a caller test PINs without the lockout, set a PIN, unlock a pupil or read
+ * which codes exist.
+ */
+async function signinFunctionChecks(who: string, client: SupabaseClient) {
+  const calls: [string, Record<string, unknown>][] = [
+    ['pupil_signin_lookup', { p_code: PUPILS.p1.code }],
+    ['check_pupil_pin', { p_pupil_id: P1, p_pin: '0000' }],
+    ['set_pupil_pin', { p_pupil_id: P1, p_pin: '0000' }],
+    ['lock_pupil', { p_pupil_id: P1, p_until: null }],
+    ['link_pupil_user', { p_pupil_id: P1, p_user_id: P1 }],
+    ['signin_rate_hit', { p_key: '0'.repeat(64), p_minute: new Date().toISOString(), p_limit: 1000 }],
+  ];
+  for (const [fn, args] of calls) {
+    const { data, error } = await client.rpc(fn, args);
+    // 42501 = permission denied. Any other error (a typo in the arguments, say)
+    // would prove nothing, so it fails.
+    check(`${who} cannot run ${fn} (permission denied)`, error?.code === '42501', error ? `${error.code}: ${error.message}` : `returned ${JSON.stringify(data)}`);
+  }
+  const rate = await client.from('signin_rate').select('key').limit(1);
+  check(`${who} reads nothing from signin_rate`, (rate.data ?? []).length === 0, rate.error ? undefined : `got ${(rate.data ?? []).length} rows`);
+}
 
 // Seeded owners per pupil table, so "sees only" knows which test pupils have rows.
 const OWNERS: Record<(typeof PUPIL_TABLES)[number], string[]> = {
@@ -347,6 +372,11 @@ async function main() {
   await pupilChecks(admin);
   await teacherChecks();
   await adminChecks(admin);
+
+  section('Pupil sign-in functions (service role only, S10)');
+  await signinFunctionChecks('anon', newClient());
+  await signinFunctionChecks('P1', await signIn(USERS.p1));
+  await signinFunctionChecks('Admin', admin);
 
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed > 0 ? 1 : 0);

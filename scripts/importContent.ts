@@ -18,10 +18,8 @@
  * Like the seed (D-31), it runs through the Supabase CLI login, so no service
  * role key is stored on this shared computer. It runs here only, never in the app.
  */
-import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 
@@ -36,6 +34,7 @@ import {
   stableStringify,
   type DbState,
 } from './lib/contentImport.ts';
+import { runCliSql } from './lib/cliSql.ts';
 import { assertAtlasDev, parseEnvFile } from './lib/devTarget.ts';
 
 const root = join(import.meta.dirname, '..');
@@ -63,34 +62,18 @@ async function chooseTarget(prod: boolean): Promise<string> {
   return prodTarget(envImport.ATLAS_PROD_REF, typed);
 }
 
-/** Runs a SQL file through the CLI. ref is a checked 20-letter ref; the file is our own temp path. */
-function runSql(ref: string, sql: string, mode: 'read' | 'write'): string {
-  const dir = mkdtempSync(join(tmpdir(), 'atlas-import-'));
-  const file = join(dir, `${mode}.sql`);
+/** chooseTarget is the real guard; runCliSql adds --yes for writes (D-25). */
+function runSql(ref: string, sql: string, mode: 'read' | 'write'): Record<string, unknown>[] {
   try {
-    writeFileSync(file, sql, { mode: 0o600 });
-    // write: --yes because the CLI asks before any write to a hosted database and
-    // calls every main database "production" (D-25). chooseTarget is the real guard.
-    const flag = mode === 'read' ? '--read-only' : '--yes';
-    const command = `npx supabase db query --remote=${ref} ${flag} -f "${file}" --output-format json`;
-    const run = spawnSync(command, { cwd: root, shell: true, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-    if (run.status !== 0) {
-      // Both streams: the CLI puts its "Target" line on stderr and the error JSON on stdout.
-      console.error([run.stderr, run.stdout, run.error?.message].filter(Boolean).join('\n'));
-      console.error(`CLI exit status: ${String(run.status)}${run.signal ? `, signal ${run.signal}` : ''}`);
-      fail(mode === 'read' ? 'Could not read the database.' : 'Import FAILED. Nothing was changed: the transaction rolled back.');
-    }
-    return run.stdout;
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
+    return runCliSql(root, ref, sql, mode);
+  } catch (e) {
+    console.error((e as Error).message);
+    fail(mode === 'read' ? 'Could not read the database.' : 'Import FAILED. Nothing was changed: the transaction rolled back.');
   }
 }
 
 function readState(ref: string, topic: string): DbState {
-  const out = runSql(ref, buildReadSql(topic), 'read');
-  const start = out.indexOf('{');
-  const parsed = JSON.parse(start >= 0 ? out.slice(start) : out) as { rows?: { state?: unknown }[] };
-  const state = parsed.rows?.[0]?.state;
+  const state = runSql(ref, buildReadSql(topic), 'read')[0]?.state;
   const value = typeof state === 'string' ? (JSON.parse(state) as unknown) : state;
   if (value === null || typeof value !== 'object') fail('The database read returned no content state.');
   return value as DbState;
