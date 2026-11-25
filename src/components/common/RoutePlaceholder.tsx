@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import { DevSignOut } from '@/components/auth/DevSignOut';
+
 import { Screen } from './Screen';
 import { Body, Heading, Label } from './Text';
 
@@ -16,6 +18,7 @@ export function RoutePlaceholder({ name, children }: { name: string; children?: 
       <Heading>{name}</Heading>
       <Body muted>This screen is built in a later session.</Body>
       {children}
+      <DevSignOut />
     </Screen>
   );
 }

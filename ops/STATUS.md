@@ -4,6 +4,10 @@ Last updated: 25 November 2026, team with Bright (S09). Sprint mode is on (D-30)
 
 ## Current session
 
+S11, sign-in screens, on `feat/S11-signin-screens` (cut from `feat/S10-pupil-signin-fn`). D-37. `app/(auth)/sign-in.tsx`: code (6 boxes, IBM Plex Mono, 0 O 1 I ignored), choose PIN, type it again, PIN (number pad, dots), all runbook copy, calm offline message with "Try again". Session saved by the Supabase client; `app/index.tsx` sends a returning pupil where `src/domain/nextScreen.ts` says. pupil-signin takes `{ code }` alone (redeployed); seed gives test pupils no PIN (reseeded). nextScreen tests 7, auth tests 68 in all; `test:signin` 25 of 25; a Node probe of the app flow for P1 reached `/notice` as expected; web bundle builds. Typecheck, lint, test (348) pass. Not proven: anything on Phone A (BL-8).
+
+## Earlier
+
 S10, pupil-signin Edge Function, on `feat/S10-pupil-signin-fn` (cut from `feat/S09-content-import`). D-36. Migration `20261125120000_pupil_signin.sql` (signin_rate table, six service-role-only functions) applied to atlas-dev, types regenerated, `SIGNIN_PEPPER` secret set, function deployed. `npm run test:signin` 21 of 21 PASS twice: needsPin, PIN set gives a session that RLS scopes to P1, bcrypt hash of 60 characters, 4 wrong PINs `no_match` (same as an unknown code), 5th locks for 15 minutes, right PIN refused while locked without checking, rate limit 429 at call 21, code never stored. RLS 166 of 166 (new: nobody but the service role can run the sign-in functions, `42501`). Domain tests 37. Typecheck, lint, test (299) pass. Earlier: Sentry DSN fixed (D-35), app starts.
 
 ## Earlier

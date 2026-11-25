@@ -12,7 +12,7 @@
  * (D-31), so no service role key is needed. At the end TEST-P1 is unlocked and
  * has no PIN again, so the script can be run any number of times.
  *
- * TEST-P1 makes 12 sign-in calls per run. The limit is 20 per code per minute,
+ * TEST-P1 makes 15 sign-in calls per run. The limit is 20 per code per minute,
  * so wait a minute between two runs.
  */
 import { createClient } from '@supabase/supabase-js';
@@ -105,6 +105,12 @@ async function main() {
   const pin = randomPin();
   const wrong = randomPin(pin);
 
+  // 0. Code alone (S11): the code screen asks whether to choose a PIN.
+  const unknownAsk = await signin({ code: madeUpCode() });
+  check('Code alone, unknown code: askPin (says nothing about whether it exists)', unknownAsk.status === 200 && unknownAsk.body.askPin === true, shape(unknownAsk));
+  const codeOnly = await signin({ code: P1.code });
+  check('Code alone, pupil with no PIN: needsPin', codeOnly.status === 200 && codeOnly.body.needsPin === true, shape(codeOnly));
+
   // 1. First sign-in: no PIN yet.
   const first = await signin({ code: P1.code, pin });
   check('First sign-in with no PIN set says needsPin', first.status === 200 && first.body.needsPin === true, shape(first));
@@ -131,6 +137,9 @@ async function main() {
   const takeover = await signin({ code: P1.code, pin: wrong, setPin: true });
   check('setPin with another PIN does not change it', takeover.status === 401 && takeover.body.error === 'no_match', shape(takeover));
 
+  const codeOnlyAfter = await signin({ code: P1.code });
+  check('Code alone, pupil with a PIN: askPin, the same answer as an unknown code', codeOnlyAfter.status === 200 && codeOnlyAfter.body.askPin === true, shape(codeOnlyAfter));
+
   // 4. Normal sign-in, also with a lowercase code and spaces.
   const normal = await signin({ code: ` ${P1.code.toLowerCase()} `, pin });
   check('Correct PIN signs in (code typed in lowercase with spaces)', normal.status === 200 && !!normal.body.session, shape(normal));
@@ -156,6 +165,8 @@ async function main() {
   // 6. While locked, even the right PIN is refused, without checking it.
   const whileLocked = await signin({ code: P1.code, pin });
   check('The right PIN is refused while locked', whileLocked.status === 423 && whileLocked.body.locked === true && !whileLocked.body.session, shape(whileLocked));
+  const codeOnlyLocked = await signin({ code: P1.code });
+  check('Code alone while locked: askPin, the lock shows only after a PIN', codeOnlyLocked.status === 200 && codeOnlyLocked.body.askPin === true, shape(codeOnlyLocked));
   const countAfter = sql(`select failed_pin_count as count from public.pupils where id = '${P1.id}';`, 'read')[0];
   check('While locked the PIN is not checked (the count does not move)', countAfter?.count === lockRow?.count, JSON.stringify({ before: lockRow?.count, after: countAfter?.count }));
 

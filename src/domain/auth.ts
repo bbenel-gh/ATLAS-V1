@@ -25,12 +25,34 @@ export const isValidCode = (code: string): boolean => CODE_PATTERN.test(code);
 
 export const isValidPin = (pin: string): boolean => PIN_PATTERN.test(pin);
 
-export const signinInputSchema = z.strictObject({
-  code: z.string().transform(normaliseCode).pipe(z.string().regex(CODE_PATTERN)),
-  pin: z.string().regex(PIN_PATTERN),
-  setPin: z.boolean().optional(),
-});
+/**
+ * { code } alone asks whether the pupil must choose a PIN (S11): the answer is
+ * needsPin for a pupil with no PIN, and askPin for everyone else, unknown codes
+ * included, so it says no more than S10 already did. setPin needs a PIN.
+ */
+export const signinInputSchema = z
+  .strictObject({
+    code: z.string().transform(normaliseCode).pipe(z.string().regex(CODE_PATTERN)),
+    pin: z.string().regex(PIN_PATTERN).optional(),
+    setPin: z.boolean().optional(),
+  })
+  .refine((v) => !v.setPin || v.pin !== undefined, { message: 'setPin needs a PIN', path: ['pin'] });
 export type SigninInput = z.infer<typeof signinInputSchema>;
+
+const CODE_CHARS = new Set(CODE_ALPHABET);
+
+/** As the pupil types: uppercase, drop anything that cannot be in a code (0, O, 1, I, spaces), at most 6. */
+export function filterCodeInput(text: string): string {
+  return Array.from(text.toUpperCase())
+    .filter((c) => CODE_CHARS.has(c))
+    .join('')
+    .slice(0, CODE_LENGTH);
+}
+
+/** As the pupil types: digits only, at most 4. */
+export function filterPinInput(text: string): string {
+  return text.replace(/[^0-9]/g, '').slice(0, 4);
+}
 
 /** Locked until the end time; from that moment on, free again. */
 export function isLocked(lockedUntil: Date | null, now: Date): boolean {
@@ -62,7 +84,7 @@ export function rateBucket(now: Date): string {
 export type SigninSession = {
   access_token: string;
   refresh_token: string;
-  expires_at: number | undefined;
+  expires_at?: number;
   expires_in: number;
   token_type: string;
 };
@@ -70,5 +92,43 @@ export type SigninSession = {
 export type SigninResponse =
   | { session: SigninSession }
   | { needsPin: true }
+  | { askPin: true }
   | { locked: true; minutes: number }
   | { error: 'bad_input' | 'rate_limited' | 'no_match' | 'server' };
+
+// What the app makes of a reply ------------------------------------------------------
+
+export type SigninOutcome =
+  | { kind: 'session'; session: SigninSession }
+  | { kind: 'needsPin' }
+  | { kind: 'askPin' }
+  | { kind: 'locked'; minutes: number }
+  | { kind: 'noMatch' }
+  | { kind: 'rateLimited' }
+  | { kind: 'failed' };
+
+const sessionSchema = z.object({
+  access_token: z.string().min(1),
+  refresh_token: z.string().min(1),
+  expires_at: z.number().optional(),
+  expires_in: z.number(),
+  token_type: z.string(),
+});
+
+/** Checks the reply's status and shape with zod. Anything unexpected is "failed". */
+export function interpretSigninReply(status: number, body: unknown): SigninOutcome {
+  const obj = body !== null && typeof body === 'object' ? (body as Record<string, unknown>) : {};
+  if (status === 200) {
+    const session = sessionSchema.safeParse(obj.session);
+    if (session.success) return { kind: 'session', session: session.data };
+    if (obj.needsPin === true) return { kind: 'needsPin' };
+    if (obj.askPin === true) return { kind: 'askPin' };
+    return { kind: 'failed' };
+  }
+  if (status === 423 && obj.locked === true && typeof obj.minutes === 'number' && obj.minutes > 0) {
+    return { kind: 'locked', minutes: Math.ceil(obj.minutes) };
+  }
+  if (status === 401 && obj.error === 'no_match') return { kind: 'noMatch' };
+  if (status === 429) return { kind: 'rateLimited' };
+  return { kind: 'failed' };
+}

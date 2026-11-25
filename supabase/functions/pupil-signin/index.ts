@@ -2,6 +2,7 @@
  * pupil-signin: a pupil signs in with code and PIN (specs/prd.md FR-1, FR-2;
  * runbook S10; D-36).
  *
+ * POST { code }              (S11, D-37) needsPin for a pupil with no PIN, else askPin
  * POST { code, pin, setPin? }
  *   needsPin   the pupil has no PIN yet; call again with setPin: true
  *   session    a normal Supabase session for the pupil's auth user, so RLS works
@@ -125,9 +126,20 @@ Deno.serve(async (req) => {
     const lookup = await admin.rpc('pupil_signin_lookup', { p_code: code });
     if (lookup.error) throw new Error('lookup failed');
     const pupil = lookup.data?.[0];
+    const lockedUntil = pupil?.locked_until ? new Date(pupil.locked_until) : null;
+
+    // Code alone (S11): must this pupil choose a PIN first? Only an active,
+    // unlocked pupil with no PIN gets needsPin. Everyone else, unknown codes
+    // included, gets the same askPin, so this says no more than needsPin did.
+    if (pin === undefined) {
+      const choose = pupil && pupil.status === 'active' && !pupil.has_pin && !isLocked(lockedUntil, now);
+      return choose
+        ? reply(200, { needsPin: true }, 'needs_pin', started, pupil.pupil_id)
+        : reply(200, { askPin: true }, 'ask_pin', started);
+    }
+
     if (!pupil || pupil.status !== 'active') return reply(401, { error: 'no_match' }, 'no_match', started);
 
-    const lockedUntil = pupil.locked_until ? new Date(pupil.locked_until) : null;
     if (lockedUntil && isLocked(lockedUntil, now)) {
       return reply(423, { locked: true, minutes: minutesLeft(lockedUntil, now) }, 'locked', started, pupil.pupil_id);
     }

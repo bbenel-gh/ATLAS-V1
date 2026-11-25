@@ -108,10 +108,11 @@ const sql: string[] = [
    (${t(CLASSES.A.id)}, ${t(CLASSES.A.name)}, ${t(SCHOOL.id)}, ${t(STAFF.teacher7A.id)}, ${t(CLASSES.A.joinCode)}),
    (${t(CLASSES.B.id)}, ${t(CLASSES.B.name)}, ${t(SCHOOL.id)}, ${t(STAFF.teacher7B.id)}, ${t(CLASSES.B.joinCode)});`,
   ...PUPIL_LIST.flatMap((p) => [
-    // pin_hash is a fake marker, so the suite can prove nobody reads it.
-    `insert into public.pupils (id, user_id, class_id, display_name, school_given, school_id, code, pin_hash, signed_up_by)
+    // No PIN: like a real pupil, each test pupil chooses one at first sign-in
+    // (S10). A fake hash here made bcrypt fail with a server error (S11).
+    `insert into public.pupils (id, user_id, class_id, display_name, school_given, school_id, code, signed_up_by)
      values (${t(p.id)}, ${t(p.user.authId)}, ${t(p.classId)}, ${t(p.name)}, ${t(SCHOOL.name)}, ${t(SCHOOL.id)},
-       ${t(p.code)}, 'fake-test-hash-not-a-real-pin', 'admin');`,
+       ${t(p.code)}, 'admin');`,
     `insert into public.profiles (pupil_id, interests, playful_choices)
      values (${t(p.id)}, array['football', 'cooking'], '{"seed": true}');`,
   ]),
