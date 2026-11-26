@@ -20,6 +20,8 @@ type Row = {
               label: string;
               url_360: string;
               url_480: string;
+              url_720: string | null;
+              url_1080: string | null;
               poster_url: string | null;
               captions_url: string | null;
               board_colour: string;
@@ -48,6 +50,8 @@ export function toTopicMedia(row: Row): TopicMedia {
           label: v.label,
           url360: v.url_360,
           url480: v.url_480,
+          url720: v.url_720,
+          url1080: v.url_1080,
           posterUrl: v.poster_url,
           captionsUrl: v.captions_url,
           boardColour: v.board_colour,
@@ -68,7 +72,7 @@ export async function fetchTopicMedia(topicCode: string): Promise<TopicMedia | n
     supabase
       .from('topics')
       .select(
-        'code, title, subject, class_level, content_version, segments (code, sort_order, video_versions (id, label, url_360, url_480, poster_url, captions_url, board_colour, duration_seconds))',
+        'code, title, subject, class_level, content_version, segments (code, sort_order, video_versions (id, label, url_360, url_480, url_720, url_1080, poster_url, captions_url, board_colour, duration_seconds))',
       )
       .eq('code', topicCode)
       .abortSignal(signal)

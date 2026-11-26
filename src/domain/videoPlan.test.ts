@@ -2,8 +2,11 @@ import {
   estimateBytes,
   filesForTopic,
   formatMegabytes,
+  pickVideo,
   planDownload,
+  QUALITIES,
   shouldPlay,
+  toQuality,
   visibleFraction,
   type ManifestEntry,
   type TopicMedia,
@@ -148,5 +151,47 @@ describe('shouldPlay (P4 to P8)', () => {
   it('does not play before the file is ready, or after the end', () => {
     expect(shouldPlay({ ...base, ready: false })).toBe(false);
     expect(shouldPlay({ ...base, ended: true })).toBe(false);
+  });
+});
+
+describe('pickVideo (360p to 1080p)', () => {
+  const all = v('id-x', '1A', 'a', { url720: 'https://media.test/x-720.mp4', url1080: 'https://media.test/x-1080.mp4' });
+  const basic = v('id-y', '1A', 'b');
+
+  it('lists the qualities from lowest to highest', () => {
+    expect(QUALITIES).toEqual(['360', '480', '720', '1080']);
+  });
+
+  it('gives the asked quality when the version has it', () => {
+    expect(pickVideo(all, '360')).toEqual({ quality: '360', url: 'https://media.test/1A-a-360.mp4' });
+    expect(pickVideo(all, '480')).toEqual({ quality: '480', url: 'https://media.test/1A-a-480.mp4' });
+    expect(pickVideo(all, '720')).toEqual({ quality: '720', url: 'https://media.test/x-720.mp4' });
+    expect(pickVideo(all, '1080')).toEqual({ quality: '1080', url: 'https://media.test/x-1080.mp4' });
+  });
+
+  it('steps down to the best lower quality when the asked one is missing', () => {
+    expect(pickVideo(basic, '1080')).toEqual({ quality: '480', url: 'https://media.test/1A-b-480.mp4' });
+    expect(pickVideo({ ...all, url720: null }, '720')).toEqual({ quality: '480', url: 'https://media.test/1A-a-480.mp4' });
+    expect(pickVideo({ ...all, url720: null }, '1080')).toEqual({ quality: '1080', url: 'https://media.test/x-1080.mp4' });
+  });
+
+  it('names the file after the quality actually used', () => {
+    const files = filesForTopic({ ...MEDIA, versions: [basic] }, '1080');
+    expect(files[0]).toMatchObject({ url: 'https://media.test/1A-b-480.mp4', fileName: 'B7-MATERIALS/1A-b-480.mp4' });
+  });
+
+  it('downloads again when the pupil changes quality, keeping posters and captions', () => {
+    const at360 = filesForTopic(MEDIA, '360');
+    const manifest: Record<string, ManifestEntry> = {};
+    for (const f of at360) manifest[f.key] = { key: f.key, url: f.url, fileName: f.fileName, bytes: 1 };
+    const plan = planDownload(filesForTopic(MEDIA, '480'), manifest);
+    expect(plan.toDownload.every((f) => f.kind === 'video')).toBe(true);
+    expect(plan.toDownload).toHaveLength(3);
+  });
+
+  it('reads a quality setting safely, 360 for anything unknown', () => {
+    expect(toQuality('720')).toBe('720');
+    expect(toQuality('4k')).toBe('360');
+    expect(toQuality(null)).toBe('360');
   });
 });

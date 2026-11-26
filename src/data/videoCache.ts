@@ -66,7 +66,8 @@ function startManifest(media: TopicMedia, quality: Quality, old: Manifest | null
     contentVersion: old?.contentVersion ?? null,
     quality,
     media,
-    entries: old && old.quality === quality ? old.entries : {},
+    // Kept across a quality change: posters and captions stay, only videos whose link changed download again.
+    entries: old?.entries ?? {},
     paused: old?.paused ?? null,
   };
 }
@@ -97,17 +98,20 @@ function guessBytes(file: MediaFile, media: TopicMedia): number {
 /** What is still to download for this topic, in bytes. Asks the server for exact sizes, estimates the rest. */
 export async function getTopicDownloadSize(media: TopicMedia, quality: Quality = '360'): Promise<number> {
   const manifest = await readManifest(media.topicCode);
-  const plan = planDownload(filesForTopic(media, quality), manifest?.quality === quality ? manifest.entries : {});
+  const plan = planDownload(filesForTopic(media, quality), manifest?.entries ?? {});
   let total = 0;
   for (const f of plan.toDownload) total += (await headSize(f.url)) ?? guessBytes(f, media);
   return total;
 }
 
-/** Every file the topic needs is recorded and still on the phone. */
-export async function isTopicReady(media: TopicMedia, quality: Quality = '360'): Promise<boolean> {
+/**
+ * Every file the topic needs is recorded and still on the phone. Without a
+ * quality, the quality the topic was last downloaded at counts (D-46).
+ */
+export async function isTopicReady(media: TopicMedia, quality?: Quality): Promise<boolean> {
   const manifest = await readManifest(media.topicCode);
-  if (!manifest || manifest.quality !== quality) return false;
-  const files = filesForTopic(media, quality);
+  if (!manifest) return false;
+  const files = filesForTopic(media, quality ?? manifest.quality);
   if (!planDownload(files, manifest.entries).ready) return false;
   return files.every((f) => fileFor(f.fileName).exists);
 }
@@ -197,6 +201,12 @@ export async function downloadTopic(
       await writeManifest(manifest);
       return 'failed';
     }
+    // A video at another quality had another file name: remove the old file.
+    const previous = manifest.entries[f.key];
+    if (previous && previous.fileName !== f.fileName) {
+      const oldFile = fileFor(previous.fileName);
+      if (oldFile.exists) oldFile.delete();
+    }
     manifest.entries[f.key] = { key: f.key, url: f.url, fileName: f.fileName, bytes: size };
     manifest.paused = null;
     if (f.kind === 'video') videosDone += 1;
@@ -211,6 +221,7 @@ export async function downloadTopic(
     delete manifest.entries[old.key];
   }
   manifest.contentVersion = media.contentVersion;
+  manifest.quality = quality;
   await writeManifest(manifest);
   return 'done';
 }

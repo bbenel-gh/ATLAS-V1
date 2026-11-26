@@ -9,6 +9,7 @@
  *
  * Expected names, per video version (overview segment code is OV):
  *   mat-<segment>-<label>-360.mp4, mat-<segment>-<label>-480.mp4,
+ *   optional mat-<segment>-<label>-720.mp4 and -1080.mp4,
  *   mat-<segment>-<label>.jpg, mat-<segment>-<label>.vtt
  *
  * Each line says OK or MISSING, with the type and size the server reports.
@@ -18,7 +19,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-type Version = { label: string; url360: string; url480: string; posterUrl: string; captionsUrl: string };
+type Version = { label: string; url360: string; url480: string; url720?: string; url1080?: string; posterUrl: string; captionsUrl: string };
 type Content = { topic: { overview: Version }; segments: { code: string; versions: Version[] }[] };
 
 const root = join(import.meta.dirname, '..');
@@ -36,11 +37,17 @@ const versions: { name: string; v: Version }[] = [
   ...content.segments.flatMap((s) => s.versions.map((v) => ({ name: `${s.code}-${v.label}`, v }))),
 ];
 
-const checks: { what: string; url: string; kind: Kind }[] = versions.flatMap(({ name, v }) => {
+const checks: { what: string; url: string; kind: Kind; optional?: boolean }[] = versions.flatMap(({ name, v }) => {
   const file = (suffix: string) => (base ? `${base}/mat-${name}${suffix}` : null);
+  // 720p and 1080p are optional (D-46): checked at a bucket, or when the content file lists them.
+  const hd = (['720', '1080'] as const).flatMap((q) => {
+    const url = file(`-${q}.mp4`) ?? (q === '720' ? v.url720 : v.url1080);
+    return url ? [{ what: `${name} ${q}p`, url, kind: 'video' as const, optional: true }] : [];
+  });
   return [
     { what: `${name} 360p`, url: file('-360.mp4') ?? v.url360, kind: 'video' as const },
     { what: `${name} 480p`, url: file('-480.mp4') ?? v.url480, kind: 'video' as const },
+    ...hd,
     { what: `${name} poster`, url: file('.jpg') ?? v.posterUrl, kind: 'poster' as const },
     { what: `${name} captions`, url: file('.vtt') ?? v.captionsUrl, kind: 'captions' as const },
   ];
@@ -68,9 +75,14 @@ for (const c of checks) {
   const r = seen.get(c.url) ?? (await head(c.url));
   seen.set(c.url, r);
   const ok = r.status === 200 && typeOk(c.kind, r.type);
+  if (!ok && c.optional && r.status === 404) {
+    console.log(`none     ${c.what.padEnd(16)} optional, not uploaded`);
+    continue;
+  }
   if (!ok) bad += 1;
   const why = r.status === 0 ? 'no answer' : r.status !== 200 ? `HTTP ${r.status}` : `wrong type ${r.type}`;
   console.log(`${ok ? 'OK     ' : 'MISSING'}  ${c.what.padEnd(16)} ${ok ? `${r.type}, ${mb(r.bytes)}` : why}  ${c.url}`);
 }
-console.log(`\n${checks.length - bad} of ${checks.length} files ready.`);
+const required = checks.filter((c) => !c.optional).length;
+console.log(`\n${bad} problem(s). ${required} required files checked, plus any optional 720p and 1080p found.`);
 process.exit(bad > 0 ? 1 : 0);

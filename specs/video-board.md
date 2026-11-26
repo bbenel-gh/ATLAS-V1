@@ -14,7 +14,7 @@ The lesson video looks like a page being written on, not like a video player. Ha
 3. Handwriting appears stroke by stroke, in time with the narration. One idea per line. Large enough to read on a 5-inch phone.
 4. Audio: Ghanaian English voice-over plus a quiet pen sound. No music.
 5. Captions: burned into the video in English, and also supplied as a timed cue file (WebVTT, `.vtt`) per version, word for word with the script.
-6. Aspect ratio 16:10. Exports at 480p and 360p, MP4, H.264, AAC, about 500 kbps. Under 3 minutes.
+6. Aspect ratio 16:10. Exports at 480p and 360p, MP4, H.264, AAC, about 500 kbps. Under 3 minutes. 720p and 1080p exports are optional (D-46): the pupil may choose them on the download screen, and a version without them uses the best lower quality.
 7. Also export one poster image (JPEG) of the first frame per version.
 8. Never write the answer to the segment's check questions on the board.
 
@@ -47,6 +47,7 @@ The demo ends with a "Your turn" question checked instantly in red or green. **V
 `content/materials.json`, inside each video version:
 - `label`: `a` or `b`
 - `url360`, `url480`: R2 links
+- `url720`, `url1080`: optional R2 links (D-46)
 - `posterUrl`: R2 link to the poster image
 - `captionsUrl`: R2 link to the `.vtt` file
 - `boardColour`: the sampled hex value

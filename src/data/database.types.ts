@@ -1176,8 +1176,10 @@ export type Database = {
           misconception_tags: string[]
           poster_url: string | null
           segment_id: string
+          url_1080: string | null
           url_360: string
           url_480: string
+          url_720: string | null
         }
         Insert: {
           board_colour?: string
@@ -1191,8 +1193,10 @@ export type Database = {
           misconception_tags?: string[]
           poster_url?: string | null
           segment_id: string
+          url_1080?: string | null
           url_360: string
           url_480: string
+          url_720?: string | null
         }
         Update: {
           board_colour?: string
@@ -1206,8 +1210,10 @@ export type Database = {
           misconception_tags?: string[]
           poster_url?: string | null
           segment_id?: string
+          url_1080?: string | null
           url_360?: string
           url_480?: string
+          url_720?: string | null
         }
         Relationships: [
           {

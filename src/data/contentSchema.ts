@@ -62,6 +62,9 @@ const videoVersionSchema = z.strictObject({
   label: z.string().regex(/^[a-e]$/, 'must be one small letter from a to e'),
   url360: httpsUrl,
   url480: httpsUrl,
+  // Optional (D-46): the phone steps down to 480p or 360p when these are missing.
+  url720: httpsUrl.optional(),
+  url1080: httpsUrl.optional(),
   posterUrl: httpsUrl,
   captionsUrl: httpsUrl,
   boardColour: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'must be a colour written as # and 6 hex digits, like the board token'),

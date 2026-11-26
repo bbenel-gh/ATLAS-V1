@@ -320,3 +320,22 @@ describe('formatContentIssues', () => {
     ]));
   });
 });
+
+describe('video qualities (D-46)', () => {
+  it('accepts a version with only 360p and 480p', () => {
+    expect(validateContent(valid()).ok).toBe(true);
+  });
+
+  it('accepts optional 720p and 1080p links', () => {
+    const data = valid();
+    data.topic.overview.url720 = 'https://media.test/mat-OV-a-720.mp4';
+    data.topic.overview.url1080 = 'https://media.test/mat-OV-a-1080.mp4';
+    expect(validateContent(data).ok).toBe(true);
+  });
+
+  it('refuses a 720p link that is not https, and names the path', () => {
+    const data = valid();
+    data.topic.overview.url720 = 'http://media.test/mat-OV-a-720.mp4';
+    expect(errorPaths(data)).toContain('topic.overview.url720');
+  });
+});

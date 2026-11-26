@@ -163,7 +163,7 @@ Totals for V1: 11 videos, 15 check questions, 5 worked-example cards, 20 objecti
 
 Videos use the board style defined in `specs/video-board.md`: handwriting appearing on a paper-coloured board, a Ghanaian English voice-over, pen sound, and burned-in English captions.
 - Script rules: under 3 minutes (about 350 spoken words), one concept per video, Ghanaian names, places and objects, real objects shown wherever possible. A video teaches the idea but never answers the exact check question.
-- Export: MP4, H.264 video, AAC audio, two files per video at 480p and 360p (about 500 kbps, so a 3-minute video is roughly 11 MB).
+- Export: MP4, H.264 video, AAC audio, two files per video at 480p and 360p (about 500 kbps, so a 3-minute video is roughly 11 MB). Optional 720p and 1080p files may be added (D-46); the app downloads 360p unless the pupil picks a higher quality.
 - File names: `mat-<segment>-<version>-<resolution>.mp4`, for example `mat-1B-a-360.mp4`.
 - No copyrighted music, images or clips. No children's faces.
 

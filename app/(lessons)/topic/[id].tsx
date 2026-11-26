@@ -18,6 +18,7 @@ import type { TopicMedia } from '@/domain/videoPlan';
 async function loadTopic(code: string) {
   const result = await loadTopicMedia(code);
   if (result.kind !== 'ok') return result;
+  // Ready means every file is on the phone at whatever quality was downloaded (D-46).
   return { kind: 'ok' as const, media: result.media, ready: await isTopicReady(result.media) };
 }
 

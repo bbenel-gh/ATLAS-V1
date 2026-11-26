@@ -56,6 +56,8 @@ export const COLUMNS: Record<Table, readonly string[]> = {
   video_versions: [
     'url_360',
     'url_480',
+    'url_720',
+    'url_1080',
     'poster_url',
     'captions_url',
     'board_colour',
@@ -106,6 +108,8 @@ export const OVERVIEW_CODE = 'OV';
 const versionValues = (v: ContentVideoVersion) => ({
   url_360: v.url360,
   url_480: v.url480,
+  url_720: v.url720 ?? null,
+  url_1080: v.url1080 ?? null,
   poster_url: v.posterUrl,
   captions_url: v.captionsUrl,
   board_colour: v.boardColour,
