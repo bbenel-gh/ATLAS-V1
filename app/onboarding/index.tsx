@@ -1,11 +1,14 @@
 import { PupilGuard } from '@/components/auth/PupilGuard';
-import { RoutePlaceholder } from '@/components/common/RoutePlaceholder';
+import { Screen } from '@/components/common/Screen';
+import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 
-/** Onboarding (S14). Behind the guard: only with the AI notice seen and consent recorded. */
+/** Onboarding (runbook S14). Behind the guard: only with the AI notice seen and consent recorded. */
 export default function Onboarding() {
   return (
     <PupilGuard area="onboarding">
-      <RoutePlaceholder name="onboarding" />
+      <Screen>
+        <OnboardingFlow />
+      </Screen>
     </PupilGuard>
   );
 }

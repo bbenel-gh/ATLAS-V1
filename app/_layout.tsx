@@ -15,6 +15,7 @@ import { PinLock } from '@/components/auth/PinLock';
 import { colors } from '@/components/common/theme';
 import { getEnv } from '@/data/env';
 import { useLockStore } from '@/data/lockStore';
+import { startOnboardingSync } from '@/data/onboarding';
 import { scrubEvent } from '@/data/scrub';
 
 SplashScreen.preventAutoHideAsync();
@@ -73,6 +74,11 @@ function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded, error]);
+
+  // S14: onboarding answers saved offline are sent when the network returns.
+  useEffect(() => {
+    startOnboardingSync();
+  }, []);
 
   // Hold the splash screen while the fonts load. If they fail, carry on with
   // the system font rather than trapping the pupil on a blank screen.

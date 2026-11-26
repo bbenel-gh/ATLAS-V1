@@ -33,7 +33,10 @@ export function PupilGuard({ area, children }: { area: GuardArea; children: Reac
       </Screen>
     );
   }
-  if (gate.isError) {
+  // A failed background refresh keeps the last good answer (rule 5: the
+  // network never traps a pupil mid-way). Only a first read with no answer
+  // at all shows the offline message.
+  if (gate.data === undefined) {
     return (
       <Screen>
         <CalmError message={COPY.offline} onRetry={() => void gate.refetch()} />

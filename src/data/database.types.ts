@@ -769,6 +769,8 @@ export type Database = {
       profiles: {
         Row: {
           interests: string[]
+          onboarded_at: string | null
+          onboarding: Json
           overview_confusions: string[]
           overview_keywords: string[]
           playful_choices: Json
@@ -777,6 +779,8 @@ export type Database = {
         }
         Insert: {
           interests?: string[]
+          onboarded_at?: string | null
+          onboarding?: Json
           overview_confusions?: string[]
           overview_keywords?: string[]
           playful_choices?: Json
@@ -785,6 +789,8 @@ export type Database = {
         }
         Update: {
           interests?: string[]
+          onboarded_at?: string | null
+          onboarding?: Json
           overview_confusions?: string[]
           overview_keywords?: string[]
           playful_choices?: Json

@@ -52,3 +52,39 @@ Write each result (PASS or FAIL, and what you saw) in the shift log.
 2. Open the sheet it names (in `content-work/pilot/`) in a browser and print one page on A4 at 100%.
 3. Expected: 12 cards per page with dashed cut lines, each with the class, first name, code and "Keep this code. Do not share your PIN.". No 0, O, 1 or I in any code.
 4. Delete the printout and the sheet file when done. Run `npm run seed:dev` to remove the pupils again.
+
+## B3 onboarding
+
+Runbook S14. Proves the B3 gate: onboarding takes under 3 minutes, resumes after the app closes, and saves every answer.
+Use TEST-P3 (code TESTPC): it is the test pupil with no profile.
+
+### Before you start
+
+1. At the computer: `npm run seed:dev`, then `npm run consent:set -- --code TEST-P3 --on`.
+2. Phone A: sign in with TESTPC, choose a PIN, tap "I understand" on the AI notice. Onboarding opens.
+
+### a. Under 3 minutes
+
+1. Start a stopwatch when "What should I call you?" shows.
+2. Go through every screen at a normal reading pace: name, class (Basic 7 is already picked), up to 4 interests, the three "would you rather" cards, then "Go to my lessons".
+3. Expected: Home opens. Stopwatch under 3:00. Write the time in the shift log.
+4. Expected on every screen: 4 small dots at the top, no numbers on screen, no score, no timer, nothing marked right or wrong, nothing red.
+
+### b. Resume
+
+1. Run the "Before you start" steps again (the reseed clears TEST-P3).
+2. Answer the name and class screens. On the interests screen, close the app fully (swipe it away).
+3. Open the app and type the PIN.
+4. Expected: the interests screen, with the third dot current. Your name and class are kept (the end screen will say "Thank you, <your name>.").
+
+### c. Saved
+
+1. After a full onboarding, in the Supabase dashboard (atlas-dev), table `profiles`, row for TEST-P3.
+2. Expected: `interests` lists your picks; `playful_choices` has radio, farm and song, each with `choice` and `ms`; `onboarding` has `name_ms`, `class_ms` and `interests_ms`; `onboarded_at` is set. Table `pupils`: your name and class level.
+
+### d. Offline
+
+1. Run the "Before you start" steps again. On the name screen, turn on airplane mode.
+2. Finish onboarding offline. Expected: every screen works and "Go to my lessons" opens Home.
+3. Turn airplane mode off and wait 15 seconds (or close and reopen the app).
+4. Expected: the answers are in `profiles` as in step c.

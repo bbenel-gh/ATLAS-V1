@@ -40,5 +40,45 @@ export const COPY = {
     locked: (minutes: number) =>
       `Too many tries. Please wait ${minutes} ${minutes === 1 ? 'minute' : 'minutes'}, or ask your teacher.`,
   },
+  /**
+   * Onboarding (runbook S14). The three "would you rather" questions are the
+   * runbook DRAFT; specs/B3-playful.md (BL-12) will replace them. The short
+   * option labels are new DRAFT copy for Bright to confirm (D-41).
+   */
+  onboarding: {
+    progress: (step: number) => `Step ${step + 1} of 4`,
+    next: 'Next',
+    nameQuestion: 'What should I call you?',
+    nameLabel: 'Your name',
+    classQuestion: 'Which class are you in?',
+    interestsQuestion: 'What do you enjoy? Pick up to 4.',
+    tooMany: 'You can pick up to 4.',
+    interestLabels: {
+      football: 'Football',
+      music: 'Music',
+      farming: 'Farming',
+      stories: 'Stories',
+      cooking: 'Cooking',
+      market: 'Market',
+      animals: 'Animals',
+      'phones and computers': 'Phones and computers',
+    },
+    choices: {
+      radio: {
+        question: 'Would you rather fix a broken radio, or find out why it broke?',
+        options: { fix: 'Fix the radio', why: 'Find out why it broke' },
+      },
+      farm: {
+        question: 'Would you rather plant a new farm, or sell at the market?',
+        options: { plant: 'Plant a new farm', sell: 'Sell at the market' },
+      },
+      song: {
+        question: 'Would you rather learn a new song, or write a new story?',
+        options: { song: 'Learn a new song', story: 'Write a new story' },
+      },
+    },
+    thanks: (name: string) => `Thank you, ${name}. Let's start.`,
+    go: 'Go to my lessons',
+  },
   offline: 'No connection. Check the data and try again.',
 } as const;

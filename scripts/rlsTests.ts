@@ -268,7 +268,23 @@ async function pupilChecks(admin: SupabaseClient) {
   await updateRefused(p1, 'P1 cannot mark their own segment complete', 'segment_status', { status: 'complete' }, 'pupil_id', P1);
   await updateRefused(p1, 'P1 cannot change their own mastery', 'mastery', { status: 'confirmed', exam_score: 100 }, 'pupil_id', P1);
   await updateRefused(p1, "P1 cannot change P2's profile", 'profiles', { interests: ['changed'] }, 'pupil_id', P2);
-  await updateRefused(p1, 'P1 cannot change their own class or name', 'pupils', { display_name: 'Changed' }, 'id', P1);
+  // S14 (D-41): onboarding lets a pupil set their own name and class level,
+  // within the rules. Everything else on their row stays out of reach.
+  await updateRefused(p1, 'P1 cannot move themselves to another class', 'pupils', { class_id: CLASSES.B.id }, 'id', P1);
+  await updateRefused(p1, 'P1 cannot change their own status', 'pupils', { status: 'suspended' }, 'id', P1);
+  await updateRefused(p1, 'P1 cannot set a name with digits', 'pupils', { display_name: 'Ama 2' }, 'id', P1);
+  await updateRefused(p1, 'P1 cannot set a name over 20 characters', 'pupils', { display_name: 'Abcdefghij Klmnopqrst' }, 'id', P1);
+  await updateRefused(p1, 'P1 cannot set class level Basic 12', 'pupils', { class_level: 'Basic 12' }, 'id', P1);
+  await updateRefused(p1, "P1 cannot change P2's name", 'pupils', { display_name: 'Changed' }, 'id', P2);
+  const renamed = await p1.from('pupils').update({ display_name: 'Ama-Test', class_level: 'Basic 8' }).eq('id', P1).select('display_name, class_level');
+  check('P1 can set their own name and class level (onboarding)',
+    !renamed.error && renamed.data?.[0]?.display_name === 'Ama-Test' && renamed.data[0].class_level === 'Basic 8',
+    JSON.stringify(renamed.data ?? renamed.error));
+  const restored = await p1.from('pupils').update({ display_name: PUPILS.p1.name, class_level: 'Basic 7' }).eq('id', P1).select('id');
+  check('P1 can set them back', !restored.error && (restored.data ?? []).length === 1, restored.error?.message);
+  const finished = await p1.from('profiles').update({ onboarded_at: new Date().toISOString(), onboarding: { name_ms: 1 } }).eq('pupil_id', P1).select('pupil_id');
+  check('P1 can record their own onboarding answers and finish', !finished.error && (finished.data ?? []).length === 1, finished.error?.message);
+  await updateRefused(p1, "P1 cannot finish P2's onboarding", 'profiles', { onboarded_at: new Date().toISOString() }, 'pupil_id', P2);
   await insertRefused(p1, 'P1 cannot write a flag', 'flags', { pupil_id: P1, kind: 'safeguarding' });
   await insertRefused(p1, 'P1 cannot write an AI call log row', 'ai_calls', { job: 'check', model: 'x', pupil_id: P1, ok: true });
   await insertRefused(p1, 'P1 cannot save an attempt with their own verdict', 'attempts', {
@@ -289,8 +305,12 @@ async function pupilChecks(admin: SupabaseClient) {
   const status = await admin.from('segment_status').select('status, tries_used').eq('pupil_id', P1).eq('segment_id', CONTENT.segmentId).single();
   check("Admin confirms P1's segment is still in progress", status.data?.status === 'in_progress' && status.data?.tries_used === 1,
     JSON.stringify(status.data ?? status.error));
-  const name = await admin.from('pupils').select('display_name').eq('id', P1).single();
-  check("Admin confirms P1's name did not change", name.data?.display_name === PUPILS.p1.name, JSON.stringify(name.data ?? name.error));
+  const name = await admin.from('pupils').select('display_name, class_level, class_id, status').eq('id', P1).single();
+  check("Admin confirms P1's row is back as seeded: name, class level, class and status",
+    name.data?.display_name === PUPILS.p1.name && name.data.class_level === 'Basic 7' && name.data.class_id === PUPILS.p1.classId && name.data.status === 'active',
+    JSON.stringify(name.data ?? name.error));
+  const p2Name = await admin.from('pupils').select('display_name').eq('id', P2).single();
+  check("Admin confirms P2's name did not change", p2Name.data?.display_name === PUPILS.p2.name, JSON.stringify(p2Name.data ?? p2Name.error));
 
   for (const key of ['p2', 'p3', 'p4'] as const) {
     const pupil = PUPILS[key];
@@ -320,6 +340,7 @@ async function teacherChecks() {
   await seesNothing(t7a, 'Teacher 7A cannot read the exam answer key', 'exam_item_keys', 'item_id', [CONTENT.objectiveItemId, CONTENT.theoryItemId]);
   await columnRefused(t7a, 'Teacher 7A cannot read pin_hash', 'pupils', 'pin_hash', 'id', CLASS_7A_PUPIL_IDS);
   await updateRefused(t7a, 'Teacher 7A cannot move P1 to another class', 'pupils', { class_id: CLASSES.B.id }, 'id', P1);
+  await updateRefused(t7a, "Teacher 7A cannot change P1's onboarding answers", 'profiles', { interests: ['music'], onboarded_at: null }, 'pupil_id', P1);
   await updateRefused(t7a, 'Teacher 7A cannot clear a flag (admin job)', 'flags', { cleared_at: new Date().toISOString() }, 'id', r1.flag);
 
   section('Teacher of Test Basic 7B');

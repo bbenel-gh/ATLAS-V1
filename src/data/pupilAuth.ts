@@ -2,6 +2,7 @@ import { interpretSigninReply, type SigninOutcome, type SigninSession } from '@/
 import type { PupilGate } from '@/domain/nextScreen';
 
 import { getEnv } from './env';
+import { readLocalOnboarding } from './onboardingStore';
 import { supabase } from './supabase';
 
 /**
@@ -58,12 +59,12 @@ export class OfflineError extends Error {}
  * The auth user id saved on this phone, read locally (no network). Pupil
  * lookups filter on it, because a staff test account can read many pupil rows.
  */
-async function signedInUserId(): Promise<string | null> {
+export async function signedInUserId(): Promise<string | null> {
   const { data } = await supabase.auth.getSession();
   return data.session?.user.id ?? null;
 }
 
-async function withTimeout<T>(run: (signal: AbortSignal) => PromiseLike<T>): Promise<T> {
+export async function withTimeout<T>(run: (signal: AbortSignal) => PromiseLike<T>): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
@@ -91,13 +92,16 @@ export async function fetchPupilGate(): Promise<PupilGate | null> {
   const id = pupil.data.id;
   const [consent, profile] = await Promise.all([
     withTimeout((signal) => supabase.from('consents').select('id').eq('pupil_id', id).is('withdrawn_at', null).limit(1).abortSignal(signal)),
-    withTimeout((signal) => supabase.from('profiles').select('pupil_id').eq('pupil_id', id).limit(1).abortSignal(signal)),
+    withTimeout((signal) => supabase.from('profiles').select('onboarded_at').eq('pupil_id', id).limit(1).abortSignal(signal)),
   ]);
   if (consent.error || profile.error) throw new OfflineError('Could not read the pupil state');
+  // Finished on the server, or finished on this phone and still on its way (S14, D-41).
+  const local = await readLocalOnboarding(userId);
+  const finishedHere = local !== null && local.pupilId === id && local.answers.finishedAt !== undefined;
   return {
     aiNoticeSeen: pupil.data.ai_notice_seen_at !== null,
     hasConsent: consent.data.length > 0,
-    onboardingDone: profile.data.length > 0,
+    onboardingDone: (profile.data[0]?.onboarded_at ?? null) !== null || finishedHere,
   };
 }
 

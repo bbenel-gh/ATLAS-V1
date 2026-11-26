@@ -124,8 +124,9 @@ const sql: string[] = [
     ...(p.id === PUPILS.p3.id
       ? []
       : [
-          `insert into public.profiles (pupil_id, interests, playful_choices)
-           values (${t(p.id)}, array['football', 'cooking'], '{"seed": true}');`,
+          // Onboarding finished (S14, D-41): onboarded_at set, so they go straight home.
+          `insert into public.profiles (pupil_id, interests, playful_choices, onboarded_at)
+           values (${t(p.id)}, array['football', 'cooking'], '{"seed": true}', now());`,
         ]),
   ]),
   ...PUPIL_LIST.filter((p) => p.consent !== null).map((p, i) => {
