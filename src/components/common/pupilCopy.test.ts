@@ -61,3 +61,20 @@ describe('home copy (runbook S15)', () => {
     }
   });
 });
+
+describe('board copy (specs/video-board.md)', () => {
+  it('builds the breadcrumb like "Basic 7 Science · Materials" (P10)', () => {
+    expect(COPY.board.breadcrumb('Basic 7', 'Integrated Science', 'Materials')).toBe('Basic 7 Science · Materials');
+  });
+
+  it('uses the spec words for the paused label and the sound pill (P4, P5)', () => {
+    expect(COPY.board.tapToContinue).toBe('tap to continue');
+    expect(COPY.board.tapForSound).toBe('Tap for sound');
+    expect(COPY.board.watchAgain).toBe('Watch again');
+  });
+
+  it('uses the runbook download line and counts videos, never a percentage', () => {
+    expect(COPY.topic.needsData('8')).toBe('This topic needs 8 MB of data. Download it now, on Wi-Fi if you can.');
+    expect(COPY.topic.progress(2, 11)).toBe('2 of 11 videos');
+  });
+});

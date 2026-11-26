@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react-native';
-import { Redirect } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -13,6 +13,7 @@ import { TextField } from '@/components/common/TextField';
 import { board, colors, fonts, spacing } from '@/components/common/theme';
 import { useReducedMotion } from '@/components/common/useReducedMotion';
 import { FAKE_PREREQ, useDevFlags } from '@/data/devFlags';
+import { clearTopicMedia } from '@/data/videoCache';
 import { checkSupabaseHealth, type HealthResult } from '@/data/health';
 
 /**
@@ -44,6 +45,10 @@ function DevComponents() {
 
       <Section title="Home (S15)">
         <FakePrerequisiteSwitch />
+      </Section>
+
+      <Section title="Board video test (S16)">
+        <BoardVideoTest />
       </Section>
 
       <Section title="Text">
@@ -164,6 +169,30 @@ function FakePrerequisiteSwitch() {
         variant={on ? 'primary' : 'secondary'}
         label={on ? 'Turn the fake prerequisite off' : 'Turn the fake prerequisite on'}
         onPress={() => setOn(!on)}
+      />
+    </>
+  );
+}
+
+/**
+ * Runbook S16 item 5: opens the Materials topic, which downloads the topic
+ * (first time) and plays the overview on the board. Needs a signed-in test
+ * pupil. "Remove downloaded videos" lets the download be tested again.
+ */
+function BoardVideoTest() {
+  const router = useRouter();
+  const [cleared, setCleared] = useState(false);
+  return (
+    <>
+      <Body>Opens {FAKE_PREREQ.topicCode}: download, then the overview on the board. Sign in as a test pupil first.</Body>
+      <PillButton label="Board video test" onPress={() => router.push({ pathname: '/topic/[id]', params: { id: FAKE_PREREQ.topicCode } })} />
+      <PillButton
+        variant="secondary"
+        label={cleared ? 'Downloaded videos removed' : 'Remove downloaded videos'}
+        onPress={async () => {
+          await clearTopicMedia(FAKE_PREREQ.topicCode);
+          setCleared(true);
+        }}
       />
     </>
   );

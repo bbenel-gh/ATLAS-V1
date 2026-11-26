@@ -4,6 +4,10 @@ Last updated: 26 November 2026, team with Bright (S15). Sprint mode is on (D-30)
 
 ## Current session
 
+S16, topic download and board video, on `feat/S16-video-board` (cut from `feat/S15-home`). D-45. `.vtt` parser and video rules (`src/domain/vtt.ts`, `src/domain/videoPlan.ts`, tests first), topic download cache (`src/data/videoCache.ts`: one file at a time, pause and resume, size check, manifest by content version, works offline), board player on expo-video meeting P1 to P10, download screen and overview board on the topic route, dev "Board video test". R2 bucket created by Bright; **no test files uploaded yet** (`npm run media:check -- --base <R2 link>`: 0 of 44). Typecheck, lint, test (622) pass, web and Android bundles build. **Not proven: every phone check** in `specs/video-board.md` Done when (needs the upload, then content links and `content:import`).
+
+## Earlier
+
 S15, Home, on `feat/S15-home` (cut from `feat/S14-onboarding`). D-44. "Recommended for you" (teacher-set topics from the new `class_topics` table, segments moved on or missed in a re-check, a typed re-check slot for S33) and "Choose a topic" (Integrated Science, Mathematics "Coming soon"), topic cards with "5 parts" and a quiet progress line, prerequisite nudge (`src/domain/prerequisites.ts`, fake data in Jest) whose "Take me to the class topic anyway" always opens the topic, dev switch for a fake prerequisite on `/dev/components`. Home shows its phone copy first; the pupil gate is kept on the phone too, so an offline restart reaches Home. Migration `20261127090000_class_topics.sql` on atlas-dev, RLS 190, probe as TEST-P1 PASS. Typecheck, lint, test (559) pass, web export builds. **Not proven: the B4 gate on Phone A** (both sections open the topic, nudge shows and is skippable, airplane mode restart; BL-8).
 
 ## Earlier

@@ -103,5 +103,28 @@ export const COPY = {
     nudgeAnyway: 'Take me to the class topic anyway',
     refreshing: 'Updating',
   },
+  /** The board video (specs/video-board.md P4, P5, P9, P10). */
+  board: {
+    tapToContinue: 'tap to continue',
+    tapToPause: 'Lesson video. Tap to pause.',
+    tapForSound: 'Tap for sound',
+    watchAgain: 'Watch again',
+    breadcrumb: (level: string, subject: string, topic: string) =>
+      [level, String(subject ?? '').replace(/^Integrated /, '')].filter(Boolean).join(' ') + ` · ${topic ?? ''}`,
+  },
+  /** Topic download (runbook S16 item 2). */
+  topic: {
+    needsData: (mb: string) => `This topic needs ${mb} MB of data. Download it now, on Wi-Fi if you can.`,
+    checkingSize: 'Checking how much data this topic needs.',
+    download: 'Download',
+    continueDownload: 'Continue the download',
+    cancel: 'Cancel',
+    progress: (n: number, total: number) => `${n} of ${total} videos`,
+    paused: 'The download is paused. Your finished videos are kept.',
+    failed: 'The download stopped. Your finished videos are kept. Try again when you have a connection.',
+    notFound: 'This topic is not ready yet.',
+    overview: 'Overview',
+    ready: 'This topic is on your phone. It works without data now.',
+  },
   offline: 'No connection. Check the data and try again.',
 } as const;
