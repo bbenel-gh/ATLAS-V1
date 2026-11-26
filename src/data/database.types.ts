@@ -241,6 +241,49 @@ export type Database = {
           },
         ]
       }
+      class_topics: {
+        Row: {
+          class_id: string
+          set_at: string
+          set_by: string | null
+          topic_id: string
+        }
+        Insert: {
+          class_id: string
+          set_at?: string
+          set_by?: string | null
+          topic_id: string
+        }
+        Update: {
+          class_id?: string
+          set_at?: string
+          set_by?: string | null
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_topics_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_topics_set_by_fkey"
+            columns: ["set_by"]
+            isOneToOne: false
+            referencedRelation: "staff"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_topics_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classes: {
         Row: {
           created_at: string

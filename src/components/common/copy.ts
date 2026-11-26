@@ -80,5 +80,28 @@ export const COPY = {
     thanks: (name: string) => `Thank you, ${name}. Let's start.`,
     go: 'Go to my lessons',
   },
+  /** Home (runbook S15, specs/framework.md stage 2, FR-8, FR-9). */
+  home: {
+    greeting: (name: string) => {
+      const n = String(name).trim();
+      return n ? `Hello, ${n}.` : 'Hello.';
+    },
+    recommended: 'Recommended for you',
+    recommendedEmpty: 'Nothing here right now. Choose a topic below.',
+    choose: 'Choose a topic',
+    comingSoon: 'Coming soon',
+    parts: (n: number) => `${n} ${n === 1 ? 'part' : 'parts'}`,
+    progress: (done: number, total: number) => `${done} of ${total} parts done`,
+    setByTeacher: 'From your class',
+    reteach: "Let's look at this part again.",
+    reteachLabel: (code: string) => `Part ${code}`,
+    recheck: (title: string) => `Three quick questions on ${title}.`,
+    recheckLabel: 'Check in',
+    nudgeTitle: "I'd suggest this first, here's why.",
+    nudgeReason: (titles: string) => `This topic builds on ${titles}. Starting there can make this one easier.`,
+    nudgeGo: (title: string) => `Go to ${title}`,
+    nudgeAnyway: 'Take me to the class topic anyway',
+    refreshing: 'Updating',
+  },
   offline: 'No connection. Check the data and try again.',
 } as const;

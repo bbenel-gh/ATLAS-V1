@@ -164,7 +164,7 @@ const ALL_TABLES = [
   'schools', 'staff', 'classes', 'pupils', 'consents', 'app_settings', 'profiles', 'topics', 'segments',
   'video_versions', 'check_items', 'worked_examples', 'exam_papers', 'exam_items', 'exam_item_keys',
   'recheck_items', 'overview_responses', 'attempts', 'segment_status', 'flags', 'exam_attempts',
-  'exam_answers', 'mastery', 'ai_calls', 'signin_rate',
+  'exam_answers', 'mastery', 'ai_calls', 'signin_rate', 'class_topics',
 ] as const;
 
 /**
@@ -233,6 +233,13 @@ async function pupilChecks(admin: SupabaseClient) {
   await seesNothing(p1, 'P1 cannot read the pupil in 7B', 'pupils', 'id', [P4]);
   await seesOnly(p1, 'P1', 'classes', 'id', [CLASSES.A.id, CLASSES.B.id], [CLASSES.A.id], 'class');
   await seesNothing(p1, 'P1 cannot read staff rows', 'staff', 'id', Object.values(STAFF).map((s) => s.id));
+
+  // S15 (D-44): topics the teacher set. Own class only, read only.
+  await seesOnly(p1, 'P1', 'class_topics', 'class_id', [CLASSES.A.id, CLASSES.B.id], [CLASSES.A.id], 'class_topics (own class)');
+  await insertRefused(p1, 'P1 cannot set a topic for their class', 'class_topics', { class_id: CLASSES.A.id, topic_id: CONTENT.topicId });
+  const p1Delete = await p1.from('class_topics').delete().eq('class_id', CLASSES.A.id).select('class_id');
+  check('P1 cannot remove a topic from their class', p1Delete.error !== null || (p1Delete.data ?? []).length === 0,
+    `${(p1Delete.data ?? []).length} row(s) deleted`);
 
   // Flags and the AI log: not even their own (P1 has one of each).
   await seesNothing(p1, 'P1 cannot read flags, not even their own', 'flags', 'pupil_id', PUPIL_IDS);
@@ -324,7 +331,7 @@ async function pupilChecks(admin: SupabaseClient) {
   }
 }
 
-async function teacherChecks() {
+async function teacherChecks(admin: SupabaseClient) {
   section('Teacher of Test Basic 7A');
   const t7a = await signIn(USERS.teacher7A);
   await seesOnly(t7a, 'Teacher 7A', 'pupils', 'id', PUPIL_IDS, CLASS_7A_PUPIL_IDS, 'pupil (P1 to P3, not P4)');
@@ -343,11 +350,32 @@ async function teacherChecks() {
   await updateRefused(t7a, "Teacher 7A cannot change P1's onboarding answers", 'profiles', { interests: ['music'], onboarded_at: null }, 'pupil_id', P1);
   await updateRefused(t7a, 'Teacher 7A cannot clear a flag (admin job)', 'flags', { cleared_at: new Date().toISOString() }, 'id', r1.flag);
 
+  // S15 (D-44): class_topics. The admin removes 7B's row first, so a refused
+  // insert for 7B is refused by RLS, not by the primary key.
+  await seesOnly(t7a, 'Teacher 7A', 'class_topics', 'class_id', [CLASSES.A.id, CLASSES.B.id], [CLASSES.A.id], 'class_topics');
+  const testRow = (classId: string) => ({ class_id: classId, topic_id: CONTENT.topicId });
+  const removed = await t7a.from('class_topics').delete().match(testRow(CLASSES.A.id)).select('class_id');
+  check('Teacher 7A can remove a topic from 7A', !removed.error && (removed.data ?? []).length === 1, removed.error?.message ?? `${(removed.data ?? []).length} rows`);
+  await insertRefused(t7a, 'Teacher 7A cannot set a topic in the name of another teacher', 'class_topics',
+    { ...testRow(CLASSES.A.id), set_by: STAFF.teacher7B.id });
+  const added = await t7a.from('class_topics').insert(testRow(CLASSES.A.id)).select('set_by');
+  check('Teacher 7A can set a topic for 7A, recorded as set by them',
+    !added.error && added.data?.[0]?.set_by === STAFF.teacher7A.id, JSON.stringify(added.data ?? added.error));
+  const adminRemoved = await admin.from('class_topics').delete().match(testRow(CLASSES.B.id)).select('class_id');
+  check("Admin can remove 7B's topic", !adminRemoved.error && (adminRemoved.data ?? []).length === 1, adminRemoved.error?.message);
+  await insertRefused(t7a, 'Teacher 7A cannot set a topic for 7B', 'class_topics', testRow(CLASSES.B.id));
+  const adminAdded = await admin.from('class_topics').insert({ ...testRow(CLASSES.B.id), set_by: STAFF.teacher7B.id }).select('class_id');
+  check("Admin can set 7B's topic back", !adminAdded.error && (adminAdded.data ?? []).length === 1, adminAdded.error?.message);
+  const t7aDeleteB = await t7a.from('class_topics').delete().eq('class_id', CLASSES.B.id).select('class_id');
+  check('Teacher 7A cannot remove a topic from 7B', t7aDeleteB.error !== null || (t7aDeleteB.data ?? []).length === 0,
+    `${(t7aDeleteB.data ?? []).length} row(s) deleted`);
+
   section('Teacher of Test Basic 7B');
   const t7b = await signIn(USERS.teacher7B);
   await seesOnly(t7b, 'Teacher 7B', 'pupils', 'id', PUPIL_IDS, [P4], 'pupil (P4 only)');
   await seesOnly(t7b, 'Teacher 7B', 'attempts', 'pupil_id', PUPIL_IDS, [P4], 'attempts');
   await seesOnly(t7b, 'Teacher 7B', 'flags', 'pupil_id', PUPIL_IDS, [P4], 'flags');
+  await seesOnly(t7b, 'Teacher 7B', 'class_topics', 'class_id', [CLASSES.A.id, CLASSES.B.id], [CLASSES.B.id], 'class_topics');
 }
 
 async function adminChecks(admin: SupabaseClient) {
@@ -392,7 +420,7 @@ async function main() {
   section('Admin sign-in (used to confirm refused writes changed nothing)');
   const admin = await signIn(USERS.admin);
   await pupilChecks(admin);
-  await teacherChecks();
+  await teacherChecks(admin);
   await adminChecks(admin);
 
   section('Pupil sign-in functions (service role only, S10)');

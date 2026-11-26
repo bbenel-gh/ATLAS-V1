@@ -2,6 +2,7 @@ import { interpretSigninReply, type SigninOutcome, type SigninSession } from '@/
 import type { PupilGate } from '@/domain/nextScreen';
 
 import { getEnv } from './env';
+import { readLocalGate, writeLocalGate } from './gateStore';
 import { readLocalOnboarding } from './onboardingStore';
 import { supabase } from './supabase';
 
@@ -79,11 +80,27 @@ export async function withTimeout<T>(run: (signal: AbortSignal) => PromiseLike<T
 /**
  * What nextScreen needs, read with the pupil's own session (RLS: own rows only).
  * null: the signed-in user is not a pupil (a staff test account, say).
- * Throws OfflineError when the network fails.
+ * Network fails: the last gate saved on this phone for this pupil, else OfflineError.
  */
 export async function fetchPupilGate(): Promise<PupilGate | null> {
   const userId = await signedInUserId();
   if (!userId) return null;
+  try {
+    const gate = await fetchPupilGateOnline(userId);
+    await writeLocalGate(userId, gate);
+    return gate;
+  } catch (e) {
+    // Offline: the last gate this phone saw for this pupil (S15). A withdrawn
+    // consent still applies as soon as the network is back.
+    if (e instanceof OfflineError) {
+      const local = await readLocalGate(userId);
+      if (local) return local;
+    }
+    throw e;
+  }
+}
+
+async function fetchPupilGateOnline(userId: string): Promise<PupilGate | null> {
   const pupil = await withTimeout((signal) =>
     supabase.from('pupils').select('id, ai_notice_seen_at').eq('user_id', userId).abortSignal(signal).maybeSingle(),
   );

@@ -14,11 +14,14 @@ Amended 25 November 2026 by Bright with the team (D-36, S10): added `signin_rate
 
 Amended 26 November 2026 by Bright with the team (D-41, S14, BL-16): `profiles` gained the time spent on each onboarding screen and the date onboarding was finished; onboarding counts as done only when that date is set. A pupil may change their own display name (letters, spaces and hyphens, at most 20) and class level (Basic 7 to 9), and nothing else on their `pupils` row except the AI notice date.
 
+Amended 26 November 2026 by Bright with the team (D-44, S15): added `class_topics`, the topics a class teacher has set, shown under "Recommended for you" on Home.
+
 | Table | Holds |
 | --- | --- |
 | `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
 | `staff` | Admin and teacher accounts, role (admin or teacher). A teacher's classes are found through `classes` |
 | `classes` | Class name, school (link to `schools`), teacher, join code |
+| `class_topics` | Class, topic, set by (staff), date set. One row per class and topic. A pupil reads their own class's rows; a teacher reads and changes their own classes; an admin all |
 | `pupils` | Class (optional), display name, school as the pupil stated it, school (optional link to `schools`, set by an admin), class level, pupil code, hashed PIN, failed PIN count, locked until, signed up by (self or admin), status (active or suspended), AI notice seen date, date created |
 | `consents` | Pupil, method (paper or in-app), recorded by (staff, for paper), date given, form reference, withdrawn date |
 | `app_settings` | Public sign-up on or off, global daily AI call cap, sign-ups per phone per day. One row, admin only |

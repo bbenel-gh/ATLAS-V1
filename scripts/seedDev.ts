@@ -150,6 +150,14 @@ const sql: string[] = [
      '["one", "two", "three"]', '[{"text": "sound", "code": null}, {"text": "m1", "code": "T1-M1"}, {"text": "m2", "code": "T1-M2"}]');`,
   `insert into public.exam_papers (id, topic_id, label, duration_minutes)
    values (${t(CONTENT.paperId)}, ${t(CONTENT.topicId)}, 'A', 30);`,
+  // S15 (D-44): topics set by the class teacher, shown in "Recommended for you".
+  // Both classes get the test topic. 7A (P1 to P3, the phone test pupils) also
+  // gets the real Materials topic when content:import has loaded it.
+  `insert into public.class_topics (class_id, topic_id, set_by) values
+   (${t(CLASSES.A.id)}, ${t(CONTENT.topicId)}, ${t(STAFF.teacher7A.id)}),
+   (${t(CLASSES.B.id)}, ${t(CONTENT.topicId)}, ${t(STAFF.teacher7B.id)});`,
+  `insert into public.class_topics (class_id, topic_id, set_by)
+   select ${t(CLASSES.A.id)}, id, ${t(STAFF.teacher7A.id)} from public.topics where code = 'B7-MATERIALS';`,
   `insert into public.exam_items (id, paper_id, kind, sort_order, question, options, marks) values
    (${t(CONTENT.objectiveItemId)}, ${t(CONTENT.paperId)}, 'objective', 1, 'Test objective item', '["Wood", "Glass", "Iron", "Paper"]', 1),
    (${t(CONTENT.theoryItemId)}, ${t(CONTENT.paperId)}, 'theory', 2, 'Test theory item', null, 4);`,

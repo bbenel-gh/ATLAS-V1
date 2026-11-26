@@ -12,6 +12,7 @@ import { Body, Heading, Label } from '@/components/common/Text';
 import { TextField } from '@/components/common/TextField';
 import { board, colors, fonts, spacing } from '@/components/common/theme';
 import { useReducedMotion } from '@/components/common/useReducedMotion';
+import { FAKE_PREREQ, useDevFlags } from '@/data/devFlags';
 import { checkSupabaseHealth, type HealthResult } from '@/data/health';
 
 /**
@@ -39,6 +40,10 @@ function DevComponents() {
       <Section title="atlas-dev and Sentry">
         <HealthCheck />
         <TestError />
+      </Section>
+
+      <Section title="Home (S15)">
+        <FakePrerequisiteSwitch />
       </Section>
 
       <Section title="Text">
@@ -139,6 +144,28 @@ function TestError() {
       <PillButton variant="secondary" label="Send test error" onPress={send} />
       {sent ? <Body muted>Test error sent. Event id {sent}.</Body> : null}
     </View>
+  );
+}
+
+/**
+ * Runbook S15 item 6: gives the Materials topic a fake prerequisite, so the
+ * "I'd suggest this first" nudge shows on a phone. Kept on the phone across
+ * restarts until switched off. Has no effect in a release build.
+ */
+function FakePrerequisiteSwitch() {
+  const on = useDevFlags((s) => s.fakePrerequisite);
+  const setOn = useDevFlags((s) => s.setFakePrerequisite);
+  return (
+    <>
+      <Body>
+        Fake prerequisite on {FAKE_PREREQ.topicCode}: {on ? 'on' : 'off'}. When on, opening the topic from Home shows the nudge.
+      </Body>
+      <PillButton
+        variant={on ? 'primary' : 'secondary'}
+        label={on ? 'Turn the fake prerequisite off' : 'Turn the fake prerequisite on'}
+        onPress={() => setOn(!on)}
+      />
+    </>
   );
 }
 

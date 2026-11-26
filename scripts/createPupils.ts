@@ -103,7 +103,14 @@ try {
   const pupils = names.map((name, i) => ({ id: createdPupilId(randomBytes), name, code: codes[i] ?? '' }));
   const sql = [
     'begin;',
-    ...(classes.length === 0 ? [`insert into public.classes (id, name) values (${t(classId)}, ${t(className)});`] : []),
+    ...(classes.length === 0
+      ? [
+          `insert into public.classes (id, name) values (${t(classId)}, ${t(className)});`,
+          // S15 (D-44): a new class gets the Materials topic in "Recommended for you", when it is loaded.
+          `insert into public.class_topics (class_id, topic_id, set_by)
+           select ${t(classId)}, id, ${t(STAFF.admin.id)} from public.topics where code = 'B7-MATERIALS';`,
+        ]
+      : []),
     ...pupils.map(
       (p) => `insert into public.pupils (id, class_id, display_name, code, signed_up_by, class_level, school_id, school_given)
        select ${t(p.id)}, c.id, ${t(p.name)}, ${t(p.code)}, 'admin', c.level, c.school_id, s.name

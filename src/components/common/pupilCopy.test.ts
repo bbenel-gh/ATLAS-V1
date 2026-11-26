@@ -39,3 +39,25 @@ describe('pupil copy', () => {
     }
   });
 });
+
+describe('home copy (runbook S15)', () => {
+  it('uses the runbook lines', () => {
+    expect(COPY.home.greeting('Ama')).toBe('Hello, Ama.');
+    expect(COPY.home.recommended).toBe('Recommended for you');
+    expect(COPY.home.choose).toBe('Choose a topic');
+    expect(COPY.home.parts(5)).toBe('5 parts');
+    expect(COPY.home.nudgeTitle).toBe("I'd suggest this first, here's why.");
+    expect(COPY.home.nudgeAnyway).toBe('Take me to the class topic anyway');
+    expect(COPY.home.comingSoon).toBe('Coming soon');
+  });
+
+  it('greets calmly without a name', () => {
+    expect(COPY.home.greeting('  ')).toBe('Hello.');
+  });
+
+  it('shows no percentage anywhere on Home', () => {
+    for (const s of [COPY.home.progress(2, 5), COPY.home.parts(5), COPY.home.parts(1)]) {
+      expect(s).not.toContain('%');
+    }
+  });
+});

@@ -1,8 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 25 November 2026, team with Bright (S14). Sprint mode is on (D-30).
+Last updated: 26 November 2026, team with Bright (S15). Sprint mode is on (D-30).
 
 ## Current session
+
+S15, Home, on `feat/S15-home` (cut from `feat/S14-onboarding`). D-44. "Recommended for you" (teacher-set topics from the new `class_topics` table, segments moved on or missed in a re-check, a typed re-check slot for S33) and "Choose a topic" (Integrated Science, Mathematics "Coming soon"), topic cards with "5 parts" and a quiet progress line, prerequisite nudge (`src/domain/prerequisites.ts`, fake data in Jest) whose "Take me to the class topic anyway" always opens the topic, dev switch for a fake prerequisite on `/dev/components`. Home shows its phone copy first; the pupil gate is kept on the phone too, so an offline restart reaches Home. Migration `20261127090000_class_topics.sql` on atlas-dev, RLS 190, probe as TEST-P1 PASS. Typecheck, lint, test (559) pass, web export builds. **Not proven: the B4 gate on Phone A** (both sections open the topic, nudge shows and is skippable, airplane mode restart; BL-8).
+
+## Earlier
 
 S14, onboarding, on `feat/S14-onboarding` (cut from `feat/S13-codes-two-phones`), on the 23 Nov runbook (D-40: the 25 Nov rewrite was rolled back; its S14 tooling work is shelved on `feat/S14-tooling`, not for merge). D-41. Four screens plus the end screen in `src/components/onboarding/`, resume rule in `src/domain/onboarding.ts` (31 tests), answers kept on the phone first then synced, migration `20261126090000_onboarding.sql` on atlas-dev (`profiles.onboarding`, `profiles.onboarded_at`, pupil may set own name and class level). RLS 177, test:signin 25 PASS, probe as TEST-P3 PASS. Typecheck, lint, test (485) pass, web export builds. **Not proven: the B3 gate on Phone A** (stopwatch, resume, offline; `docs/test-script.md` "B3 onboarding", BL-8). BL-16 closed: `specs/data-model.md` amended with Bright present.
 
