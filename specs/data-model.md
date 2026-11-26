@@ -12,6 +12,8 @@ Amended 25 November 2026 by Bright with the team (D-34, S09): `topics` gained pr
 
 Amended 25 November 2026 by Bright with the team (D-36, S10): added `signin_rate`. A pupil's auth user is created at first sign-in with an internal email `pupil-<pupil id>@pupils.atlas.invalid` that the pupil never sees; `pin_hash` is bcrypt (cost 10) made inside Postgres.
 
+Amended 26 November 2026 by Bright with the team (D-41, S14, BL-16): `profiles` gained the time spent on each onboarding screen and the date onboarding was finished; onboarding counts as done only when that date is set. A pupil may change their own display name (letters, spaces and hyphens, at most 20) and class level (Basic 7 to 9), and nothing else on their `pupils` row except the AI notice date.
+
 | Table | Holds |
 | --- | --- |
 | `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
@@ -20,7 +22,7 @@ Amended 25 November 2026 by Bright with the team (D-36, S10): added `signin_rate
 | `pupils` | Class (optional), display name, school as the pupil stated it, school (optional link to `schools`, set by an admin), class level, pupil code, hashed PIN, failed PIN count, locked until, signed up by (self or admin), status (active or suspended), AI notice seen date, date created |
 | `consents` | Pupil, method (paper or in-app), recorded by (staff, for paper), date given, form reference, withdrawn date |
 | `app_settings` | Public sign-up on or off, global daily AI call cap, sign-ups per phone per day. One row, admin only |
-| `profiles` | Interests, playful-choice behaviour, overview keywords and confusions |
+| `profiles` | Interests, playful-choice behaviour, overview keywords and confusions, onboarding times per screen (`onboarding` jsonb: name, class and interests ms, updated at), onboarding finished date (`onboarded_at` timestamptz) |
 | `topics` | Code (like B7-MATERIALS), title, class level, subject, prerequisites (topic codes), content version (import date and short hash of the content file) |
 | `segments` | Topic, code (OV for the overview, then 1A, 1B and on, D-33), title, order, objective, reference meaning, misconceptions (list of code and text) |
 | `video_versions` | Segment, label (a or b), 360p and 480p URLs, example world, misconception tags, interest tags, poster URL (`poster_url` text), captions URL (`captions_url` text), board colour (`board_colour` text, hex like #F6F0E6), duration in seconds (`duration_seconds` integer) |

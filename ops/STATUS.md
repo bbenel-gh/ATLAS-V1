@@ -4,7 +4,7 @@ Last updated: 25 November 2026, team with Bright (S14). Sprint mode is on (D-30)
 
 ## Current session
 
-S14, onboarding, on `feat/S14-onboarding` (cut from `feat/S13-codes-two-phones`), on the 23 Nov runbook (D-40: the 25 Nov rewrite was rolled back; its S14 tooling work is shelved on `feat/S14-tooling`, not for merge). D-41. Four screens plus the end screen in `src/components/onboarding/`, resume rule in `src/domain/onboarding.ts` (31 tests), answers kept on the phone first then synced, migration `20261126090000_onboarding.sql` on atlas-dev (`profiles.onboarding`, `profiles.onboarded_at`, pupil may set own name and class level). RLS 177, test:signin 25 PASS, probe as TEST-P3 PASS. Typecheck, lint, test (485) pass, web export builds. **Not proven: the B3 gate on Phone A** (stopwatch, resume, offline; `docs/test-script.md` "B3 onboarding", BL-8). BL-16: `specs/data-model.md` needs the new columns (Bright).
+S14, onboarding, on `feat/S14-onboarding` (cut from `feat/S13-codes-two-phones`), on the 23 Nov runbook (D-40: the 25 Nov rewrite was rolled back; its S14 tooling work is shelved on `feat/S14-tooling`, not for merge). D-41. Four screens plus the end screen in `src/components/onboarding/`, resume rule in `src/domain/onboarding.ts` (31 tests), answers kept on the phone first then synced, migration `20261126090000_onboarding.sql` on atlas-dev (`profiles.onboarding`, `profiles.onboarded_at`, pupil may set own name and class level). RLS 177, test:signin 25 PASS, probe as TEST-P3 PASS. Typecheck, lint, test (485) pass, web export builds. **Not proven: the B3 gate on Phone A** (stopwatch, resume, offline; `docs/test-script.md` "B3 onboarding", BL-8). BL-16 closed: `specs/data-model.md` amended with Bright present.
 
 ## Earlier
 
