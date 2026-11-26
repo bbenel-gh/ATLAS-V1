@@ -1,0 +1,25 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change.",
+  "version": "OV-a",
+  "title": "Diversity of Matter: Materials",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      { "board": "Materials", "say": "This topic is about materials." },
+      { "board": "what things are made of", "say": "A material is what a thing is made of." },
+      { "board": "cup: clay   bag: plastic", "say": "Look at a cup. It may be made of clay. A bag may be made of plastic." },
+      { "board": "door: wood   pot: metal", "say": "A door may be made of wood, and a cooking pot of metal." }
+    ],
+    [
+      { "board": "1. What a material is", "say": "First, you will learn what a material is, and how it is different from the object made from it." },
+      { "board": "2. Properties", "say": "Next, you will look at properties. Is it hard or soft? Does it bend? Does water pass through it?" },
+      { "board": "3. Natural or man-made", "say": "Then you will sort materials. Some come from nature, like wood and cotton. People make others, like glass and plastic." }
+    ],
+    [
+      { "board": "4. Choosing for a use", "say": "After that, you will choose a material for a job, and say why it suits that job." },
+      { "board": "5. Caring and reusing", "say": "Last, you will think about caring for materials, and how to reuse them so less is wasted." },
+      { "board": "Look around you", "say": "As you watch, look around you. Every thing you see is made of a material." },
+      { "board": "Let's begin", "say": "Take your time. Let's begin." }
+    ]
+  ]
+}

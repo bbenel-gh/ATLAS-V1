@@ -20,7 +20,8 @@
     "test:rls": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/rlsTests.ts",
     "version:bump": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bumpVersion.ts",
     "pupils:create": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/createPupils.ts",
-    "media:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/checkMedia.ts"
+    "media:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/checkMedia.ts",
+    "video:make": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/makeVideo.ts"
   },
   "dependencies": {
     "@expo-google-fonts/caveat": "^0.4.2",
@@ -56,10 +57,12 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@napi-rs/canvas": "^1.2.1",
     "@types/jest": "30.0.0",
     "@types/react": "~19.3.0",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~58.0.4",
+    "ffmpeg-static": "^5.3.0",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.15",
     "prettier": "3.10.1",
