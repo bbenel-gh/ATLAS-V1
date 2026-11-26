@@ -2,9 +2,9 @@
  * Every line a pupil reads on the account screens, in one file (runbook S12),
  * so wording can be replaced without code changes.
  *
- * The AI notice is the runbook S12 DRAFT. The final wording comes from the
- * data protection consultant (specs/prd.md section 10, BL-12). Keep it under
- * 80 words (FR-3); pupilCopy.test.ts checks.
+ * The AI notice is the DRAFT in specs/B2-ai-notice.md (D-42), waiting for
+ * Bright and the data protection consultant (specs/prd.md section 10). Keep
+ * it under 80 words (FR-3); pupilCopy.test.ts checks.
  *
  * Calm, second person, short sentences. No exclamation marks, no em dashes
  * (CLAUDE.md rule 7).
@@ -13,9 +13,10 @@ export const COPY = {
   notice: {
     title: 'Before you start',
     body:
-      'ATLAS is a learning app. Some of your answers are checked by a computer program called AI. ' +
+      'ATLAS is a learning app. A computer program called AI reads some of your answers. ' +
       'It looks at what you write to see how you are thinking. It does not see your name. ' +
-      'A teacher can check its work. You can ask your teacher any time if something feels wrong.',
+      'If you send a photo of your writing, the photo is deleted once your words are saved. ' +
+      'The AI can make mistakes. A teacher can check its work. If something feels wrong, tell your teacher.',
     button: 'I understand',
   },
   waiting: {
@@ -41,9 +42,8 @@ export const COPY = {
       `Too many tries. Please wait ${minutes} ${minutes === 1 ? 'minute' : 'minutes'}, or ask your teacher.`,
   },
   /**
-   * Onboarding (runbook S14). The three "would you rather" questions are the
-   * runbook DRAFT; specs/B3-playful.md (BL-12) will replace them. The short
-   * option labels are new DRAFT copy for Bright to confirm (D-41).
+   * Onboarding (runbook S14). The three "would you rather" questions and
+   * their option labels are approved in specs/B3-playful.md (D-42).
    */
   onboarding: {
     progress: (step: number) => `Step ${step + 1} of 4`,
