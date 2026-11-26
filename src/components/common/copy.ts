@@ -2,9 +2,9 @@
  * Every line a pupil reads on the account screens, in one file (runbook S12),
  * so wording can be replaced without code changes.
  *
- * The AI notice is the DRAFT in specs/B2-ai-notice.md (D-42), waiting for
- * Bright and the data protection consultant (specs/prd.md section 10). Keep
- * it under 80 words (FR-3); pupilCopy.test.ts checks.
+ * The AI notice is the approved text in specs/B2-ai-notice.md (D-43); the
+ * data protection consultant still confirms it (specs/prd.md section 10).
+ * Keep it under 80 words (FR-3); pupilCopy.test.ts checks.
  *
  * Calm, second person, short sentences. No exclamation marks, no em dashes
  * (CLAUDE.md rule 7).

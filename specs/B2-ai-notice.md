@@ -1,6 +1,6 @@
 # B2 pupil AI notice
 
-Status: DRAFT, written 26 November 2026 with Bright present (D-42). Waiting for Bright's approval of the wording and for the data protection consultant to confirm it (prd section 10). Until then the app shows this draft.
+Status: approved by Bright with the team, 26 November 2026 (D-42, D-43). The data protection consultant still confirms it before the pilot (prd section 10). Any change they ask for is made here and in `src/components/common/copy.ts`.
 
 Shown once after first sign-in (prd FR-3, `specs/B2.md` step 4). Under 80 words, plain English, calm, no exclamation marks, no em dashes.
 
