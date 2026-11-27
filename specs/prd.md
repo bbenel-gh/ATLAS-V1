@@ -110,6 +110,7 @@ The journey has eight stages. Onboarding runs once. Topic choice and the overvie
 - FR-24. A pupil gets 3 tries per segment. After the third failed try the pupil sees "We'll come back to this one. You're not behind." and moves to the next segment.
 - FR-25. The unfinished segment goes to Recommended and a stalled flag goes to the admin. The admin decides: content fix needed, or human help suggested, with a note.
 - FR-26. When the segment returns, the app re-tests it. The flag clears only when the pupil actually gets it.
+- FR-26a. Relearn (D-48). At the end of a segment, after "Well reasoned" (FR-19) or after "We'll come back to this one" (FR-24), the pupil sees a secondary "Relearn" button beside the way forward. It starts a new round of the same segment: tries count from 1 again, 3 per round, and every attempt records its round. The first video of the round is chosen by the rule in section 8.2, counting versions seen in any round as seen and using the misconception codes from the latest round; if every version has been seen, the best match by the same rule is used again, ties going to the one seen longest ago. The status never goes down: complete stays complete; moved on becomes complete when the pupil gets it in a round, which clears the flag and removes it from Recommended (FR-26); a failed round on a moved-on segment adds a note to the open flag rather than a new flag. Exam unlock (FR-27) and mastery use this best status. The server starts the round; the pupil cannot set a status (D-29). The AI caps still apply.
 
 ### 6.7 Stage 6: Timed topic exam
 
@@ -188,6 +189,7 @@ The system prompts are in `specs/ai-prompts.md`. They are first drafts; the qual
 2. From the versions this pupil has not seen, pick the one whose tags match the most codes.
 3. On a tie, pick the version whose examples match the pupil's interests.
 4. If no unseen version is left, show the worked-example card.
+5. Relearn (FR-26a) uses the same rule for the first video of a new round, counting versions seen in any round as seen, with the codes from the latest round. With every version seen, it picks the best match again, ties to the version seen longest ago.
 
 ### 8.3 Reliability
 

@@ -31,8 +31,8 @@ Amended 26 November 2026 by Bright with the team (D-44, S15): added `class_topic
 | `video_versions` | Segment, label (a or b), 360p and 480p URLs, example world, misconception tags, interest tags, poster URL (`poster_url` text), captions URL (`captions_url` text), board colour (`board_colour` text, hex like #F6F0E6), duration in seconds (`duration_seconds` integer) |
 | `check_items` | Segment, try number, question, accepted answers, tap options, reason options, reference reasoning, misconception codes |
 | `worked_examples` | Segment, text, image URL |
-| `attempts` | Pupil, segment, try number, version shown, answer, input mode, reason, sure or not sure, time taken, changed answer, AI verdicts, misconception codes |
-| `segment_status` | Pupil, segment, status (in progress, complete, moved on), tries used |
+| `attempts` | Pupil, segment, round (Relearn, starts at 1, D-48), try number, version shown, answer, input mode, reason, sure or not sure, time taken, changed answer, AI verdicts, misconception codes |
+| `segment_status` | Pupil, segment, status (in progress, complete, moved on; never goes down, D-48), tries used, current round (Relearn, starts at 1, D-48) |
 | `flags` | Pupil, segment, kind (stalled, safeguarding, borderline), status, admin action, notes |
 | `exam_papers` | Topic, label (A or B), duration in minutes |
 | `exam_items` | Paper, kind (objective or theory), question, options, marks. No answers |
