@@ -83,15 +83,21 @@ export const overviewOutputSchema = z.object({
 });
 export type OverviewOutput = z.infer<typeof overviewOutputSchema>;
 
-/** null when the text is not the JSON shape the prompt asks for. */
+/**
+ * null when the text is not the JSON shape the prompt asks for. Thinking text
+ * and a sentence around the JSON are ignored (some stand-in models add them,
+ * D-50): the JSON is the text from the first { to the last }.
+ */
 export function parseOverviewOutput(text: string): OverviewOutput | null {
-  const cleaned = text
-    .trim()
-    .replace(/^```(?:json)?\s*/i, '')
-    .replace(/\s*```$/, '');
+  const cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '');
+  // A list is not the shape asked for, even with the right object inside.
+  if (/^\s*\[/.test(cleaned)) return null;
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start < 0 || end < start) return null;
   let json: unknown;
   try {
-    json = JSON.parse(cleaned);
+    json = JSON.parse(cleaned.slice(start, end + 1));
   } catch {
     return null;
   }

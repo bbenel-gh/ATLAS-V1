@@ -15,6 +15,11 @@
  * every call logged in ai_calls (9), caps before every call (13), a
  * safeguarding verdict makes a flag and nothing else (14). The pupil never
  * waits for this: the phone has already said thanks.
+ *
+ * Provider (D-50): Claude when ANTHROPIC_API_KEY is set. Until then, on
+ * atlas-dev with fake test pupils only, a chain of free OpenRouter models
+ * (OPENROUTER_API_KEY, optional OPENROUTER_MODELS). Stand-in calls are logged
+ * as "openrouter/<model>". Off before any real pupil uses ATLAS.
  */
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
@@ -35,6 +40,7 @@ import {
   startOfUtcDay,
   titlesToCodes,
 } from '../../../src/domain/overview.ts';
+import { loggedModel, pickProvider } from '../../../src/domain/aiProvider.ts';
 
 /** New projects give JSON maps of keys ({"default": "sb_..."}); older ones give single keys. */
 function keyFromEnv(single: string, map: string): string {
@@ -51,11 +57,15 @@ function keyFromEnv(single: string, map: string): string {
 const url = Deno.env.get('SUPABASE_URL') ?? '';
 const serviceKey = keyFromEnv('SUPABASE_SERVICE_ROLE_KEY', 'SUPABASE_SECRET_KEYS');
 const apiKey = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
+const openrouterKey = Deno.env.get('OPENROUTER_API_KEY') ?? '';
+
+// Claude when its key is set; until then the free OpenRouter chain on atlas-dev only (D-50).
+const provider = pickProvider({ anthropicKey: apiKey, openrouterKey, openrouterModels: Deno.env.get('OPENROUTER_MODELS') });
 
 const admin = createClient(url, serviceKey, {
   auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 });
-const anthropic = apiKey ? new Anthropic({ apiKey, maxRetries: 0, timeout: AI_TIMEOUT_MS }) : null;
+const anthropic = provider.kind === 'anthropic' ? new Anthropic({ apiKey, maxRetries: 0, timeout: AI_TIMEOUT_MS }) : null;
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -69,12 +79,18 @@ function reply(status: number, body: OverviewReply, outcome: string, started: nu
   return new Response(JSON.stringify(body), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
 }
 
-type Attempt = { output: OverviewOutput | null; logged: Record<string, unknown>; ms: number };
+/** model is what goes in ai_calls.model: the Claude model, or the stand-in model that answered. */
+type Attempt = { output: OverviewOutput | null; logged: Record<string, unknown>; ms: number; model: string };
 
 /** One call to the model. Never throws: a failure is an attempt with no output. */
-async function askModel(userMessage: string): Promise<Attempt> {
+function askModel(userMessage: string): Promise<Attempt> {
+  if (provider.kind === 'openrouter') return askOpenRouter(provider.models, userMessage);
+  return askClaude(userMessage);
+}
+
+async function askClaude(userMessage: string): Promise<Attempt> {
   const t0 = Date.now();
-  if (!anthropic) return { output: null, logged: { error: 'ANTHROPIC_API_KEY is not set' }, ms: 0 };
+  if (!anthropic) return { output: null, logged: { error: 'no AI key is set' }, ms: 0, model: OVERVIEW_MODEL };
   try {
     const res = await anthropic.messages.create({
       model: OVERVIEW_MODEL,
@@ -91,11 +107,64 @@ async function askModel(userMessage: string): Promise<Attempt> {
         ? { result: output, stop_reason: res.stop_reason, usage: res.usage }
         : { error: 'bad_output', stop_reason: res.stop_reason, text: text.slice(0, 2000) },
       ms: Date.now() - t0,
+      model: OVERVIEW_MODEL,
     };
   } catch (e) {
     const status = e instanceof Anthropic.APIError ? e.status : undefined;
     const kind = e instanceof Anthropic.APIConnectionTimeoutError ? 'timeout' : e instanceof Anthropic.APIError ? 'api_error' : 'error';
-    return { output: null, logged: { error: kind, status: status ?? null }, ms: Date.now() - t0 };
+    return { output: null, logged: { error: kind, status: status ?? null }, ms: Date.now() - t0, model: OVERVIEW_MODEL };
+  }
+}
+
+/**
+ * The stand-in (D-50): OpenRouter chat completions with a model chain. The
+ * first model is tried, and OpenRouter moves to the next on any error, a
+ * used-up free limit included. No app name or referrer is sent. The same
+ * prompt, 20-second limit and zod check as Claude.
+ */
+async function askOpenRouter(models: string[], userMessage: string): Promise<Attempt> {
+  const t0 = Date.now();
+  const chain = { kind: 'openrouter' as const, models };
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${openrouterKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: models[0],
+        models: models.slice(1),
+        max_tokens: 2000,
+        messages: [
+          { role: 'system', content: OVERVIEW_SYSTEM_PROMPT },
+          { role: 'user', content: userMessage },
+        ],
+      }),
+      signal: AbortSignal.timeout(AI_TIMEOUT_MS),
+    });
+    const body = (await res.json().catch(() => null)) as {
+      model?: string;
+      choices?: { message?: { content?: unknown }; finish_reason?: string | null }[];
+      usage?: unknown;
+      error?: { code?: unknown; message?: unknown };
+    } | null;
+    const served = typeof body?.model === 'string' ? body.model : undefined;
+    const model = loggedModel(chain, OVERVIEW_MODEL, served);
+    if (!res.ok || !body?.choices?.[0]) {
+      return { output: null, logged: { error: 'api_error', status: res.status, code: body?.error?.code ?? null }, ms: Date.now() - t0, model };
+    }
+    const choice = body.choices[0];
+    const text = typeof choice.message?.content === 'string' ? choice.message.content : '';
+    const output = choice.finish_reason === 'stop' ? parseOverviewOutput(text) : null;
+    return {
+      output,
+      logged: output
+        ? { result: output, finish_reason: choice.finish_reason, usage: body.usage ?? null }
+        : { error: 'bad_output', finish_reason: choice.finish_reason ?? null, text: text.slice(0, 2000) },
+      ms: Date.now() - t0,
+      model,
+    };
+  } catch (e) {
+    const kind = e instanceof DOMException && e.name === 'TimeoutError' ? 'timeout' : 'error';
+    return { output: null, logged: { error: kind }, ms: Date.now() - t0, model: loggedModel(chain, OVERVIEW_MODEL) };
   }
 }
 
@@ -177,14 +246,16 @@ Deno.serve(async (req) => {
     const loggedInput = JSON.parse(userMessage) as Record<string, unknown>;
 
     let output: OverviewOutput | null = null;
+    let answeredBy = OVERVIEW_MODEL;
     for (let i = 0; i < 2 && !output; i++) {
       const cap = capCheck({ pupilToday: (mine.count ?? 0) + i, globalToday: (all.count ?? 0) + i, globalCap });
       if (cap !== 'ok') return reply(200, { fallback: true, retry: false }, cap, started, pupilId);
       const attempt = await askModel(userMessage);
       output = attempt.output;
+      answeredBy = attempt.model;
       const log = await admin.from('ai_calls').insert({
         job: 'overview',
-        model: OVERVIEW_MODEL,
+        model: attempt.model,
         pupil_id: pupilId,
         input: { ...loggedInput, response_id: input.response_id, try: i + 1 },
         output: attempt.logged,
@@ -201,7 +272,7 @@ Deno.serve(async (req) => {
       confusions: output.confusions,
       segmentsMentioned: titlesToCodes(output.segments_mentioned, segs),
       safeguarding: output.safeguarding,
-      model: OVERVIEW_MODEL,
+      model: answeredBy,
     };
     const upd = await admin.from('overview_responses').update({ ai_result: result }).eq('id', input.response_id);
     if (upd.error) throw new Error('could not save the AI result');

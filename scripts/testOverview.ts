@@ -138,7 +138,8 @@ async function main() {
   check('Send: row saved with the texts', sendRow?.summary_text === summary && sendRow.skipped === false, JSON.stringify(sendRow));
   const calls = callsFor(sendId);
   check('Send: every AI call logged (1 or 2 tries)', calls.length >= 1 && calls.length <= 2, `${calls.length} rows`);
-  check('Send: logged with model claude-haiku-5-5', calls.every((c) => c.model === 'claude-haiku-5-5'));
+  check('Send: logged with claude-haiku-5-5, or a stand-in marked openrouter/ (D-50)', calls.every((c) => c.model === 'claude-haiku-5-5' || String(c.model).startsWith('openrouter/')), JSON.stringify(calls.map((c) => c.model)));
+  info(`models: ${[...new Set(calls.map((c) => String(c.model)))].join(', ')}`);
   const loggedText = JSON.stringify(calls.map((c) => c.input));
   const nameParts = PUPILS.p1.name.split(' ');
   check('Send: no name in ai_calls input', !nameParts.some((n) => loggedText.includes(n)), loggedText.slice(0, 200));

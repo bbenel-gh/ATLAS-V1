@@ -130,6 +130,12 @@ describe('parseOverviewOutput', () => {
   it('reads JSON inside a code fence', () => {
     expect(parseOverviewOutput('```json\n' + JSON.stringify(good) + '\n```')).toEqual(good);
   });
+  it('reads JSON after thinking text, as some stand-in models write (D-50)', () => {
+    expect(parseOverviewOutput('<think>The pupil said wood.</think>\n' + JSON.stringify(good))).toEqual(good);
+  });
+  it('reads JSON with a short sentence around it', () => {
+    expect(parseOverviewOutput('Here is the JSON:\n' + JSON.stringify(good) + '\nDone.')).toEqual(good);
+  });
   it('returns null for text that is not JSON', () => {
     expect(parseOverviewOutput('Sure, here you go')).toBeNull();
     expect(parseOverviewOutput('')).toBeNull();
