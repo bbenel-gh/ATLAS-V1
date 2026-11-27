@@ -81,7 +81,7 @@ export function TopicDownload({ media, onReady }: { media: TopicMedia; onReady: 
           {phase === 'paused' ? <Body muted>{COPY.topic.paused}</Body> : null}
           {phase === 'failed' ? <Body muted>{COPY.topic.failed}</Body> : null}
           <PillButton
-            label={phase === 'idle' ? COPY.topic.download : COPY.topic.continueDownload}
+            label={phase === 'idle' ? COPY.topic.download : COPY.topic.startLesson}
             onPress={() => void start()}
           />
         </>

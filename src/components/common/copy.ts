@@ -117,7 +117,7 @@ export const COPY = {
     needsData: (mb: string) => `This topic needs ${mb} MB of data. Download it now, on Wi-Fi if you can.`,
     checkingSize: 'Checking how much data this topic needs.',
     download: 'Download',
-    continueDownload: 'Continue the download',
+    startLesson: 'Start lesson',
     cancel: 'Cancel',
     progress: (n: number, total: number) => `${n} of ${total} videos`,
     paused: 'The download is paused. Your finished videos are kept.',
