@@ -128,6 +128,9 @@ export const COPY = {
     qualityHint: 'Lower quality uses less data. Higher quality looks sharper.',
     qualityLabel: (q: string) => `${q}p`,
     ready: 'This topic is on your phone. It works without data now.',
+    loadFailed: 'This topic did not open. Try again.',
+    needsDataUnknown: 'This topic needs some data. Download it now, on Wi-Fi if you can.',
+    videoMissing: 'This video is not on your phone yet. Download the topic again.',
   },
   offline: 'No connection. Check the data and try again.',
 } as const;

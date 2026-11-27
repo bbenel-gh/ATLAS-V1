@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 
+import { CalmError } from '@/components/common/CalmError';
 import { COPY } from '@/components/common/copy';
 import { PillButton } from '@/components/common/PillButton';
 import { spacing } from '@/components/common/theme';
@@ -27,6 +28,7 @@ export function VersionBoard({
   onBoardLayout,
   scrollToBoard,
   onEnded,
+  onMissing,
   after,
 }: {
   topicCode: string;
@@ -38,9 +40,12 @@ export function VersionBoard({
   onBoardLayout: (e: LayoutChangeEvent) => void;
   scrollToBoard: () => void;
   onEnded?: () => void;
+  /** The video file is not on the phone: the parent sends the pupil back to the download. */
+  onMissing?: () => void;
   after?: ReactNode;
 }) {
   const [uris, setUris] = useState<Uris | null>(null);
+  const [missing, setMissing] = useState(false);
   const [ended, setEnded] = useState(false);
   const boardRef = useRef<BoardVideoHandle>(null);
 
@@ -51,8 +56,13 @@ export function VersionBoard({
         localUriFor(topicCode, version.id, 'video'),
         localUriFor(topicCode, version.id, 'poster'),
         localUriFor(topicCode, version.id, 'captions'),
-      ]);
-      if (live && video) setUris({ video, poster, captions });
+      ]).catch((e: unknown) => {
+        console.warn('localUriFor failed', e);
+        return [null, null, null] as const;
+      });
+      if (!live) return;
+      if (video) setUris({ video, poster, captions });
+      else setMissing(true);
     })();
     return () => {
       live = false;
@@ -76,6 +86,8 @@ export function VersionBoard({
               onEnded?.();
             }}
           />
+        ) : missing ? (
+          <CalmError message={COPY.topic.videoMissing} onRetry={() => onMissing?.()} />
         ) : null}
       </View>
       {ended ? (

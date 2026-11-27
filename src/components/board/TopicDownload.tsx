@@ -20,7 +20,7 @@ type Phase = 'sizing' | 'idle' | 'downloading' | 'paused' | 'failed';
  */
 export function TopicDownload({ media, onReady }: { media: TopicMedia; onReady: () => void }) {
   const [phase, setPhase] = useState<Phase>('sizing');
-  const [bytes, setBytes] = useState(0);
+  const [bytes, setBytes] = useState<number | null>(0);
   const [progress, setProgress] = useState<DownloadProgress | null>(null);
   const controller = useRef<AbortController | null>(null);
   const quality = useVideoQuality((q) => q.quality);
@@ -31,7 +31,12 @@ export function TopicDownload({ media, onReady }: { media: TopicMedia; onReady: 
     if (!qualityLoaded) return;
     let live = true;
     void (async () => {
-      const [size, manifest] = await Promise.all([getTopicDownloadSize(media, quality), readManifest(media.topicCode)]);
+      // Never stuck on "Checking": if the size cannot be found, offer the download without it.
+      const size = await getTopicDownloadSize(media, quality).catch((e: unknown) => {
+        console.warn('getTopicDownloadSize failed', e);
+        return null;
+      });
+      const manifest = await readManifest(media.topicCode);
       if (!live) return;
       setBytes(size);
       setPhase(manifest?.paused ? 'paused' : 'idle');
@@ -56,7 +61,7 @@ export function TopicDownload({ media, onReady }: { media: TopicMedia; onReady: 
 
   return (
     <View style={styles.wrap}>
-      <Body>{COPY.topic.needsData(formatMegabytes(bytes))}</Body>
+      <Body>{bytes === null ? COPY.topic.needsDataUnknown : COPY.topic.needsData(formatMegabytes(bytes))}</Body>
       {phase === 'downloading' ? (
         <>
           <LoadingCalm />

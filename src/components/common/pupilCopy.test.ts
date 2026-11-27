@@ -77,4 +77,10 @@ describe('board copy (specs/video-board.md)', () => {
     expect(COPY.topic.needsData('8')).toBe('This topic needs 8 MB of data. Download it now, on Wi-Fi if you can.');
     expect(COPY.topic.progress(2, 11)).toBe('2 of 11 videos');
   });
+
+  it('never leaves the topic screen loading: calm lines for a failed load and a missing video', () => {
+    expect(COPY.topic.loadFailed).toBe('This topic did not open. Try again.');
+    expect(COPY.topic.needsDataUnknown).toBe('This topic needs some data. Download it now, on Wi-Fi if you can.');
+    expect(COPY.topic.videoMissing).toBe('This video is not on your phone yet. Download the topic again.');
+  });
 });

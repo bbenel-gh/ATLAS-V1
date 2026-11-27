@@ -73,9 +73,9 @@ function startManifest(media: TopicMedia, quality: Quality, old: Manifest | null
 }
 
 /** Bytes the server says a file has, or null when it does not say. */
-async function headSize(url: string): Promise<number | null> {
+async function headSize(url: string, timeoutMs = 20_000): Promise<number | null> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 20_000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(url, { method: 'HEAD', signal: controller.signal });
     if (!res.ok) return null;
@@ -99,9 +99,15 @@ function guessBytes(file: MediaFile, media: TopicMedia): number {
 export async function getTopicDownloadSize(media: TopicMedia, quality: Quality = '360'): Promise<number> {
   const manifest = await readManifest(media.topicCode);
   const plan = planDownload(filesForTopic(media, quality), manifest?.entries ?? {});
-  let total = 0;
-  for (const f of plan.toDownload) total += (await headSize(f.url)) ?? guessBytes(f, media);
-  return total;
+  // Asked six at a time, each given at most 8 seconds: 33 files one after another
+  // could keep "Checking how much data" on screen for minutes on a slow line.
+  const sizes: number[] = [];
+  const queue = [...plan.toDownload];
+  const worker = async () => {
+    for (let f = queue.shift(); f; f = queue.shift()) sizes.push((await headSize(f.url, 8_000)) ?? guessBytes(f, media));
+  };
+  await Promise.all(Array.from({ length: 6 }, worker));
+  return sizes.reduce((a, b) => a + b, 0);
 }
 
 /**
