@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -11,6 +11,8 @@ import { COPY } from '@/components/common/copy';
 import { LoadingCalm } from '@/components/common/LoadingCalm';
 import { Screen } from '@/components/common/Screen';
 import { Body, Heading } from '@/components/common/Text';
+import { OverviewQuestions, type OverviewAnswers } from '@/components/lesson/OverviewQuestions';
+import { queueOverview } from '@/data/overviewQueue';
 import { loadTopicMedia } from '@/data/topicMedia';
 import { isTopicReady } from '@/data/videoCache';
 import type { TopicMedia } from '@/domain/videoPlan';
@@ -32,7 +34,7 @@ async function loadTopic(code: string) {
 /**
  * Topic screen (runbook S16). The id is the topic code (D-44). First visit:
  * "Download this topic". Once the topic is on the phone: the overview board.
- * S17 adds the overview questions under the board.
+ * Under the board, after the video: the overview questions (S17).
  */
 export default function Topic() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -91,6 +93,16 @@ function OverviewBoard({ media, onMissing }: { media: TopicMedia; onMissing: () 
   const overview = media.versions.find((v) => v.segmentCode === 'OV');
   const title = media.title ?? media.topicCode;
   const shortTitle = title.split(': ').pop() ?? title;
+  // Kept here, not in the questions, so "Watch again" keeps what the pupil typed.
+  const [answers, setAnswers] = useState<OverviewAnswers>({ summary: '', confusing: '' });
+  const [sent, setSent] = useState(false);
+  // The answer is safe on the phone before the thanks shows; sending happens later (FR-13).
+  const finish = (a: OverviewAnswers) => {
+    void queueOverview(media.topicCode, a.summary, a.confusing)
+      .catch((e: unknown) => console.warn('queueOverview failed', e))
+      .finally(() => setSent(true));
+  };
+  const firstSegment = media.versions.find((v) => v.segmentCode !== 'OV')?.segmentCode ?? '1A';
   return (
     <Screen onScroll={scroll.onScroll} scrollRef={scroll.scrollRef}>
       {overview ? (
@@ -105,7 +117,16 @@ function OverviewBoard({ media, onMissing }: { media: TopicMedia; onMissing: () 
           scrollToBoard={scroll.scrollToBoard}
           onEnded={scroll.scrollToEnd}
           onMissing={onMissing}
-          after={<Body muted>{COPY.topic.ready}</Body>}
+          after={
+            <OverviewQuestions
+              answers={answers}
+              onChange={setAnswers}
+              sent={sent}
+              onSend={() => finish(answers)}
+              onSkip={() => finish({ summary: '', confusing: '' })}
+              onNext={() => router.push(`/segment/${firstSegment}`)}
+            />
+          }
         />
       ) : (
         <Body>{COPY.topic.notFound}</Body>

@@ -88,3 +88,34 @@ Use TEST-P3 (code TESTPC): it is the test pupil with no profile.
 2. Finish onboarding offline. Expected: every screen works and "Go to my lessons" opens Home.
 3. Turn airplane mode off and wait 15 seconds (or close and reopen the app).
 4. Expected: the answers are in `profiles` as in step c.
+
+## B5 overview
+
+Runbook S17. Proves the B5 gate: the overview works offline after download, the profile updates when the network returns, and `ai_calls` logs every call with no names.
+
+Before you start: Bright has set `ANTHROPIC_API_KEY` in the atlas-dev Supabase secrets, and the Materials topic is downloaded on Phone A (B5 board checks).
+
+### Send
+
+1. Phone A, signed in as TESTPA (TEST-P1). Home, open the Materials topic. Watch the overview to the end.
+2. Expected: under the board, "Watch again", "Tell a friend what this video was about, in one or two sentences.", "Which part felt confusing?", Send and Skip. No score, no tick, no colour on anything.
+3. Type two sentences in the first box and one in the second. Tap Send.
+4. Expected: "Thanks. That helps me choose how to teach this." and "Go to the first part". Nothing that looks like a mark.
+5. Supabase dashboard (atlas-dev), within a minute: `profiles`, row for TEST-P1: `overview_keywords` has words you typed. `ai_calls`: one new row, job `overview`, model `claude-haiku-5-5`, `ok` true. Open its `input`: only `segment_titles`, `pupil_summary`, `pupil_confusion`, `response_id`, `try`. No name, no class.
+
+### Offline
+
+1. Go back to Home and open the topic again. Turn on airplane mode. Watch the overview to the end, type, tap Send.
+2. Expected: the same thanks message, at once. No error.
+3. Turn airplane mode off. Close and reopen the app (or wait on any screen).
+4. Expected: within a minute, a new `overview_responses` row with your text and an `ai_result`, and the profile gains the new words.
+
+### Skip
+
+1. Watch the overview to the end and tap Skip.
+2. Expected: the thanks message, then you move on. No error. In `overview_responses`, a row with `skipped` true and no AI call for it in `ai_calls`.
+
+### Watch again keeps your words
+
+1. Type something, then tap "Watch again". Let the video end.
+2. Expected: what you typed is still there.

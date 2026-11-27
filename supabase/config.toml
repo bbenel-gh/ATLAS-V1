@@ -406,6 +406,12 @@ deno_version = 2
 verify_jwt = false
 import_map = "./functions/pupil-signin/deno.json"
 
+# S17 (D-49): the gateway JWT check is off for the same reason; the function
+# checks the pupil's session token itself with auth.getUser.
+[functions.ai-overview]
+verify_jwt = false
+import_map = "./functions/ai-overview/deno.json"
+
 [analytics]
 enabled = true
 port = 54327

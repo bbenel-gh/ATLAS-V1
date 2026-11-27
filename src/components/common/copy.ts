@@ -132,5 +132,14 @@ export const COPY = {
     needsDataUnknown: 'This topic needs some data. Download it now, on Wi-Fi if you can.',
     videoMissing: 'This video is not on your phone yet. Download the topic again.',
   },
+  /** After the overview video (runbook S17, FR-11, FR-12). Never a grade. */
+  overview: {
+    tellFriend: 'Tell a friend what this video was about, in one or two sentences.',
+    confusing: 'Which part felt confusing?',
+    send: 'Send',
+    skip: 'Skip',
+    thanks: 'Thanks. That helps me choose how to teach this.',
+    next: 'Go to the first part',
+  },
   offline: 'No connection. Check the data and try again.',
 } as const;

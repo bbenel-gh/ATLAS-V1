@@ -38,7 +38,7 @@ export function TextField({ label, accessibilityLabel, onFocus, onBlur, ...rest 
           setFocused(false);
           onBlur?.(e);
         }}
-        style={[styles.input, focused && styles.inputFocused, focused && focusRing]}
+        style={[styles.input, rest.multiline && styles.multiline, focused && styles.inputFocused, focused && focusRing]}
         {...rest}
       />
     </View>
@@ -59,4 +59,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   inputFocused: { borderColor: colors.teal },
+  // Several lines of writing: card corners, and the text starts at the top.
+  multiline: { borderRadius: radius.card, minHeight: 96, paddingHorizontal: spacing.lg, textAlignVertical: 'top' },
 });

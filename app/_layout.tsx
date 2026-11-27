@@ -16,6 +16,7 @@ import { colors } from '@/components/common/theme';
 import { getEnv } from '@/data/env';
 import { useLockStore } from '@/data/lockStore';
 import { startOnboardingSync } from '@/data/onboarding';
+import { startOverviewSync } from '@/data/overviewQueue';
 import { scrubEvent } from '@/data/scrub';
 
 SplashScreen.preventAutoHideAsync();
@@ -76,8 +77,10 @@ function RootLayout() {
   }, [loaded, error]);
 
   // S14: onboarding answers saved offline are sent when the network returns.
+  // S17: overview answers saved offline are sent the same way.
   useEffect(() => {
     startOnboardingSync();
+    startOverviewSync();
   }, []);
 
   // Hold the splash screen while the fonts load. If they fail, carry on with

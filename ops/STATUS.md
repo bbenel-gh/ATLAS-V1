@@ -1,8 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 26 November 2026, team with Bright (S15). Sprint mode is on (D-30).
+Last updated: 27 November 2026, team with Bright (S17). Sprint mode is on (D-30).
 
 ## Current session
+
+S17, overview stage and ai-overview, on `feat/S17-overview` (cut from `feat/S16-video-board`). D-49. Rules in `src/domain/overview.ts` (39 tests first: input shape with no name or class, 600 characters, output parse with zod, titles to segment codes, profile merge, both daily caps, queue keep or drop, prompt word for word from `specs/ai-prompts.md`). Edge Function `ai-overview` (claude-haiku-5-5 through `@anthropic-ai/sdk`, 20 s, one retry, every try logged in `ai_calls`, safeguarding flag) deployed to atlas-dev. Migrations `20261127120000_overview_interests.sql` (`profiles.overview_interests`, guard so only the function writes the overview words) and `20261127130000_ai_overview_grants.sql` (column grants for the service role) applied; types regenerated; `specs/data-model.md` amended. Phone: answers queued on the phone first (`src/data/overviewQueue.ts`), thanks shown at once, sent every 15 s and on app return. Overview questions under the board, Send and a quiet Skip, "Watch again" keeps the words. RLS 194 PASS; `npm run test:overview` 27 of 27 PASS on the fallback path. Typecheck, lint, test (699) pass, web and Android bundles build. **Not proven: the AI answer path** (needs `ANTHROPIC_API_KEY` set by Bright, then `npm run test:overview` again) **and every phone check** (`docs/test-script.md` "B5 overview", BL-8).
+
+## Earlier
 
 S16, topic download and board video, on `feat/S16-video-board` (cut from `feat/S15-home`). D-45. `.vtt` parser and video rules (`src/domain/vtt.ts`, `src/domain/videoPlan.ts`, tests first), topic download cache (`src/data/videoCache.ts`: one file at a time, pause and resume, size check, manifest by content version, works offline), board player on expo-video meeting P1 to P10, download screen and overview board on the topic route, dev "Board video test". R2 bucket `my-lessons-bucket` (D-45). D-46: 720p and 1080p. D-47: `npm run video:make` makes board videos locally (PC voice stand-in); overview `mat-OV-a` made (75 s, four sizes, poster, captions) and linked in the content file, imported to atlas-dev; uploaded and `media:check` 44 of 44 OK; **next: phone checks**. All 10 segment videos made too (27 Nov) and linked; uploaded, `media:check` 66 of 66 OK. Typecheck, lint, test (646) pass, web and Android bundles build. **Not proven: every phone check** in `specs/video-board.md` Done when (needs the upload, then content links and `content:import`).
 

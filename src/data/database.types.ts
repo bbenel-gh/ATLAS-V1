@@ -815,6 +815,7 @@ export type Database = {
           onboarded_at: string | null
           onboarding: Json
           overview_confusions: string[]
+          overview_interests: string[]
           overview_keywords: string[]
           playful_choices: Json
           pupil_id: string
@@ -825,6 +826,7 @@ export type Database = {
           onboarded_at?: string | null
           onboarding?: Json
           overview_confusions?: string[]
+          overview_interests?: string[]
           overview_keywords?: string[]
           playful_choices?: Json
           pupil_id: string
@@ -835,6 +837,7 @@ export type Database = {
           onboarded_at?: string | null
           onboarding?: Json
           overview_confusions?: string[]
+          overview_interests?: string[]
           overview_keywords?: string[]
           playful_choices?: Json
           pupil_id?: string

@@ -292,6 +292,11 @@ async function pupilChecks(admin: SupabaseClient) {
   const finished = await p1.from('profiles').update({ onboarded_at: new Date().toISOString(), onboarding: { name_ms: 1 } }).eq('pupil_id', P1).select('pupil_id');
   check('P1 can record their own onboarding answers and finish', !finished.error && (finished.data ?? []).length === 1, finished.error?.message);
   await updateRefused(p1, "P1 cannot finish P2's onboarding", 'profiles', { onboarded_at: new Date().toISOString() }, 'pupil_id', P2);
+  // S17 (D-49): the overview words are written only by ai-overview.
+  await updateRefused(p1, 'P1 cannot set their own overview keywords', 'profiles', { overview_keywords: ['forged'] }, 'pupil_id', P1);
+  await updateRefused(p1, 'P1 cannot set their own overview interests', 'profiles', { overview_interests: ['forged'] }, 'pupil_id', P1);
+  await updateRefused(p1, 'P1 cannot set their own overview confusions', 'profiles', { overview_confusions: ['forged'] }, 'pupil_id', P1);
+  await updateRefused(p1, 'P1 cannot write the AI result on their own overview answer', 'overview_responses', { ai_result: { keywords: ['forged'] } }, 'pupil_id', P1);
   await insertRefused(p1, 'P1 cannot write a flag', 'flags', { pupil_id: P1, kind: 'safeguarding' });
   await insertRefused(p1, 'P1 cannot write an AI call log row', 'ai_calls', { job: 'check', model: 'x', pupil_id: P1, ok: true });
   await insertRefused(p1, 'P1 cannot save an attempt with their own verdict', 'attempts', {

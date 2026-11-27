@@ -16,6 +16,8 @@ Amended 26 November 2026 by Bright with the team (D-41, S14, BL-16): `profiles` 
 
 Amended 26 November 2026 by Bright with the team (D-44, S15): added `class_topics`, the topics a class teacher has set, shown under "Recommended for you" on Home.
 
+Amended 27 November 2026 by Bright with the team (D-49, S17): `profiles` gained `overview_interests`, the everyday things a pupil mentioned after an overview video, kept apart from the onboarding interest tags. The three overview columns are written only by the ai-overview function, never by the pupil.
+
 | Table | Holds |
 | --- | --- |
 | `schools` | School name, district, region, added by (admin), date added. Managed by admins only |
@@ -25,7 +27,7 @@ Amended 26 November 2026 by Bright with the team (D-44, S15): added `class_topic
 | `pupils` | Class (optional), display name, school as the pupil stated it, school (optional link to `schools`, set by an admin), class level, pupil code, hashed PIN, failed PIN count, locked until, signed up by (self or admin), status (active or suspended), AI notice seen date, date created |
 | `consents` | Pupil, method (paper or in-app), recorded by (staff, for paper), date given, form reference, withdrawn date |
 | `app_settings` | Public sign-up on or off, global daily AI call cap, sign-ups per phone per day. One row, admin only |
-| `profiles` | Interests, playful-choice behaviour, overview keywords and confusions, onboarding times per screen (`onboarding` jsonb: name, class and interests ms, updated at), onboarding finished date (`onboarded_at` timestamptz) |
+| `profiles` | Interests, playful-choice behaviour, overview keywords, interests and confusions (written only by ai-overview), onboarding times per screen (`onboarding` jsonb: name, class and interests ms, updated at), onboarding finished date (`onboarded_at` timestamptz) |
 | `topics` | Code (like B7-MATERIALS), title, class level, subject, prerequisites (topic codes), content version (import date and short hash of the content file) |
 | `segments` | Topic, code (OV for the overview, then 1A, 1B and on, D-33), title, order, objective, reference meaning, misconceptions (list of code and text) |
 | `video_versions` | Segment, label (a or b), 360p and 480p URLs, example world, misconception tags, interest tags, poster URL (`poster_url` text), captions URL (`captions_url` text), board colour (`board_colour` text, hex like #F6F0E6), duration in seconds (`duration_seconds` integer) |
