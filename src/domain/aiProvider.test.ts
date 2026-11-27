@@ -1,12 +1,11 @@
 import { DEFAULT_OPENROUTER_MODELS, loggedModel, OPENROUTER_PREFIX, pickProvider } from './aiProvider';
 
 describe('DEFAULT_OPENROUTER_MODELS (D-50)', () => {
-  it("is Bright's chain, in order", () => {
+  it("is Bright's chain, in order, with the IDs OpenRouter lists (27 Nov 2026)", () => {
     expect(DEFAULT_OPENROUTER_MODELS).toEqual([
-      'nvidia/nemotron-3-ultra:free',
+      'nvidia/nemotron-3-ultra-550b-a55b:free',
       'baidu/ernie-5.5-flash-preview:free',
       'recursive/flint-v1.0:free',
-      'inclusionai/ling-3.2-flash:free',
     ]);
   });
   it('holds only free models, so a fallback never costs money', () => {

@@ -149,7 +149,8 @@ async function askOpenRouter(models: string[], userMessage: string): Promise<Att
     const served = typeof body?.model === 'string' ? body.model : undefined;
     const model = loggedModel(chain, OVERVIEW_MODEL, served);
     if (!res.ok || !body?.choices?.[0]) {
-      return { output: null, logged: { error: 'api_error', status: res.status, code: body?.error?.code ?? null }, ms: Date.now() - t0, model };
+      const message = typeof body?.error?.message === 'string' ? body.error.message.slice(0, 300) : null;
+      return { output: null, logged: { error: 'api_error', status: res.status, code: body?.error?.code ?? null, message }, ms: Date.now() - t0, model };
     }
     const choice = body.choices[0];
     const text = typeof choice.message?.content === 'string' ? choice.message.content : '';

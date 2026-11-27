@@ -8,12 +8,16 @@
  * before any real pupil uses ATLAS (pilot 9 December).
  */
 
-/** Bright's chain, tried in order: OpenRouter moves to the next one on any error, a used-up limit included. */
+/**
+ * Bright's chain, tried in order: OpenRouter moves to the next one on any
+ * error, a used-up limit included. IDs checked against OpenRouter's model list
+ * on 27 Nov 2026: an unknown ID fails the whole request. InclusionAI Ling 3.2
+ * Flash has no free version, so it is left out (D-50: free models only).
+ */
 export const DEFAULT_OPENROUTER_MODELS = [
-  'nvidia/nemotron-3-ultra:free',
+  'nvidia/nemotron-3-ultra-550b-a55b:free',
   'baidu/ernie-5.5-flash-preview:free',
   'recursive/flint-v1.0:free',
-  'inclusionai/ling-3.2-flash:free',
 ] as const;
 
 /** Marks stand-in calls in ai_calls.model, so they are never taken for Claude. */
