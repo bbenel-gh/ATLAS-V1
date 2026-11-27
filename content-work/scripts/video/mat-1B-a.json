@@ -1,0 +1,52 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1B-a",
+  "title": "Properties of materials",
+  "exampleWorld": "home and farm",
+  "misconception": "1B-M1: gives a use (it cuts) when asked for a property",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Properties",
+        "say": "A property tells you what a material is like."
+      },
+      {
+        "board": "hard or soft, rough or smooth",
+        "say": "Is it hard or soft? Is it rough or smooth?"
+      },
+      {
+        "board": "bends or breaks",
+        "say": "Does it bend, or does it break?"
+      },
+      {
+        "board": "lets water through or not",
+        "say": "Does water pass through it, or not?"
+      }
+    ],
+    [
+      {
+        "board": "clay pot: hard, breaks",
+        "say": "A clay pot is hard. If it falls, it breaks."
+      },
+      {
+        "board": "rubber: stretches back",
+        "say": "A rubber band stretches, then springs back."
+      },
+      {
+        "board": "cloth: soaks up water",
+        "say": "Water soaks into cloth. We say cloth absorbs water."
+      }
+    ],
+    [
+      {
+        "board": "like, not used for",
+        "say": "Be careful. Cutting is a use, not a property. Hard and sharp are properties."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Describe what a material is like."
+      }
+    ]
+  ]
+}

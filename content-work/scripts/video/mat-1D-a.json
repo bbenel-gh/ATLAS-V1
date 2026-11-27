@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1D-a",
+  "title": "Choosing a material for a use",
+  "exampleWorld": "home and farm",
+  "misconception": "1D-M1: chooses by colour or looks, not by properties",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Choose for the job",
+        "say": "When you choose a material, think about the job it must do."
+      },
+      {
+        "board": "roof: keeps rain out",
+        "say": "A roof must keep rain out, so it needs a waterproof material."
+      },
+      {
+        "board": "roofing sheets: metal",
+        "say": "Metal roofing sheets are waterproof and strong."
+      }
+    ],
+    [
+      {
+        "board": "pot: safe on the fire",
+        "say": "A cooking pot must not melt or burn on the fire. Aluminium is a good choice."
+      },
+      {
+        "board": "handle: stays cool",
+        "say": "Its handle may be wood or plastic, so it does not get too hot to hold."
+      },
+      {
+        "board": "colour is not the reason",
+        "say": "A bright colour may look nice, but it does not make the pot cook well."
+      }
+    ],
+    [
+      {
+        "board": "the property, not the look",
+        "say": "Choose a material because of its properties, not only how it looks."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Choose a material and say why."
+      }
+    ]
+  ]
+}

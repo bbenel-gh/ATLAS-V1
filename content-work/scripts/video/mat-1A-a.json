@@ -1,0 +1,52 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1A-a",
+  "title": "What a material is",
+  "exampleWorld": "home and farm",
+  "misconception": "1A-M1: thinks an object (a hoe, a pot) is a material",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "What is it made of?",
+        "say": "Look at things at home and on the farm. For each one, you can ask: what is it made of?"
+      },
+      {
+        "board": "the object: a hoe",
+        "say": "Take a hoe. The hoe is the object. It is the thing you use."
+      },
+      {
+        "board": "the materials: metal, wood",
+        "say": "The blade is made of metal. The handle is made of wood. These are the materials."
+      }
+    ],
+    [
+      {
+        "board": "object: the whole thing",
+        "say": "So the object is the whole thing."
+      },
+      {
+        "board": "material: what it is made of",
+        "say": "The material is the stuff the thing is made of."
+      },
+      {
+        "board": "basket: cane",
+        "say": "A basket is an object. It is made of cane."
+      },
+      {
+        "board": "cooking pot: aluminium",
+        "say": "A cooking pot is an object. It is often made of aluminium, a metal."
+      }
+    ],
+    [
+      {
+        "board": "A hoe is not a material",
+        "say": "So a hoe is not a material. A pot is not a material. They are objects made from materials."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Think about what each thing is made of."
+      }
+    ]
+  ]
+}

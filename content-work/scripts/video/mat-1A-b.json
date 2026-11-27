@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1A-b",
+  "title": "What a material is",
+  "exampleWorld": "market and sport",
+  "misconception": "1A-M2: thinks \"material\" means only cloth",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "At the market",
+        "say": "At the market, people may say material when they mean cloth."
+      },
+      {
+        "board": "Cloth is one material",
+        "say": "Cloth is a material. But in science, the word means more than cloth."
+      },
+      {
+        "board": "made of: material",
+        "say": "A material is anything a thing is made of."
+      }
+    ],
+    [
+      {
+        "board": "football: leather, rubber",
+        "say": "A football may be made of leather on the outside, and rubber inside."
+      },
+      {
+        "board": "goal post: metal or wood",
+        "say": "A goal post may be made of metal or wood."
+      },
+      {
+        "board": "market stall: wood, zinc",
+        "say": "A market stall may have a wooden frame and a zinc roof."
+      }
+    ],
+    [
+      {
+        "board": "Many materials, not one",
+        "say": "So metal, wood, rubber, leather and glass are all materials, not only cloth."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Look at a thing and name what it is made of."
+      }
+    ]
+  ]
+}

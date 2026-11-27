@@ -39,12 +39,14 @@
       "versions": [
         {
           "label": "a",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1a-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1a-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 59,
           "exampleWorld": "home and farm",
           "misconceptionTags": [
             "1A-M1"
@@ -56,12 +58,14 @@
         },
         {
           "label": "b",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1a-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1a-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 44,
           "exampleWorld": "market and sport",
           "misconceptionTags": [
             "1A-M2"
@@ -181,12 +185,14 @@
       "versions": [
         {
           "label": "a",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1b-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1b-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 48,
           "exampleWorld": "home and farm",
           "misconceptionTags": [
             "1B-M1"
@@ -198,12 +204,14 @@
         },
         {
           "label": "b",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1b-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1b-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 47,
           "exampleWorld": "market and sport",
           "misconceptionTags": [
             "1B-M2"
@@ -323,12 +331,14 @@
       "versions": [
         {
           "label": "a",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1c-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1c-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 50,
           "exampleWorld": "home and farm",
           "misconceptionTags": [
             "1C-M1"
@@ -340,12 +350,14 @@
         },
         {
           "label": "b",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1c-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1c-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 43,
           "exampleWorld": "market and sport",
           "misconceptionTags": [
             "1C-M2"
@@ -465,12 +477,14 @@
       "versions": [
         {
           "label": "a",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1d-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1d-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 46,
           "exampleWorld": "home and farm",
           "misconceptionTags": [
             "1D-M1"
@@ -482,12 +496,14 @@
         },
         {
           "label": "b",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1d-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1d-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 47,
           "exampleWorld": "market and sport",
           "misconceptionTags": [
             "1D-M2"
@@ -607,12 +623,14 @@
       "versions": [
         {
           "label": "a",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1e-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1e-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 43,
           "exampleWorld": "home and farm",
           "misconceptionTags": [
             "1E-M1"
@@ -624,12 +642,14 @@
         },
         {
           "label": "b",
-          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1e-a-360.mp4.mp4",
-          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1e-a-360.mp4.mp4",
-          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
-          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
-          "boardColour": "#F6F0E6",
-          "durationSeconds": 150,
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 45,
           "exampleWorld": "market and sport",
           "misconceptionTags": [
             "1E-M2"
