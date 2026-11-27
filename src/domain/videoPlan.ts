@@ -127,3 +127,13 @@ export function visibleFraction(
 export function shouldPlay(s: { ready: boolean; ended: boolean; userPaused: boolean; appActive: boolean; visible: number }): boolean {
   return s.ready && !s.ended && !s.userPaused && s.appActive && s.visible >= 0.5;
 }
+
+/**
+ * A byte count from the phone as a plain number. Android sends download
+ * progress and file sizes as BigInt although the types say number; mixing
+ * BigInt with number throws, and a BigInt never equals a number.
+ */
+export function toByteCount(value: unknown): number {
+  const n = typeof value === 'bigint' ? Number(value) : typeof value === 'number' ? value : Number.NaN;
+  return Number.isFinite(n) ? n : 0;
+}

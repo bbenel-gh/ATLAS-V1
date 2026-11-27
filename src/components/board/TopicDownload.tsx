@@ -9,7 +9,7 @@ import { colors, spacing } from '@/components/common/theme';
 import { ChoicePill } from '@/components/onboarding/ChoicePill';
 import { downloadTopic, getTopicDownloadSize, readManifest, type DownloadProgress } from '@/data/videoCache';
 import { useVideoQuality } from '@/data/videoQuality';
-import { formatMegabytes, QUALITIES, type TopicMedia } from '@/domain/videoPlan';
+import { formatMegabytes, QUALITIES, toByteCount, type TopicMedia } from '@/domain/videoPlan';
 
 type Phase = 'sizing' | 'idle' | 'downloading' | 'paused' | 'failed';
 
@@ -92,7 +92,7 @@ export function TopicDownload({ media, onReady }: { media: TopicMedia; onReady: 
 
 /** A thin line for the file downloading now. No numbers on screen. */
 function FileLine({ written, total }: { written: number; total: number }) {
-  const share = Math.max(0, Math.min(1, written / total));
+  const share = Math.max(0, Math.min(1, toByteCount(written) / Math.max(1, toByteCount(total))));
   return (
     <View style={styles.track} accessible={false} importantForAccessibility="no-hide-descendants">
       <View style={[styles.fill, { flex: share }]} />

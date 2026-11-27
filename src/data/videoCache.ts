@@ -5,6 +5,7 @@ import {
   estimateBytes,
   filesForTopic,
   planDownload,
+  toByteCount,
   type FileKind,
   type ManifestEntry,
   type MediaFile,
@@ -53,7 +54,11 @@ export async function readManifest(topicCode: string): Promise<Manifest | null> 
 }
 
 async function writeManifest(m: Manifest): Promise<void> {
-  await AsyncStorage.setItem(manifestKey(m.topicCode), JSON.stringify(m));
+  // JSON cannot hold a BigInt, which Android may put in native values (see toByteCount).
+  await AsyncStorage.setItem(
+    manifestKey(m.topicCode),
+    JSON.stringify(m, (_key, value: unknown) => (typeof value === 'bigint' ? Number(value) : value)),
+  );
 }
 
 function fileFor(fileName: string): File {
@@ -167,8 +172,10 @@ export async function downloadTopic(
     const target = fileFor(f.fileName);
     target.parentDirectory.create({ intermediates: true, idempotent: true });
     const expected = await headSize(f.url);
-    const onProgress = ({ bytesWritten, totalBytes }: { bytesWritten: number; totalBytes: number }) =>
-      report(bytesWritten, totalBytes > 0 ? totalBytes : expected);
+    const onProgress = ({ bytesWritten, totalBytes }: { bytesWritten: number; totalBytes: number }) => {
+      const total = toByteCount(totalBytes);
+      report(toByteCount(bytesWritten), total > 0 ? total : expected);
+    };
 
     let task: DownloadTask;
     let resumed = false;
@@ -200,7 +207,7 @@ export async function downloadTopic(
       return 'cancelled';
     }
 
-    const size = target.exists ? target.size : 0;
+    const size = target.exists ? toByteCount(target.size) : 0;
     if (size <= 0 || (expected !== null && size !== expected)) {
       if (target.exists) target.delete();
       manifest.paused = null;

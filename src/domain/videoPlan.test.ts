@@ -6,6 +6,7 @@ import {
   planDownload,
   QUALITIES,
   shouldPlay,
+  toByteCount,
   toQuality,
   visibleFraction,
   type ManifestEntry,
@@ -187,6 +188,16 @@ describe('pickVideo (360p to 1080p)', () => {
     const plan = planDownload(filesForTopic(MEDIA, '480'), manifest);
     expect(plan.toDownload.every((f) => f.kind === 'video')).toBe(true);
     expect(plan.toDownload).toHaveLength(3);
+  });
+
+  it('turns byte counts from the phone into plain numbers, BigInt included', () => {
+    expect(toByteCount(BigInt(1532585))).toBe(1532585);
+    expect(toByteCount(740611)).toBe(740611);
+    expect(toByteCount(BigInt(1532585)) === 1532585).toBe(true);
+    expect(toByteCount(null)).toBe(0);
+    expect(toByteCount(undefined)).toBe(0);
+    expect(toByteCount('nonsense')).toBe(0);
+    expect(toByteCount(BigInt(300) / BigInt(600))).toBe(0);
   });
 
   it('reads a quality setting safely, 360 for anything unknown', () => {
