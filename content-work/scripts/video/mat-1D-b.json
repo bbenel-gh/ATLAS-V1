@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1D-b",
+  "title": "Choosing a material for a use",
+  "exampleWorld": "market and sport",
+  "misconception": "1D-M2: thinks one material (metal) is best for every job",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "No one best material",
+        "say": "No single material is best for every job."
+      },
+      {
+        "board": "football: light, bounces",
+        "say": "A football needs to bounce and be light. Rubber and leather work well."
+      },
+      {
+        "board": "metal ball: too heavy",
+        "say": "A metal ball would be strong, but far too heavy to kick."
+      }
+    ],
+    [
+      {
+        "board": "goal net: nylon",
+        "say": "A goal net must be light and bend. Nylon rope works."
+      },
+      {
+        "board": "basket: cane is light",
+        "say": "A market basket made of cane is light, and strong enough to carry goods."
+      },
+      {
+        "board": "bucket: plastic holds water",
+        "say": "A bucket for water needs a waterproof material, like plastic."
+      }
+    ],
+    [
+      {
+        "board": "Match material to job",
+        "say": "Each job needs its own properties, so match the material to the job."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Say which material suits the job, and why."
+      }
+    ]
+  ]
+}

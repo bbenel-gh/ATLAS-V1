@@ -38,6 +38,8 @@ yarn-error.*
 # secrets and local env
 .env*
 !.env.example
+!.env.test.example
+!.env.import.example
 
 # typescript
 *.tsbuildinfo
@@ -54,3 +56,7 @@ coverage/
 
 # drop folder for files Bright hands to session S00
 _incoming/
+
+# Pupil code sheets and name lists hold pupil names (runbook S13). Never commit them.
+content-work/pilot/codes-*.html
+content-work/pilot/names*.csv

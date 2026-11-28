@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1B-b",
+  "title": "Properties of materials",
+  "exampleWorld": "market and sport",
+  "misconception": "1B-M2: thinks a bigger piece has different properties",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Properties",
+        "say": "A property tells you what a material is like."
+      },
+      {
+        "board": "strong, light, waterproof",
+        "say": "A material may be strong, or light, or waterproof."
+      }
+    ],
+    [
+      {
+        "board": "football: rubber bounces",
+        "say": "A football bounces because rubber is springy."
+      },
+      {
+        "board": "plastic bowl: waterproof",
+        "say": "A plastic bowl at the market holds water. Plastic is waterproof."
+      },
+      {
+        "board": "glass: see-through",
+        "say": "A glass bottle lets you see inside. Glass is see-through. We say transparent."
+      }
+    ],
+    [
+      {
+        "board": "small or big, same material",
+        "say": "A small piece of glass and a big piece of glass have the same properties."
+      },
+      {
+        "board": "properties stay the same",
+        "say": "The property belongs to the material, not to the size of the object."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Name a property of a material you know."
+      }
+    ]
+  ]
+}

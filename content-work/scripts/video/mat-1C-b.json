@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1C-b",
+  "title": "Natural and man-made materials",
+  "exampleWorld": "market and sport",
+  "misconception": "1C-M2: thinks man-made materials do not come from nature at all",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Man-made materials",
+        "say": "At the market you see many man-made materials."
+      },
+      {
+        "board": "glass bottle: from sand",
+        "say": "Glass is made by heating sand until it melts."
+      },
+      {
+        "board": "plastic bucket: from oil",
+        "say": "Plastic is made from crude oil, which comes from the ground."
+      },
+      {
+        "board": "jersey: polyester",
+        "say": "Many football jerseys are made of polyester, a material made from oil."
+      }
+    ],
+    [
+      {
+        "board": "They start in nature",
+        "say": "So man-made materials also start in nature."
+      },
+      {
+        "board": "People change them",
+        "say": "The difference is that people change them into a new material."
+      },
+      {
+        "board": "natural: used as found",
+        "say": "A natural material is used much as it is found, like wood, cotton or leather."
+      }
+    ],
+    [
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Decide if a material is natural or man-made."
+      }
+    ]
+  ]
+}

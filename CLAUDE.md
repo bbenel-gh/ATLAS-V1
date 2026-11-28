@@ -1,7 +1,17 @@
 # ATLAS V1: instructions for Claude Code
 
-Version: 22 November 2026. This file replaces every earlier CLAUDE.md (the August Expo file and any Flutter file).
+Version: 24 November 2026. This file replaces every earlier CLAUDE.md (the August Expo file and any Flutter file).
 Only Bright may change this file.
+
+## Sprint mode (D-30, set by Bright on 24 November 2026, overrides the shift protocol below)
+
+Until V1.0 ships, the whole team works together, around the clock, in every conversation. So:
+- Never ask who is on shift, their name, role or shift goal. Assume Bright and the whole team are present. Log work as "Team (Bright, owner)".
+- A message naming a runbook session (for example "S07") is the instruction to start it. Read its spec, state the plan in a few lines, then build. Do not wait for approval and do not ask permission.
+- Role limits do not block work: the team is present, so treat every request as coming from Bright.
+- Make the small calls yourself (choices the spec leaves open, branch housekeeping, uncommitted work from earlier sessions) and record them in `ops/DECISIONS.md`. Raise only real questions, in the chat, while carrying on with everything that does not depend on the answer.
+- Commit on the session branch when the session's checks pass. Pushing a feature branch is fine.
+- Still binding: the 15 rules that never bend, never touching production or real pupil data, never pushing to or merging into `main` (Bright merges), and never weakening a test.
 
 ## Shift protocol (read before anything else)
 
@@ -9,12 +19,12 @@ This computer and this Claude account are shared. People work in 5-hour shifts, 
 Claude does the coding and the drafting. People give instructions, check results and decide.
 
 At the start of every conversation:
-1. If the first message does not say who the person is, ask for their name, role and shift goal.
+1. (Suspended by sprint mode.) If the first message does not say who the person is, ask for their name, role and shift goal.
 2. Read `ops/STATUS.md` and `ops/HANDOVER.md`. Summarise in 5 lines: where the project stands, what the last shift left unfinished, open blockers, and what this shift should do first.
-3. Check the person's role in the role table below. Only change files their role allows. If asked for anything outside their role, say so and offer to log it in `ops/BLOCKERS.md` for Bright.
+3. (Suspended by sprint mode.) Check the person's role in the role table below. Only change files their role allows. If asked for anything outside their role, say so and offer to log it in `ops/BLOCKERS.md`.
 
 During the shift:
-- Plan first. Wait for approval before changing any file.
+- (Sprint mode: plan in a few lines, then build without waiting.) Plan first. Wait for approval before changing any file.
 - After each finished task, add one line to the shift log: `ops/shifts/<date>-<shift number>-<role>.md`.
 - Never ask for, repeat or store passwords, keys or pupil personal data.
 - If a request conflicts with `specs/` or this file, quote the conflicting line and stop.
@@ -39,12 +49,17 @@ When the person says "End shift":
 
 Only Bright may change `CLAUDE.md`, anything in `specs/`, or the final `content/materials.json`.
 
+Decisions: any decision marked for Bright (in `ops/`, the runbook or `specs/`) may be made by whoever is on shift. Record it in `ops/DECISIONS.md` with the person's name, role and the date. Changing `CLAUDE.md`, `specs/` or the final `content/materials.json`, and merging into `main`, stay with Bright.
+
 ## What we are building
 
 ATLAS V1 is an Android app (Expo) plus a web admin and teacher dashboard (Expo web export, same codebase).
 It teaches one topic: Basic 7 Integrated Science, Diversity of Matter: Materials. That is one overview plus five segments (1A to 1E).
-It is a pilot release for one class at Detieso D/A Basic School. Pilot days are 9 to 11 December 2026. V1.0 is released to the pilot class on 15 December 2026.
-It is installed directly on pilot phones as an APK. It is not a public Play Store release.
+V1 is the main ATLAS product for this topic, not only a pilot. It stays in use for one to two months until the next update.
+The pilot class at Detieso D/A Basic School uses it first: pilot days are 9 to 11 December 2026. V1.0 is released on 15 December 2026, to the pilot class and to the public.
+It is shared as an APK by public link. A public Play Store listing follows once the closed-test requirement is met (`specs/prd.md` section 4).
+Pupils join by self sign-up or with an admin-issued code, always with a 4-digit PIN and never with a child email or phone number. Admins manage pupils. Each pupil states their school; an admin may link it to a row in `schools`.
+Public self sign-up is built in full but stays off until the admin switches it on, after the data protection consultant confirms it is covered.
 
 The lesson design source of truth is `specs/framework.md`. The product source of truth is `specs/prd.md`. If this file and either of them disagree, stop and ask.
 
@@ -95,7 +110,7 @@ Video and audio files never go in the repo. They live in `C:\ATLAS\media` and on
 10. Write the tests in `src/domain` first, then the code. Never skip, delete or weaken a test to make it pass.
 11. Pupils never chat freely with the AI. There is no open chat screen anywhere.
 12. English only. Do not add language selection, translation or support for any other language.
-13. At most 120 AI calls per pupil per day across all jobs.
+13. At most 120 AI calls per pupil per day across all jobs, and never more than the admin-set global daily cap across all pupils.
 14. A safeguarding verdict shows the pupil a neutral message, shows no verdict for that answer, and creates a safeguarding flag with an alert to the admin.
 15. Never touch real pupil data or the production project from a Claude Code session. Development uses the `atlas-dev` Supabase project.
 
@@ -128,7 +143,7 @@ Errors use plain text and a retry button, never a red flash. Wrong answers are n
 
 ## Workflow for every task
 
-1. Read this file and the step's spec in `specs/`. Propose a plan listing the files you will change. Wait for approval.
+1. Read this file and the step's spec in `specs/`. Propose a plan listing the files you will change. Wait for approval (sprint mode: state the plan and carry on).
 2. One runbook session per branch, named like `feat/S18-routing`. Never build two sessions on one branch.
 3. Run `npm run typecheck`, `npm run lint` and `npm test`. All three must pass before you say a task is done.
 4. End every session with its "Done when" list, each line marked proven or not proven, and how you checked.

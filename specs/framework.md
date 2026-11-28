@@ -137,6 +137,8 @@ A pupil gets three tries per segment. A wrong answer and wrong reasoning each us
 
 **Tone.** The pupil sees a kind message such as "We'll come back to this one. You're not behind." Moving on must never feel like failing.
 
+**Relearn (added 27 November 2026, D-48).** At the end of a segment, after "Well reasoned" or after "We'll come back to this one", a calm "Relearn" button sits beside the way forward. It is a choice, never a push. It starts the same segment again as a fresh round of three tries, beginning with a video the pupil has not seen yet, chosen by the same rule as a retry from their latest reasoning and their interests. Earlier rounds stay in the record. A segment's status never goes down: a complete segment stays complete whatever happens in the round, and a moved-on segment becomes complete (and its flag clears) when the pupil gets it in a round.
+
 **Scale note.** One admin cannot review every flag past a few hundred pupils. Flag triage rules will be needed before wider rollout.
 
 ## Stage 6: Timed topic exam

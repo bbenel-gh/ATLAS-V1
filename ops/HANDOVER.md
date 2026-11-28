@@ -5,86 +5,55 @@ Rewritten at the end of every shift. The next person reads this first, then
 
 ---
 
-**Shift**: 23 November 2026, shift 2
-**Person and role**: Build operator, name not given
-**Session**: the repo setup task, carried over from shift 1
-**Branch**: `feat/S00-setup`, one commit, clean, not pushed
-**State**: Work complete except one check. "End shift" has not been run.
+## Date and shift
 
-## Correction carried from shift 1
+Tuesday 24 November 2026, shifts 1 and 2 (06:00 to about 13:45). One conversation.
 
-Shift 1 wrote this file and `ops/STATUS.md` from its plan rather than from
-results. They claimed the packages were installed, the work was committed, and
-that typecheck, lint and test had been run. None of it was true at the time.
-Everything below has been checked, and each line says how.
+## Who
 
-## What is done
+Bright (owner), identified in chat on the shared account.
 
-- Node 24.22.3 LTS, SHA-256 verified, unpacked to `C:\ATLAS\tools`, added to the user PATH. Node was not on this computer before shift 1. A new terminal will have `node` and `npx` on PATH.
-- Expo SDK 58.0.26 app, React Native 0.88.1, React 19.3.0, TypeScript 6.0.3 strict.
-- Expo Router with routes in `app/` at the root. No template screen, component, hook or image is in the repo.
-- All 21 required packages installed and verified on disk.
-- `src/theme.ts` with every CLAUDE.md token, and 14 tests guarding them.
-- `ops/` complete. The 23 Nov placeholder-content decision is D-8.
-- Typecheck, lint and test all pass. Android and web both bundle.
-- Committed: `9c2791f S00: init` on `main`, then `725c451` on `feat/S00-setup`, 41 files.
+## Finished
 
-## The one thing not proven
+- **D-16** on `chore/decision-rights`, commit `fb6790f`. Any decision marked for Bright may be made by whoever is on shift, recorded in `ops/DECISIONS.md` with name, role and date. Changes to `CLAUDE.md`, `specs/`, the final `content/materials.json`, and merges into `main`, stay with Bright. Both copies of `CLAUDE.md` updated (repo and `Desktop\CLAUDE.md`, version 24 November 2026).
+- **S02** on `feat/S02-theme`, commit `fc978ff`. Theme at `src/components/common/theme.ts`, fonts cut to the runbook set, seven shared components, reduced motion hook, teal focus ring, dev gallery at `/dev/components` (button on the sign-in placeholder in dev builds), placeholders on Screen + Heading, copy and colour guard test.
+- **S03 code** on `feat/S03-supabase-sentry`, not yet committed (see below). zod env check, Supabase client, health check (D-17), Sentry with pupil-field scrubber (D-18), React Query, UI store, `supabase init`, two dev gallery buttons. Typecheck, lint, test (126 tests) and both exports pass. Secret search clean.
 
-**Nobody has seen the screen.** It compiles for both platforms, the font files
-are in the export, and the dev server returns HTTP 200 with the ATLAS title on
-both `localhost` and `192.168.0.174`. But no browser and no phone has rendered
-it. Do not tick S00 until someone does this:
+## Not proven (honest list)
 
-```
-cd c:\Users\Grace\Desktop\MOBILE-APP\ATLAS-V1
-npx expo start
-```
+- Nobody has seen any screen render yet, in a browser or on a phone. This now covers S01, S02 and S03.
+- S02: components on Phone A, reduced motion on a phone (BL-8).
+- S03: "Connected to atlas-dev" and a scrubbed test event in Sentry.
 
-Then press `w` for the browser, and scan the QR with Expo Go on the phone, or
-type `exp://192.168.0.174:8081`. Expect the word ATLAS in a serif face, dark
-navy on near-white. If the letters look like the system sans, the fonts did not
-load and that is a real bug.
+## In progress
 
-A dev server may still be running on port 8081 from this shift. Stop it first,
-or use `--port 8082`.
+Branch `feat/S03-supabase-sentry`. Next exact steps:
 
-## Open blockers
+1. Commit S03 with the message proposed at the end of this shift, if not already done.
+2. Add two lines to `.env` by hand, never in chat: `EXPO_PUBLIC_SENTRY_DSN=<DSN>` and `EXPO_PUBLIC_APP_ENV=dev`. **Until then the app stops at startup** with a message naming the missing variables. This is deliberate (runbook S03 item 3).
+3. `npx expo start --clear`, sign-in, "Component gallery (dev only)": check the fonts, tap "Check connection" (project ref must match atlas-dev in the dashboard), tap "Send test error" (Sentry event must show `segment`, not `name` or `answer`).
+4. In your own terminal: `npx supabase login`, then `npx supabase link --project-ref <ref>`. Not done yet. The login stores an access token on this shared computer.
 
-`ops/BLOCKERS.md` has 11. The ones that matter now:
+## Blockers
 
-- **BL-1 and BL-2**: `specs/` is empty, and `specs/data-model.md`, `ai-prompts.md` and `B0.md` to `B12.md` do not exist anywhere on this computer. S05 onward cannot start. Only Bright may write `specs/`.
-- **BL-11**: this work maps onto runbook S01 and S02, not S00, and sits on `feat/S00-setup`. The runbook wants one session per branch, and says S00 is run by Bright. Bright decides whether to accept or split it.
-- **BL-5**: no Expo account or EAS project, so the B0 "Done when", a build installing on both phones from a link, cannot be reached.
-- **BL-9**: disk. 8.81 GB free now, but `ENOSPC` already killed one install and a Gradle cache is several GB.
-- **BL-10**: the network drops mid download. Three `ECONNRESET` failures, one of which rolled back packages that `package.json` still listed. If it happens again, pin every version first and run a single `npm install`.
-- Also open: BL-3 `content-work/`, BL-4 no app icon, BL-6 no `atlas-dev` Supabase project, BL-7 no R2 bucket, BL-8 no phone connected.
+- **BL-5** no Expo account or EAS project. S04 cannot start without it.
+- **BL-8** no phone connected. Every "on Phone A" line waits for it.
+- **BL-6** `.env` has the atlas-dev URL and key, so it may be cleared once "Check connection" passes. Not confirmed yet.
+- **BL-12** `specs/B2-ai-notice.md` and `specs/B3-playful.md` due 26 Nov.
+- **BL-11, BL-13** branch and merge questions. Under D-16 anyone on shift may now decide them. Merges stay with Bright.
+- Also open: BL-4 icon, BL-7 R2, BL-9 disk (7.9 GB free), BL-10 network.
 
-## Decisions for Bright to confirm
+## Do first next shift
 
-D-10 to D-15 in `ops/DECISIONS.md`. Two worth a look:
+1. Steps 2 and 3 above: finish `.env`, then see the screen. This is the oldest unproven line in the project.
+2. Bright merges into `main` in this order: `chore/decision-rights`, `feat/S01-expo-skeleton`, `feat/S02-theme`, `feat/S03-supabase-sentry`. Expect a small conflict in `ops/DECISIONS.md`: keep D-16, D-17 and D-18.
+3. Before S04: `npm install-scripts approve @sentry/cli` (npm held back its install script; builds need it for source maps), then S04 once BL-5 is cleared.
 
-- **D-14**: the Android application id is now `com.atlas.learn`, taken from runbook S01 item 8. It replaces D-13, which invented `com.atlasghana.atlas` before the runbook was in the repo. Confirm it, because the id cannot change after a Play Store publish.
-- **D-10**: Node 24 rather than the newest Node 26. Expo SDK 58 accepts 22.13+, 24.3+ or 26+, and Node 26 became LTS only last month.
+## Merge note (D-19)
 
-## Note on git authorship
+`feat/S02-theme` has three commits: two from outside the shift (`23017a8`, `ecbb9cd`, already pushed to `origin`) and the session's `fc978ff`. Do not rewrite or force push the branch. When merging S02 into `main` on GitHub, choose **Squash and merge** and use the message from `fc978ff` ("S02: theme, fonts and base components" and its bullet list). Then merge S03 with **Squash and merge** too, so its diff shows only S03 changes.
 
-The commit is authored by `ATLAS build operator <build-operator@atlas.local>`,
-set **locally** in this repo only. This computer is shared and the person on
-shift did not give a name, and committing under the owner's email would have
-misattributed the work. To correct it:
-
-```
-git config user.name "<your name>"
-git config user.email "<your email>"
-git commit --amend --reset-author --no-edit
-```
-
-## What the next shift should do first
-
-1. Prove or fail the screen, in the browser and on a phone. Write the result in the shift log.
-2. Get Bright's answer on BL-11 before opening a pull request, so the branch is not merged under the wrong session number.
-3. Close the S01 and S02 gap list in `ops/STATUS.md`, starting with the `src/domain` import rule, because CLAUDE.md requires it and every later session depends on `src/domain` staying pure.
+Something on this computer committed and pushed at 11:38 and 11:59 during the shift (likely the VS Code Source Control button or another session). Find out who before the next build shift. Commits belong at "End shift".
 
 ---
 

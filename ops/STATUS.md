@@ -1,28 +1,91 @@
 # ATLAS V1 status
 
-Last updated: 24 November 2026, shift 1, Bright (S00).
+Last updated: 28 November 2026, team with Bright (S16b). Sprint mode is on (D-30).
 
 ## Current session
 
-S00, repo files and specs, on `feat/S00-repo-files`. Specs exported and ops files in place. The four section 4.4 spec edits wait for Bright's approval of the diffs.
+S16b, board seek by gesture, on `feat/S16b-board-seek` (cut from `feat/S17-overview`, worktree `../ATLAS-V1-S16b`). D-52. Double tap left or right for 10 s back or forward, hold to keep moving, forward never past the furthest point watched, brief handwritten hint. `src/domain/boardSeek.ts` (23 tests first), `BoardVideo.tsx`, spec P11, test script step g. Typecheck, lint, test pass. **Not proven: step g on both phones** (BL-8).
+
+## Earlier
+
+S17, overview stage and ai-overview, on `feat/S17-overview` (cut from `feat/S16-video-board`). D-49. Rules in `src/domain/overview.ts` (39 tests first: input shape with no name or class, 600 characters, output parse with zod, titles to segment codes, profile merge, both daily caps, queue keep or drop, prompt word for word from `specs/ai-prompts.md`). Edge Function `ai-overview` (claude-haiku-5-5 through `@anthropic-ai/sdk`, 20 s, one retry, every try logged in `ai_calls`, safeguarding flag) deployed to atlas-dev. Migrations `20261127120000_overview_interests.sql` (`profiles.overview_interests`, guard so only the function writes the overview words) and `20261127130000_ai_overview_grants.sql` (column grants for the service role) applied; types regenerated; `specs/data-model.md` amended. Phone: answers queued on the phone first (`src/data/overviewQueue.ts`), thanks shown at once, sent every 15 s and on app return. Overview questions under the board, Send and a quiet Skip, "Watch again" keeps the words. RLS 194 PASS; `npm run test:overview` 27 of 27 PASS on the fallback path. Typecheck, lint, test (699) pass, web and Android bundles build. D-50: until the Claude key is set, a free OpenRouter chain stands in on atlas-dev (fake pupils only). With it, `npm run test:overview` passes the AI answer path: Nemotron 3 Ultra answered in about 12 s, ai_result saved with segment codes, profile gained keywords and interests. Migration `20261127140000_fix_profiles_guard.sql` fixed the guard for the service role. **Not proven: the same on Claude** (key not set) **and every phone check** (`docs/test-script.md` "B5 overview", BL-8).
+
+## Earlier
+
+S16, topic download and board video, on `feat/S16-video-board` (cut from `feat/S15-home`). D-45. `.vtt` parser and video rules (`src/domain/vtt.ts`, `src/domain/videoPlan.ts`, tests first), topic download cache (`src/data/videoCache.ts`: one file at a time, pause and resume, size check, manifest by content version, works offline), board player on expo-video meeting P1 to P10, download screen and overview board on the topic route, dev "Board video test". R2 bucket `my-lessons-bucket` (D-45). D-46: 720p and 1080p. D-47: `npm run video:make` makes board videos locally (PC voice stand-in); overview `mat-OV-a` made (75 s, four sizes, poster, captions) and linked in the content file, imported to atlas-dev; uploaded and `media:check` 44 of 44 OK; **next: phone checks**. All 10 segment videos made too (27 Nov) and linked; uploaded, `media:check` 66 of 66 OK. Typecheck, lint, test (646) pass, web and Android bundles build. **Not proven: every phone check** in `specs/video-board.md` Done when (needs the upload, then content links and `content:import`).
+
+## Earlier
+
+S15, Home, on `feat/S15-home` (cut from `feat/S14-onboarding`). D-44. "Recommended for you" (teacher-set topics from the new `class_topics` table, segments moved on or missed in a re-check, a typed re-check slot for S33) and "Choose a topic" (Integrated Science, Mathematics "Coming soon"), topic cards with "5 parts" and a quiet progress line, prerequisite nudge (`src/domain/prerequisites.ts`, fake data in Jest) whose "Take me to the class topic anyway" always opens the topic, dev switch for a fake prerequisite on `/dev/components`. Home shows its phone copy first; the pupil gate is kept on the phone too, so an offline restart reaches Home. Migration `20261127090000_class_topics.sql` on atlas-dev, RLS 190, probe as TEST-P1 PASS. Typecheck, lint, test (559) pass, web export builds. **Not proven: the B4 gate on Phone A** (both sections open the topic, nudge shows and is skippable, airplane mode restart; BL-8).
+
+## Earlier
+
+S14, onboarding, on `feat/S14-onboarding` (cut from `feat/S13-codes-two-phones`), on the 23 Nov runbook (D-40: the 25 Nov rewrite was rolled back; its S14 tooling work is shelved on `feat/S14-tooling`, not for merge). D-41. Four screens plus the end screen in `src/components/onboarding/`, resume rule in `src/domain/onboarding.ts` (31 tests), answers kept on the phone first then synced, migration `20261126090000_onboarding.sql` on atlas-dev (`profiles.onboarding`, `profiles.onboarded_at`, pupil may set own name and class level). RLS 177, test:signin 25 PASS, probe as TEST-P3 PASS. Typecheck, lint, test (485) pass, web export builds. **Not proven: the B3 gate on Phone A** (stopwatch, resume, offline; `docs/test-script.md` "B3 onboarding", BL-8). BL-16 closed: `specs/data-model.md` amended with Bright present.
+
+## Earlier
+
+S13, pupil codes tool and two-phone test, on `feat/S13-codes-two-phones` (cut from `feat/S12-notice-consent-lock`). D-39. `src/domain/pupilCode.ts` (secure source passed in, unique by redraw), `npm run pupils:create -- --class "Test ..." --names names.csv [--consent]` makes pupil rows in atlas-dev and a git-ignored A4 code sheet in `content-work/pilot/`; `seed:dev` clears what it makes. Live: 13 fake pupils in Test Basic 7A, 13 in a new Test Basic 7C with consent, read-back matched, sheet 2 pages and 13 cards, no 0 O 1 I; a created pupil got needsPin, set a PIN, saw only its own row, wrong PIN no_match. Reseed left 0 created rows. RLS 166, test:signin 25 PASS. Typecheck, lint, test (432) pass. `docs/test-script.md` "B2 accounts" written. **Not proven: the B2 gate on two phones** (team runs the test script; BL-8 for Phone A).
+
+## Earlier
+
+S12, AI notice, consent gate and PIN lock, on `feat/S12-notice-consent-lock` (cut from `feat/S11-signin-screens`). D-38, BL-15. AI notice (draft text in `src/components/common/copy.ts`) saved once per pupil; every lesson route in `app/(lessons)/` behind `PupilGuard` (`src/domain/routeGuard.ts`); waiting screen with "Check again"; PIN lock after a cold start or more than 5 minutes away (`src/domain/lockRule.ts`), "Not you?". `npm run consent:set`. Seed: P3 has no profile (reseeded). Probe as P3: notice, waiting, consent on to onboarding, withdrawn back to waiting, other columns refused: 11 of 11. RLS 166, test:signin all PASS, web bundle builds. Typecheck, lint, test (394) pass. Device checks passed on the test device (P3 waiting then onboarding, PIN after 6 minutes away, "Not you?" to TEST-P2).
+
+## Earlier
+
+S11, sign-in screens, on `feat/S11-signin-screens` (cut from `feat/S10-pupil-signin-fn`). D-37. `app/(auth)/sign-in.tsx`: code (6 boxes, IBM Plex Mono, 0 O 1 I ignored), choose PIN, type it again, PIN (number pad, dots), all runbook copy, calm offline message with "Try again". Session saved by the Supabase client; `app/index.tsx` sends a returning pupil where `src/domain/nextScreen.ts` says. pupil-signin takes `{ code }` alone (redeployed); seed gives test pupils no PIN (reseeded). nextScreen tests 7, auth tests 68 in all; `test:signin` 25 of 25; a Node probe of the app flow for P1 reached `/notice` as expected; web bundle builds. Typecheck, lint, test (348) pass. You check run by Bright on the test device: stay signed in after reopening, lock after 5 wrong PINs with the minutes shown, calm no-connection message: all PASS. Still to repeat on Phone A, Android 9 or 10 (BL-8).
+
+## Earlier
+
+S10, pupil-signin Edge Function, on `feat/S10-pupil-signin-fn` (cut from `feat/S09-content-import`). D-36. Migration `20261125120000_pupil_signin.sql` (signin_rate table, six service-role-only functions) applied to atlas-dev, types regenerated, `SIGNIN_PEPPER` secret set, function deployed. `npm run test:signin` 21 of 21 PASS twice: needsPin, PIN set gives a session that RLS scopes to P1, bcrypt hash of 60 characters, 4 wrong PINs `no_match` (same as an unknown code), 5th locks for 15 minutes, right PIN refused while locked without checking, rate limit 429 at call 21, code never stored. RLS 166 of 166 (new: nobody but the service role can run the sign-in functions, `42501`). Domain tests 37. Typecheck, lint, test (299) pass. Earlier: Sentry DSN fixed (D-35), app starts.
+
+## Earlier
+
+S09, content import, on `feat/S09-content-import` (cut from `feat/S08-content-schema`). `npm run content:import` validates, reads atlas-dev, upserts only what changed on stable keys in one transaction, then reads back and checks. D-34: CLI login, no service role key; migration `20261125090000` adds `topics.prerequisites`, `topics.content_version`, `segments.misconceptions` (applied to atlas-dev, types regenerated). Draft loaded: 95 rows. Second run: "No changes". A one-word edit updates exactly 2 rows (the segment and the topic version). RLS 143 of 143 PASS. Import tests 38 of 38. Typecheck, lint, test (246) pass. S09 addendum: `specs/B1.md` task 6, dev-only screen `/dev/segments` (button on the sign-in placeholder) that signs in with a test user from `.env.test` and lists the Materials segments. Same query proven on atlas-dev from Node: anon sees no topic, P1 sees OV and 1A to 1E with the content version. Not seen on screen yet (BL-8). Tests 259. Watch: the very first write failed once with no message and rolled back cleanly; four writes since passed. The script now prints the CLI's full output on failure.
+
+## Earlier
+
+S08, content schema and draft content, on `feat/S08-content-schema` (cut from `feat/S07-seed-rls-tests`). `src/data/contentSchema.ts` with the cross-field rules (D-32), `content/materials.json` as a full DRAFT that passes, `npm run content:check` with JSON paths in plain English. D-33: a topic may have any number of segments (1A to 1Z, then 1AA), not only 1A to 1E. Schema tests 48 of 48, every cross-field rule has a failing case. Typecheck, lint, test (208) pass. Committed and pushed. Real content waits for the signed-off packs (freeze 5 Dec).
+
+## Earlier
+
+
+S07, seed data and RLS tests, on `feat/S07-seed-rls-tests` (cut from `feat/S06-db-learning`). `npm run seed:dev` seeds fake test people and rows into atlas-dev (D-31, no service role key on disk). `npm run test:rls` signs in as anon, P1 to P4, both teachers and the admin: 143 of 143 PASS. With RLS switched off on `flags` it gives 10 FAIL and exit code 1. Typecheck, lint, test (157) pass. Committed and pushed.
+
+## Earlier today
+
+S06 addendum (D-29) committed `3fb232a`, D-30 committed `ee78a4e`, both on `feat/S06-db-learning`.
+
+S06, database part 2, on `feat/S06-db-learning` (cut from `feat/S05-db-people`). D-27 and D-28: spec table names, three tables added to `specs/data-model.md`, FR-30 amended so objective items are scored on the server. Two migrations applied to atlas-dev: 9 content tables and 8 learning, exam, mastery, flag and AI log tables, all with RLS. The answer key is in `exam_item_keys`, reachable by a pupil only through `get_exam_review` after their own attempt is submitted. D-29: lesson progress is owned by the server (third migration); pupils cannot write verdicts or segment status (BL-14 for S18). RLS tests 76 of 76 pass (S05 still 32 of 32). Types regenerated. Typecheck, lint, test (139) pass. Uncommitted.
+
+## Earlier today
+
+S05 committed and pushed (`8276b9d`). S05, database part 1, on `feat/S05-db-people` (cut from `feat/S04-eas-build`, with `chore/decision-rights` merged in). D-24 scope change committed (`5420903`): V1 is public with self sign-up behind an admin switch. Two migrations applied to atlas-dev (`gygmyjbuzbbngsoyoubg`, D-25): people tables with RLS, and the guard trigger fix. RLS tests 32 of 32 pass on atlas-dev (D-26). Types generated. Typecheck, lint, test (139) pass. Uncommitted.
+
+## Earlier today
+
+S04, first EAS build, committed `a982ea4` and pushed. EAS project `@lumielbright/atlas`. First build still waiting on Bright: EAS environment values, then the build run by hand (keystore prompt). Before that S04 work: on `feat/S04-eas-build` (cut from `feat/S03-supabase-sentry`). Repo side done: `eas.json` (three APK profiles), version 0.1.0 / versionCode 1, `scripts/bumpVersion.ts` with tests, "Hello ATLAS" with version on the sign-in placeholder, `docs/install.md`. Typecheck, lint, test (136) and Android export pass. Waiting on Bright: `eas login`, `eas init`, EAS environment values, first build run by hand (keystore prompt). APK size: not known until the first build.
+
+S03 is committed (`6e44c17`, `100aea7`) and pushed to `origin/feat/S03-supabase-sentry`. Not proven: connection to atlas-dev and a scrubbed event in Sentry, both waiting on `.env` (needs `EXPO_PUBLIC_SENTRY_DSN` and `EXPO_PUBLIC_APP_ENV=dev`) and `supabase link`.
+
+Earlier today: D-16 on `chore/decision-rights` (`fb6790f`), S02 committed on `feat/S02-theme` (`fc978ff`). S02 not proven on a phone (BL-8).
 
 ## Last merged session
 
-None. `main` holds only `S00: init`.
+None. `main` holds only `S00: init`. S00 is merged into `feat/S01-expo-skeleton`, and S01 is committed there (`58ac937`), not merged.
 
 ## Build step (B0 to B12)
 
-B0 Setup. The setup work on `feat/S00-setup` covers parts of S01 and S02 (BL-11). `specs/` now exists, so BL-1 and BL-2 no longer block B1.
+B0 Setup. S00 and S01 committed, S02 built. `specs/` exists, so BL-1 and BL-2 no longer block B1.
 
 ## Open PRs
 
-None yet. `feat/S00-repo-files` is pushed to `origin` once Bright approves the commit.
+None yet.
 
 ## Next 3 sessions
 
-1. S00: apply the section 4.4 diffs, then Bright merges `feat/S00-repo-files` into `main`.
-2. S01: Expo skeleton. Bright decides BL-11 first: accept `feat/S00-setup` as the S01 and S02 base, or split it.
-3. S02: theme and shared components, closing the gap list below.
+1. Finish `.env`, run `supabase link`, then prove S01 to S03 on screen with the dev gallery: fonts, "Check connection", "Send test error".
+2. Merge order for `main`: `chore/decision-rights`, `feat/S01-expo-skeleton`, `feat/S02-theme`, `feat/S03-supabase-sentry` (Bright merges). Expect a small `ops/DECISIONS.md` conflict: keep D-16 to D-18.
+3. S04: first EAS build. Needs BL-5 (Expo account) and BL-8 (phones). Approve `@sentry/cli` install script first (`npm install-scripts approve @sentry/cli`) so builds can upload source maps.
 
 ## Dates at risk
 

@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1E-a",
+  "title": "Caring for and reusing materials",
+  "exampleWorld": "home and farm",
+  "misconception": "1E-M1: thinks materials last forever, so care does not matter",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Materials can be damaged",
+        "say": "Materials do not last forever if we do not care for them."
+      },
+      {
+        "board": "iron rusts",
+        "say": "Iron left in the rain rusts. A cutlass rusts if it stays wet."
+      },
+      {
+        "board": "wood rots",
+        "say": "Wood that stays wet can rot, and termites can eat it."
+      }
+    ],
+    [
+      {
+        "board": "dry it, oil it",
+        "say": "Dry your tools after use, and oil the metal to slow rust."
+      },
+      {
+        "board": "paint the wood",
+        "say": "Paint or varnish on wood keeps water out."
+      },
+      {
+        "board": "wash and dry cloth",
+        "say": "Wash cloth and dry it well, so it does not grow mould."
+      }
+    ],
+    [
+      {
+        "board": "Care makes things last",
+        "say": "Caring for materials makes things last longer, and saves money."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Say how you would care for a material."
+      }
+    ]
+  ]
+}

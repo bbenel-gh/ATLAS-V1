@@ -1,0 +1,1117 @@
+{
+  "topic": {
+    "id": "B7-MATERIALS",
+    "subject": "Integrated Science",
+    "level": "Basic 7",
+    "title": "Diversity of Matter: Materials",
+    "prerequisites": [],
+    "overview": {
+      "label": "a",
+      "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a-360.mp4",
+      "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a-480.mp4",
+      "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a-720.mp4",
+      "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a-1080.mp4",
+      "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.jpg",
+      "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-OV-a.vtt",
+      "boardColour": "#F6F1E6",
+      "durationSeconds": 75,
+      "exampleWorld": "materials around us",
+      "misconceptionTags": [],
+      "interestTags": []
+    }
+  },
+  "segments": [
+    {
+      "code": "1A",
+      "title": "What a material is",
+      "objective": "DRAFT: learning objective for 1A, one sentence from the curriculum",
+      "referenceMeaning": "DRAFT: what a correct answer for 1A must contain, in plain words",
+      "misconceptions": [
+        {
+          "code": "1A-M1",
+          "text": "DRAFT: misconception 1 for 1A, from the content pack"
+        },
+        {
+          "code": "1A-M2",
+          "text": "DRAFT: misconception 2 for 1A, from the content pack"
+        }
+      ],
+      "versions": [
+        {
+          "label": "a",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 59,
+          "exampleWorld": "home and farm",
+          "misconceptionTags": [
+            "1A-M1"
+          ],
+          "interestTags": [
+            "farming",
+            "cooking"
+          ]
+        },
+        {
+          "label": "b",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1A-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 44,
+          "exampleWorld": "market and sport",
+          "misconceptionTags": [
+            "1A-M2"
+          ],
+          "interestTags": [
+            "market",
+            "football"
+          ]
+        }
+      ],
+      "checkQuestions": [
+        {
+          "question": "DRAFT: check question for 1A, try 1, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1A, try 1"
+          ],
+          "tapOptions": [
+            "DRAFT: accepted answer for 1A, try 1",
+            "DRAFT: wrong tap option 1 for 1A, try 1",
+            "DRAFT: wrong tap option 2 for 1A, try 1"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1A-M1 for 1A, try 1",
+              "sound": false,
+              "misconceptionCode": "1A-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1A-M2 for 1A, try 1",
+              "sound": false,
+              "misconceptionCode": "1A-M2"
+            },
+            {
+              "text": "DRAFT: sound reason for 1A, try 1",
+              "sound": true
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1A, try 1, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1A, try 2, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1A, try 2"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1A, try 2",
+            "DRAFT: accepted answer for 1A, try 2",
+            "DRAFT: wrong tap option 2 for 1A, try 2"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: sound reason for 1A, try 2",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1A-M1 for 1A, try 2",
+              "sound": false,
+              "misconceptionCode": "1A-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1A-M2 for 1A, try 2",
+              "sound": false,
+              "misconceptionCode": "1A-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1A, try 2, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1A, try 3, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1A, try 3"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1A, try 3",
+            "DRAFT: wrong tap option 2 for 1A, try 3",
+            "DRAFT: accepted answer for 1A, try 3"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1A-M1 for 1A, try 3",
+              "sound": false,
+              "misconceptionCode": "1A-M1"
+            },
+            {
+              "text": "DRAFT: sound reason for 1A, try 3",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1A-M2 for 1A, try 3",
+              "sound": false,
+              "misconceptionCode": "1A-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1A, try 3, 1 or 2 sentences from the content pack"
+        }
+      ],
+      "workedExample": {
+        "text": "DRAFT: worked example card for 1A. The real card, under 120 words with one photo, comes from the signed-off content pack.",
+        "photoUrl": "https://media.example/placeholder"
+      }
+    },
+    {
+      "code": "1B",
+      "title": "Properties of materials",
+      "objective": "DRAFT: learning objective for 1B, one sentence from the curriculum",
+      "referenceMeaning": "DRAFT: what a correct answer for 1B must contain, in plain words",
+      "misconceptions": [
+        {
+          "code": "1B-M1",
+          "text": "DRAFT: misconception 1 for 1B, from the content pack"
+        },
+        {
+          "code": "1B-M2",
+          "text": "DRAFT: misconception 2 for 1B, from the content pack"
+        }
+      ],
+      "versions": [
+        {
+          "label": "a",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 48,
+          "exampleWorld": "home and farm",
+          "misconceptionTags": [
+            "1B-M1"
+          ],
+          "interestTags": [
+            "farming",
+            "cooking"
+          ]
+        },
+        {
+          "label": "b",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1B-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 47,
+          "exampleWorld": "market and sport",
+          "misconceptionTags": [
+            "1B-M2"
+          ],
+          "interestTags": [
+            "market",
+            "football"
+          ]
+        }
+      ],
+      "checkQuestions": [
+        {
+          "question": "DRAFT: check question for 1B, try 1, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1B, try 1"
+          ],
+          "tapOptions": [
+            "DRAFT: accepted answer for 1B, try 1",
+            "DRAFT: wrong tap option 1 for 1B, try 1",
+            "DRAFT: wrong tap option 2 for 1B, try 1"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1B-M1 for 1B, try 1",
+              "sound": false,
+              "misconceptionCode": "1B-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1B-M2 for 1B, try 1",
+              "sound": false,
+              "misconceptionCode": "1B-M2"
+            },
+            {
+              "text": "DRAFT: sound reason for 1B, try 1",
+              "sound": true
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1B, try 1, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1B, try 2, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1B, try 2"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1B, try 2",
+            "DRAFT: accepted answer for 1B, try 2",
+            "DRAFT: wrong tap option 2 for 1B, try 2"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: sound reason for 1B, try 2",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1B-M1 for 1B, try 2",
+              "sound": false,
+              "misconceptionCode": "1B-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1B-M2 for 1B, try 2",
+              "sound": false,
+              "misconceptionCode": "1B-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1B, try 2, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1B, try 3, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1B, try 3"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1B, try 3",
+            "DRAFT: wrong tap option 2 for 1B, try 3",
+            "DRAFT: accepted answer for 1B, try 3"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1B-M1 for 1B, try 3",
+              "sound": false,
+              "misconceptionCode": "1B-M1"
+            },
+            {
+              "text": "DRAFT: sound reason for 1B, try 3",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1B-M2 for 1B, try 3",
+              "sound": false,
+              "misconceptionCode": "1B-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1B, try 3, 1 or 2 sentences from the content pack"
+        }
+      ],
+      "workedExample": {
+        "text": "DRAFT: worked example card for 1B. The real card, under 120 words with one photo, comes from the signed-off content pack.",
+        "photoUrl": "https://media.example/placeholder"
+      }
+    },
+    {
+      "code": "1C",
+      "title": "Natural and man-made materials",
+      "objective": "DRAFT: learning objective for 1C, one sentence from the curriculum",
+      "referenceMeaning": "DRAFT: what a correct answer for 1C must contain, in plain words",
+      "misconceptions": [
+        {
+          "code": "1C-M1",
+          "text": "DRAFT: misconception 1 for 1C, from the content pack"
+        },
+        {
+          "code": "1C-M2",
+          "text": "DRAFT: misconception 2 for 1C, from the content pack"
+        }
+      ],
+      "versions": [
+        {
+          "label": "a",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 50,
+          "exampleWorld": "home and farm",
+          "misconceptionTags": [
+            "1C-M1"
+          ],
+          "interestTags": [
+            "farming",
+            "cooking"
+          ]
+        },
+        {
+          "label": "b",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1C-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 43,
+          "exampleWorld": "market and sport",
+          "misconceptionTags": [
+            "1C-M2"
+          ],
+          "interestTags": [
+            "market",
+            "football"
+          ]
+        }
+      ],
+      "checkQuestions": [
+        {
+          "question": "DRAFT: check question for 1C, try 1, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1C, try 1"
+          ],
+          "tapOptions": [
+            "DRAFT: accepted answer for 1C, try 1",
+            "DRAFT: wrong tap option 1 for 1C, try 1",
+            "DRAFT: wrong tap option 2 for 1C, try 1"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1C-M1 for 1C, try 1",
+              "sound": false,
+              "misconceptionCode": "1C-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1C-M2 for 1C, try 1",
+              "sound": false,
+              "misconceptionCode": "1C-M2"
+            },
+            {
+              "text": "DRAFT: sound reason for 1C, try 1",
+              "sound": true
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1C, try 1, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1C, try 2, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1C, try 2"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1C, try 2",
+            "DRAFT: accepted answer for 1C, try 2",
+            "DRAFT: wrong tap option 2 for 1C, try 2"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: sound reason for 1C, try 2",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1C-M1 for 1C, try 2",
+              "sound": false,
+              "misconceptionCode": "1C-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1C-M2 for 1C, try 2",
+              "sound": false,
+              "misconceptionCode": "1C-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1C, try 2, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1C, try 3, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1C, try 3"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1C, try 3",
+            "DRAFT: wrong tap option 2 for 1C, try 3",
+            "DRAFT: accepted answer for 1C, try 3"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1C-M1 for 1C, try 3",
+              "sound": false,
+              "misconceptionCode": "1C-M1"
+            },
+            {
+              "text": "DRAFT: sound reason for 1C, try 3",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1C-M2 for 1C, try 3",
+              "sound": false,
+              "misconceptionCode": "1C-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1C, try 3, 1 or 2 sentences from the content pack"
+        }
+      ],
+      "workedExample": {
+        "text": "DRAFT: worked example card for 1C. The real card, under 120 words with one photo, comes from the signed-off content pack.",
+        "photoUrl": "https://media.example/placeholder"
+      }
+    },
+    {
+      "code": "1D",
+      "title": "Choosing a material for a use",
+      "objective": "DRAFT: learning objective for 1D, one sentence from the curriculum",
+      "referenceMeaning": "DRAFT: what a correct answer for 1D must contain, in plain words",
+      "misconceptions": [
+        {
+          "code": "1D-M1",
+          "text": "DRAFT: misconception 1 for 1D, from the content pack"
+        },
+        {
+          "code": "1D-M2",
+          "text": "DRAFT: misconception 2 for 1D, from the content pack"
+        }
+      ],
+      "versions": [
+        {
+          "label": "a",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 46,
+          "exampleWorld": "home and farm",
+          "misconceptionTags": [
+            "1D-M1"
+          ],
+          "interestTags": [
+            "farming",
+            "cooking"
+          ]
+        },
+        {
+          "label": "b",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1D-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 47,
+          "exampleWorld": "market and sport",
+          "misconceptionTags": [
+            "1D-M2"
+          ],
+          "interestTags": [
+            "market",
+            "football"
+          ]
+        }
+      ],
+      "checkQuestions": [
+        {
+          "question": "DRAFT: check question for 1D, try 1, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1D, try 1"
+          ],
+          "tapOptions": [
+            "DRAFT: accepted answer for 1D, try 1",
+            "DRAFT: wrong tap option 1 for 1D, try 1",
+            "DRAFT: wrong tap option 2 for 1D, try 1"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1D-M1 for 1D, try 1",
+              "sound": false,
+              "misconceptionCode": "1D-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1D-M2 for 1D, try 1",
+              "sound": false,
+              "misconceptionCode": "1D-M2"
+            },
+            {
+              "text": "DRAFT: sound reason for 1D, try 1",
+              "sound": true
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1D, try 1, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1D, try 2, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1D, try 2"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1D, try 2",
+            "DRAFT: accepted answer for 1D, try 2",
+            "DRAFT: wrong tap option 2 for 1D, try 2"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: sound reason for 1D, try 2",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1D-M1 for 1D, try 2",
+              "sound": false,
+              "misconceptionCode": "1D-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1D-M2 for 1D, try 2",
+              "sound": false,
+              "misconceptionCode": "1D-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1D, try 2, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1D, try 3, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1D, try 3"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1D, try 3",
+            "DRAFT: wrong tap option 2 for 1D, try 3",
+            "DRAFT: accepted answer for 1D, try 3"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1D-M1 for 1D, try 3",
+              "sound": false,
+              "misconceptionCode": "1D-M1"
+            },
+            {
+              "text": "DRAFT: sound reason for 1D, try 3",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1D-M2 for 1D, try 3",
+              "sound": false,
+              "misconceptionCode": "1D-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1D, try 3, 1 or 2 sentences from the content pack"
+        }
+      ],
+      "workedExample": {
+        "text": "DRAFT: worked example card for 1D. The real card, under 120 words with one photo, comes from the signed-off content pack.",
+        "photoUrl": "https://media.example/placeholder"
+      }
+    },
+    {
+      "code": "1E",
+      "title": "Caring for and reusing materials",
+      "objective": "DRAFT: learning objective for 1E, one sentence from the curriculum",
+      "referenceMeaning": "DRAFT: what a correct answer for 1E must contain, in plain words",
+      "misconceptions": [
+        {
+          "code": "1E-M1",
+          "text": "DRAFT: misconception 1 for 1E, from the content pack"
+        },
+        {
+          "code": "1E-M2",
+          "text": "DRAFT: misconception 2 for 1E, from the content pack"
+        }
+      ],
+      "versions": [
+        {
+          "label": "a",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-a.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 43,
+          "exampleWorld": "home and farm",
+          "misconceptionTags": [
+            "1E-M1"
+          ],
+          "interestTags": [
+            "farming",
+            "cooking"
+          ]
+        },
+        {
+          "label": "b",
+          "url360": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-360.mp4",
+          "url480": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-480.mp4",
+          "url720": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-720.mp4",
+          "url1080": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b-1080.mp4",
+          "posterUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b.jpg",
+          "captionsUrl": "https://pub-0cc3c7d9873347f7887270f590399f6b.r2.dev/mat-1E-b.vtt",
+          "boardColour": "#F6F1E6",
+          "durationSeconds": 45,
+          "exampleWorld": "market and sport",
+          "misconceptionTags": [
+            "1E-M2"
+          ],
+          "interestTags": [
+            "market",
+            "football"
+          ]
+        }
+      ],
+      "checkQuestions": [
+        {
+          "question": "DRAFT: check question for 1E, try 1, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1E, try 1"
+          ],
+          "tapOptions": [
+            "DRAFT: accepted answer for 1E, try 1",
+            "DRAFT: wrong tap option 1 for 1E, try 1",
+            "DRAFT: wrong tap option 2 for 1E, try 1"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1E-M1 for 1E, try 1",
+              "sound": false,
+              "misconceptionCode": "1E-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1E-M2 for 1E, try 1",
+              "sound": false,
+              "misconceptionCode": "1E-M2"
+            },
+            {
+              "text": "DRAFT: sound reason for 1E, try 1",
+              "sound": true
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1E, try 1, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1E, try 2, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1E, try 2"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1E, try 2",
+            "DRAFT: accepted answer for 1E, try 2",
+            "DRAFT: wrong tap option 2 for 1E, try 2"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: sound reason for 1E, try 2",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1E-M1 for 1E, try 2",
+              "sound": false,
+              "misconceptionCode": "1E-M1"
+            },
+            {
+              "text": "DRAFT: reason showing 1E-M2 for 1E, try 2",
+              "sound": false,
+              "misconceptionCode": "1E-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1E, try 2, 1 or 2 sentences from the content pack"
+        },
+        {
+          "question": "DRAFT: check question for 1E, try 3, worded differently from the other tries",
+          "acceptedAnswers": [
+            "DRAFT: accepted answer for 1E, try 3"
+          ],
+          "tapOptions": [
+            "DRAFT: wrong tap option 1 for 1E, try 3",
+            "DRAFT: wrong tap option 2 for 1E, try 3",
+            "DRAFT: accepted answer for 1E, try 3"
+          ],
+          "reasonOptions": [
+            {
+              "text": "DRAFT: reason showing 1E-M1 for 1E, try 3",
+              "sound": false,
+              "misconceptionCode": "1E-M1"
+            },
+            {
+              "text": "DRAFT: sound reason for 1E, try 3",
+              "sound": true
+            },
+            {
+              "text": "DRAFT: reason showing 1E-M2 for 1E, try 3",
+              "sound": false,
+              "misconceptionCode": "1E-M2"
+            }
+          ],
+          "referenceReasoning": "DRAFT: reference reasoning for 1E, try 3, 1 or 2 sentences from the content pack"
+        }
+      ],
+      "workedExample": {
+        "text": "DRAFT: worked example card for 1E. The real card, under 120 words with one photo, comes from the signed-off content pack.",
+        "photoUrl": "https://media.example/placeholder"
+      }
+    }
+  ],
+  "exam": {
+    "paperA": {
+      "durationMinutes": 30,
+      "objective": [
+        {
+          "question": "DRAFT: Paper A objective question 1",
+          "options": [
+            "DRAFT: Paper A question 1 option A",
+            "DRAFT: Paper A question 1 option B",
+            "DRAFT: Paper A question 1 option C",
+            "DRAFT: Paper A question 1 option D"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "DRAFT: Paper A objective question 2",
+          "options": [
+            "DRAFT: Paper A question 2 option A",
+            "DRAFT: Paper A question 2 option B",
+            "DRAFT: Paper A question 2 option C",
+            "DRAFT: Paper A question 2 option D"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "question": "DRAFT: Paper A objective question 3",
+          "options": [
+            "DRAFT: Paper A question 3 option A",
+            "DRAFT: Paper A question 3 option B",
+            "DRAFT: Paper A question 3 option C",
+            "DRAFT: Paper A question 3 option D"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "question": "DRAFT: Paper A objective question 4",
+          "options": [
+            "DRAFT: Paper A question 4 option A",
+            "DRAFT: Paper A question 4 option B",
+            "DRAFT: Paper A question 4 option C",
+            "DRAFT: Paper A question 4 option D"
+          ],
+          "correctIndex": 3
+        },
+        {
+          "question": "DRAFT: Paper A objective question 5",
+          "options": [
+            "DRAFT: Paper A question 5 option A",
+            "DRAFT: Paper A question 5 option B",
+            "DRAFT: Paper A question 5 option C",
+            "DRAFT: Paper A question 5 option D"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "DRAFT: Paper A objective question 6",
+          "options": [
+            "DRAFT: Paper A question 6 option A",
+            "DRAFT: Paper A question 6 option B",
+            "DRAFT: Paper A question 6 option C",
+            "DRAFT: Paper A question 6 option D"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "question": "DRAFT: Paper A objective question 7",
+          "options": [
+            "DRAFT: Paper A question 7 option A",
+            "DRAFT: Paper A question 7 option B",
+            "DRAFT: Paper A question 7 option C",
+            "DRAFT: Paper A question 7 option D"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "question": "DRAFT: Paper A objective question 8",
+          "options": [
+            "DRAFT: Paper A question 8 option A",
+            "DRAFT: Paper A question 8 option B",
+            "DRAFT: Paper A question 8 option C",
+            "DRAFT: Paper A question 8 option D"
+          ],
+          "correctIndex": 3
+        },
+        {
+          "question": "DRAFT: Paper A objective question 9",
+          "options": [
+            "DRAFT: Paper A question 9 option A",
+            "DRAFT: Paper A question 9 option B",
+            "DRAFT: Paper A question 9 option C",
+            "DRAFT: Paper A question 9 option D"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "DRAFT: Paper A objective question 10",
+          "options": [
+            "DRAFT: Paper A question 10 option A",
+            "DRAFT: Paper A question 10 option B",
+            "DRAFT: Paper A question 10 option C",
+            "DRAFT: Paper A question 10 option D"
+          ],
+          "correctIndex": 1
+        }
+      ],
+      "theory": [
+        {
+          "question": "DRAFT: Paper A theory question 1",
+          "marks": 4,
+          "schemePoints": [
+            {
+              "point": "DRAFT: Paper A theory question 1, acceptable point 1",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper A theory question 1, acceptable point 2",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper A theory question 1, acceptable point 3",
+              "marks": 2
+            }
+          ]
+        },
+        {
+          "question": "DRAFT: Paper A theory question 2",
+          "marks": 4,
+          "schemePoints": [
+            {
+              "point": "DRAFT: Paper A theory question 2, acceptable point 1",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper A theory question 2, acceptable point 2",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper A theory question 2, acceptable point 3",
+              "marks": 2
+            }
+          ]
+        },
+        {
+          "question": "DRAFT: Paper A theory question 3",
+          "marks": 4,
+          "schemePoints": [
+            {
+              "point": "DRAFT: Paper A theory question 3, acceptable point 1",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper A theory question 3, acceptable point 2",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper A theory question 3, acceptable point 3",
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    },
+    "paperB": {
+      "durationMinutes": 30,
+      "objective": [
+        {
+          "question": "DRAFT: Paper B objective question 1",
+          "options": [
+            "DRAFT: Paper B question 1 option A",
+            "DRAFT: Paper B question 1 option B",
+            "DRAFT: Paper B question 1 option C",
+            "DRAFT: Paper B question 1 option D"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "DRAFT: Paper B objective question 2",
+          "options": [
+            "DRAFT: Paper B question 2 option A",
+            "DRAFT: Paper B question 2 option B",
+            "DRAFT: Paper B question 2 option C",
+            "DRAFT: Paper B question 2 option D"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "question": "DRAFT: Paper B objective question 3",
+          "options": [
+            "DRAFT: Paper B question 3 option A",
+            "DRAFT: Paper B question 3 option B",
+            "DRAFT: Paper B question 3 option C",
+            "DRAFT: Paper B question 3 option D"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "question": "DRAFT: Paper B objective question 4",
+          "options": [
+            "DRAFT: Paper B question 4 option A",
+            "DRAFT: Paper B question 4 option B",
+            "DRAFT: Paper B question 4 option C",
+            "DRAFT: Paper B question 4 option D"
+          ],
+          "correctIndex": 3
+        },
+        {
+          "question": "DRAFT: Paper B objective question 5",
+          "options": [
+            "DRAFT: Paper B question 5 option A",
+            "DRAFT: Paper B question 5 option B",
+            "DRAFT: Paper B question 5 option C",
+            "DRAFT: Paper B question 5 option D"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "DRAFT: Paper B objective question 6",
+          "options": [
+            "DRAFT: Paper B question 6 option A",
+            "DRAFT: Paper B question 6 option B",
+            "DRAFT: Paper B question 6 option C",
+            "DRAFT: Paper B question 6 option D"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "question": "DRAFT: Paper B objective question 7",
+          "options": [
+            "DRAFT: Paper B question 7 option A",
+            "DRAFT: Paper B question 7 option B",
+            "DRAFT: Paper B question 7 option C",
+            "DRAFT: Paper B question 7 option D"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "question": "DRAFT: Paper B objective question 8",
+          "options": [
+            "DRAFT: Paper B question 8 option A",
+            "DRAFT: Paper B question 8 option B",
+            "DRAFT: Paper B question 8 option C",
+            "DRAFT: Paper B question 8 option D"
+          ],
+          "correctIndex": 3
+        },
+        {
+          "question": "DRAFT: Paper B objective question 9",
+          "options": [
+            "DRAFT: Paper B question 9 option A",
+            "DRAFT: Paper B question 9 option B",
+            "DRAFT: Paper B question 9 option C",
+            "DRAFT: Paper B question 9 option D"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "DRAFT: Paper B objective question 10",
+          "options": [
+            "DRAFT: Paper B question 10 option A",
+            "DRAFT: Paper B question 10 option B",
+            "DRAFT: Paper B question 10 option C",
+            "DRAFT: Paper B question 10 option D"
+          ],
+          "correctIndex": 1
+        }
+      ],
+      "theory": [
+        {
+          "question": "DRAFT: Paper B theory question 1",
+          "marks": 4,
+          "schemePoints": [
+            {
+              "point": "DRAFT: Paper B theory question 1, acceptable point 1",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper B theory question 1, acceptable point 2",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper B theory question 1, acceptable point 3",
+              "marks": 2
+            }
+          ]
+        },
+        {
+          "question": "DRAFT: Paper B theory question 2",
+          "marks": 4,
+          "schemePoints": [
+            {
+              "point": "DRAFT: Paper B theory question 2, acceptable point 1",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper B theory question 2, acceptable point 2",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper B theory question 2, acceptable point 3",
+              "marks": 2
+            }
+          ]
+        },
+        {
+          "question": "DRAFT: Paper B theory question 3",
+          "marks": 4,
+          "schemePoints": [
+            {
+              "point": "DRAFT: Paper B theory question 3, acceptable point 1",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper B theory question 3, acceptable point 2",
+              "marks": 2
+            },
+            {
+              "point": "DRAFT: Paper B theory question 3, acceptable point 3",
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "recheck": [
+    {
+      "segmentCode": "1B",
+      "question": "DRAFT: re-check question 1, on segment 1B",
+      "acceptedAnswers": [
+        "DRAFT: accepted answer for re-check 1"
+      ],
+      "tapOptions": [
+        "DRAFT: accepted answer for re-check 1",
+        "DRAFT: wrong option 1 for re-check 1",
+        "DRAFT: wrong option 2 for re-check 1"
+      ]
+    },
+    {
+      "segmentCode": "1C",
+      "question": "DRAFT: re-check question 2, on segment 1C",
+      "acceptedAnswers": [
+        "DRAFT: accepted answer for re-check 2"
+      ],
+      "tapOptions": [
+        "DRAFT: wrong option 1 for re-check 2",
+        "DRAFT: accepted answer for re-check 2",
+        "DRAFT: wrong option 2 for re-check 2"
+      ]
+    },
+    {
+      "segmentCode": "1D",
+      "question": "DRAFT: re-check question 3, on segment 1D",
+      "acceptedAnswers": [
+        "DRAFT: accepted answer for re-check 3"
+      ],
+      "tapOptions": [
+        "DRAFT: wrong option 1 for re-check 3",
+        "DRAFT: wrong option 2 for re-check 3",
+        "DRAFT: accepted answer for re-check 3"
+      ]
+    }
+  ]
+}

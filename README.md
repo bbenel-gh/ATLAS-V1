@@ -26,6 +26,19 @@ Then pick one:
 - Press `a` for the Android emulator. The AVD is `atlas_api36`.
 - Scan the QR code with Expo Go on an Android phone, on the same network.
 
+### On a phone over USB
+
+1. On the phone: Settings, About phone, tap Build number 7 times. Then in
+   Developer options turn on USB debugging.
+2. Install Expo Go on the phone from the Play Store.
+3. Connect the phone by USB and accept the "Allow USB debugging" prompt.
+4. On the computer, check the phone is seen: `adb devices` lists it as `device`.
+5. Run `npm run android`. Expo opens the app in Expo Go on the phone. The
+   first screen shows "sign-in".
+
+If the phone and computer are not on the same Wi-Fi, run
+`adb reverse tcp:8081 tcp:8081` before step 5.
+
 ## Checks
 
 All three must pass before any task is called done.
@@ -35,6 +48,52 @@ npm run typecheck
 npm run lint
 npm test
 ```
+
+After any change to `content/materials.json`, run `npm run content:check`. It
+prints every error with its JSON path and exits 1 on any error. To check a
+copy: `npm run content:check -- path/to/copy.json`.
+
+To load the content file into atlas-dev:
+
+```
+npm run content:import -- --dry-run   # shows what would change, writes nothing
+npm run content:import                # validates, then writes only what changed
+```
+
+It validates first and stops on any error. It writes in one transaction, then
+reads back and checks the database matches the file. A second run must say
+"No changes". It never deletes: rows that are in the database but not in the
+file are listed for a person to deal with. Like the seed, it uses the Supabase
+CLI login, so no service role key is stored on this computer (D-34). It refuses
+any project but atlas-dev, unless run with `--prod`, the prod ref in
+`.env.import` and the typed confirmation `IMPORT TO PROD` (S41 only).
+
+After any change to `supabase/migrations/`, also run the Row Level Security
+suite against atlas-dev. It needs `.env` (atlas-dev URL and anon key) and the
+Supabase CLI linked to atlas-dev, and it refuses to run against any other
+project.
+
+```
+npm run seed:dev    # once, and again after the seed changes. Safe to repeat
+npm run test:rls    # every line must say PASS. Any FAIL exits with code 1
+```
+
+After any change to `supabase/functions/pupil-signin` or `src/domain/auth.ts`,
+deploy it to atlas-dev and run the end-to-end sign-in check with TEST-P1:
+
+```
+npx supabase functions deploy pupil-signin --remote=gygmyjbuzbbngsoyoubg --use-api --no-verify-jwt
+npm run test:signin   # every line must say PASS. Wait a minute between two runs
+```
+
+Development only, to test the consent gate on a phone:
+
+```
+npm run consent:set -- --code TEST-P3 --on    # or --off
+```
+
+`seed:dev` creates fake test users and rows (ids start with `7e57`) and writes
+their passwords to `.env.test`, which is git ignored. See `.env.test.example`.
 
 ## Layout
 

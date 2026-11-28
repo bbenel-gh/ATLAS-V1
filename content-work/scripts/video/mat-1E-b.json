@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1E-b",
+  "title": "Caring for and reusing materials",
+  "exampleWorld": "market and sport",
+  "misconception": "1E-M2: thinks reusing means sending to a factory (confuses reuse and recycle)",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Reuse",
+        "say": "To reuse is to use a thing again, as it is, or for a new job."
+      },
+      {
+        "board": "tin: a pencil holder",
+        "say": "An empty tin can become a pencil holder."
+      },
+      {
+        "board": "sack: carry goods again",
+        "say": "A strong sack from the market can carry goods again and again."
+      }
+    ],
+    [
+      {
+        "board": "Recycle",
+        "say": "To recycle is different. The material is broken down and made into something new."
+      },
+      {
+        "board": "bottles: new plastic",
+        "say": "Old plastic bottles can be recycled into new plastic things."
+      },
+      {
+        "board": "reuse: no factory needed",
+        "say": "You can reuse at home. You do not need a factory."
+      }
+    ],
+    [
+      {
+        "board": "Less waste",
+        "say": "Reusing and recycling mean less waste on our streets and in our drains."
+      },
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Say how you would reuse a material."
+      }
+    ]
+  ]
+}

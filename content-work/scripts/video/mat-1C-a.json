@@ -1,0 +1,48 @@
+{
+  "status": "DRAFT: for the science content reviewer. Board text and narration may change. Match the misconception to the content pack.",
+  "version": "1C-a",
+  "title": "Natural and man-made materials",
+  "exampleWorld": "home and farm",
+  "misconception": "1C-M1: thinks shaping a natural material makes it man-made",
+  "voice": "Microsoft Zira Desktop (stand-in until the voice-over artist records)",
+  "pages": [
+    [
+      {
+        "board": "Natural materials",
+        "say": "Natural materials come from plants, animals or the ground."
+      },
+      {
+        "board": "wood, cotton, wool, clay",
+        "say": "Wood and cotton come from plants. Wool comes from animals. Clay comes from the ground."
+      },
+      {
+        "board": "Man-made materials",
+        "say": "Man-made materials are made by people changing natural materials."
+      },
+      {
+        "board": "plastic, glass, cement",
+        "say": "Plastic, glass and cement are man-made."
+      }
+    ],
+    [
+      {
+        "board": "wooden stool: still wood",
+        "say": "A carpenter cuts wood to make a stool. The stool is still made of wood."
+      },
+      {
+        "board": "Shaping does not change it",
+        "say": "Cutting or shaping does not change the material. Wood is still a natural material."
+      },
+      {
+        "board": "cotton shirt: still cotton",
+        "say": "A cotton shirt is sewn by people, but cotton is still a natural material."
+      }
+    ],
+    [
+      {
+        "board": "Your turn",
+        "say": "Now it is your turn. Ask where the material came from."
+      }
+    ]
+  ]
+}

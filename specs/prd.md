@@ -8,7 +8,7 @@ In the repo this file is saved as `specs/prd.md`.
 
 ATLAS is one learning companion for each pupil. It plays the part of teacher, parent and study friend. It knows the child, teaches each concept in the way that fits them, checks understanding at every step, and calls in a human when the app alone is not enough.
 
-V1 proves this on one topic with one class. Basic 7 pupils at Detieso D/A Basic School complete Integrated Science, Diversity of Matter: Materials, from onboarding to a timed exam, on pilot phones. V1.0 is released to the pilot class on **15 December 2026**.
+V1 proves this on one topic, with the Detieso pilot class first and then any pupil who signs up. Basic 7 pupils complete Integrated Science, Diversity of Matter: Materials, from onboarding to a timed exam. V1.0 is released to the pilot class and to the public on **15 December 2026**, and stays in use for one to two months until the next update.
 
 ## 2. The problem
 
@@ -32,17 +32,19 @@ Every design choice serves these goals.
 
 ## 4. What V1 is and is not
 
-V1 is a pilot release: one topic, one school, one class, Android phones supplied by ATLAS, and a web dashboard for the admin and the class teacher.
+V1 is the main ATLAS product for this topic, not only a pilot: one topic, the Detieso pilot class first on Android phones supplied by ATLAS, then any pupil who signs up, and a web dashboard for the admin and class teachers. Admins manage pupils. Each pupil states their school, and an admin may link it to a school record.
 
-It is not a public Play Store launch. A new personal Google Play account must run a closed test with at least 12 testers opted in for 14 days in a row before it can apply for production access, so the public listing comes after 15 December.
+It is shared as an APK from a public link. A new personal Google Play account must run a closed test with at least 12 testers opted in for 14 days in a row before it can apply for production access, so the public Play Store listing comes after 15 December.
+
+Public self sign-up is built in V1 but stays switched off until the admin turns it on, after the data protection consultant confirms that registration and in-app guardian consent cover public use. Until then only the pilot class and admin-created pupils can use V1.
 
 ### Scope
 
 | Area | In V1 (15 Dec) | Later |
 | --- | --- | --- |
 | Subject and topic | Basic 7 Integrated Science, Diversity of Matter: Materials. Overview plus segments 1A to 1E | Mathematics from January, then more topics |
-| Platform | Android app installed directly on pilot phones; web dashboard for admin and teacher | iOS, public Play Store listing, pupil web app |
-| Accounts | Teacher-issued pupil code plus 4-digit PIN. No child email or phone number | Phone OTP, self sign-up |
+| Platform | Android app installed from a public APK link; pilot phones supplied by ATLAS; web dashboard for admin and teacher | iOS, public Play Store listing, pupil web app |
+| Accounts | Self sign-up (behind the admin switch) or admin-issued pupil code, plus 4-digit PIN. The pupil states their school. No child email or phone number | Phone OTP |
 | Language | English only | No other language is planned |
 | Onboarding | Name, class, interests, 3 playful choices | |
 | Lesson flow | Overview video, segment loop, "Why do you think so?" after every answer, 3 tries, flags to admin | |
@@ -56,10 +58,10 @@ It is not a public Play Store launch. A new personal Google Play account must ru
 
 | User | Who in V1 | What they need |
 | --- | --- | --- |
-| Pupil | Basic 7 pupils at Detieso, about 11 to 14 years old, with signed parent consent | To learn the topic at their own pace without being judged, on a shared low-end phone |
-| Admin | Bright | To see and act on flags, approve borderline marks, create classes and pupil codes, record consent |
-| Class teacher | The Basic 7 science teacher at Detieso | A read-only view of their own class's progress |
-| Parent or guardian | Parents of pilot pupils | A plain explanation of what ATLAS collects and that AI checks answers; a consent form they understand |
+| Pupil | Basic 7 pupils at Detieso, and any pupil who signs up, about 11 to 14 years old, with parent or guardian consent | To learn the topic at their own pace without being judged, on a shared low-end phone |
+| Admin | Bright | To see and act on flags, approve borderline marks, create classes, schools and pupil codes, record consent, see, suspend, reset or delete any pupil, and switch public sign-up on or off |
+| Class teacher | The Basic 7 science teacher at Detieso, and teachers of other classes later | A read-only view of their own class's progress |
+| Parent or guardian | Parents of pilot pupils and of pupils who sign up | A plain explanation of what ATLAS collects and that AI checks answers; a consent form or in-app consent step they understand |
 
 ## 6. Learner journey
 
@@ -67,10 +69,10 @@ The journey has eight stages. Onboarding runs once. Topic choice and the overvie
 
 ### 6.1 Sign-in and notices
 
-- FR-1. The admin creates a class and its pupils on the web dashboard. Each pupil gets a 6-character code with no ambiguous characters (no 0, O, 1 or I).
+- FR-1. The admin creates a class and its pupils on the web dashboard, or, when public sign-up is on, a pupil signs up in the app with a first name or nickname, their school in their own words and their class level. Each pupil gets a 6-character code with no ambiguous characters (no 0, O, 1 or I). A pupil may join a class with the class's join code. The admin is alerted to each new sign-up and can suspend, reset or delete any pupil.
 - FR-2. A pupil signs in with code and PIN. The PIN is set on first sign-in and stored only as a hash. Five wrong PINs lock the code for 15 minutes.
 - FR-3. After first sign-in the pupil sees the AI notice once (under 80 words, plain English). The app records when it was seen.
-- FR-4. A pupil cannot start lessons until the admin has recorded parent consent. Until then they see a polite waiting screen.
+- FR-4. A pupil cannot start lessons until consent is recorded: by the admin from a signed paper form, or by a parent or guardian in the app's consent step after reading the privacy notice. Until then they see a polite waiting screen. Every consent records its method, date and any withdrawal.
 
 ### 6.2 Stage 1: Onboarding
 
@@ -108,13 +110,14 @@ The journey has eight stages. Onboarding runs once. Topic choice and the overvie
 - FR-24. A pupil gets 3 tries per segment. After the third failed try the pupil sees "We'll come back to this one. You're not behind." and moves to the next segment.
 - FR-25. The unfinished segment goes to Recommended and a stalled flag goes to the admin. The admin decides: content fix needed, or human help suggested, with a note.
 - FR-26. When the segment returns, the app re-tests it. The flag clears only when the pupil actually gets it.
+- FR-26a. Relearn (D-48). At the end of a segment, after "Well reasoned" (FR-19) or after "We'll come back to this one" (FR-24), the pupil sees a secondary "Relearn" button beside the way forward. It starts a new round of the same segment: tries count from 1 again, 3 per round, and every attempt records its round. The first video of the round is chosen by the rule in section 8.2, counting versions seen in any round as seen and using the misconception codes from the latest round; if every version has been seen, the best match by the same rule is used again, ties going to the one seen longest ago. The status never goes down: complete stays complete; moved on becomes complete when the pupil gets it in a round, which clears the flag and removes it from Recommended (FR-26); a failed round on a moved-on segment adds a note to the open flag rather than a new flag. Exam unlock (FR-27) and mastery use this best status. The server starts the round; the pupil cannot set a status (D-29). The AI caps still apply.
 
 ### 6.7 Stage 6: Timed topic exam
 
 - FR-27. The exam unlocks when every segment is complete or moved on. The pupil sees the rules, the duration and a "Start exam" button.
 - FR-28. An objective section, then a theory section. Pupils can move between questions within a section. No feedback of any kind until submission.
 - FR-29. The timer is always visible but calm. It counts from a stored start time, so closing the app does not reset it. At zero a stop-work sound plays and the paper submits itself.
-- FR-30. Objective items are scored on the phone. Each theory answer goes to the ai-mark-theory job, which marks against the scheme points. Borderline marks show "Being checked by a teacher" until an admin approves.
+- FR-30. Objective items are scored on the server when the paper is submitted, so the answer key never reaches the phone before submission (D-28). Each theory answer goes to the ai-mark-theory job, which marks against the scheme points. Borderline marks show "Being checked by a teacher" until an admin approves.
 
 ### 6.8 Stage 7: Results and retakes
 
@@ -161,7 +164,7 @@ Totals for V1: 11 videos, 15 check questions, 5 worked-example cards, 20 objecti
 
 Videos use the board style defined in `specs/video-board.md`: handwriting appearing on a paper-coloured board, a Ghanaian English voice-over, pen sound, and burned-in English captions.
 - Script rules: under 3 minutes (about 350 spoken words), one concept per video, Ghanaian names, places and objects, real objects shown wherever possible. A video teaches the idea but never answers the exact check question.
-- Export: MP4, H.264 video, AAC audio, two files per video at 480p and 360p (about 500 kbps, so a 3-minute video is roughly 11 MB).
+- Export: MP4, H.264 video, AAC audio, two files per video at 480p and 360p (about 500 kbps, so a 3-minute video is roughly 11 MB). Optional 720p and 1080p files may be added (D-46); the app downloads 360p unless the pupil picks a higher quality.
 - File names: `mat-<segment>-<version>-<resolution>.mp4`, for example `mat-1B-a-360.mp4`.
 - No copyrighted music, images or clips. No children's faces.
 
@@ -186,6 +189,7 @@ The system prompts are in `specs/ai-prompts.md`. They are first drafts; the qual
 2. From the versions this pupil has not seen, pick the one whose tags match the most codes.
 3. On a tie, pick the version whose examples match the pupil's interests.
 4. If no unseen version is left, show the worked-example card.
+5. Relearn (FR-26a) uses the same rule for the first video of a new round, counting versions seen in any round as seen, with the codes from the latest round. With every version seen, it picks the best match again, ties to the version seen longest ago.
 
 ### 8.3 Reliability
 
@@ -224,8 +228,9 @@ Anthropic requires organisations whose products let minors use its API to add th
 - No names go to the API: only a pupil ID, the question and the pupil's words.
 - Pupils have no email or phone number in ATLAS. They sign in with a code and PIN.
 - An AI notice screen for pupils, and a plain-language AI and privacy notice for parents, also published on a public ATLAS page.
-- A signed parent consent form for every pilot pupil, explained in person. It states what ATLAS collects, that AI checks answers, who sees the data, how long it is kept, and how to withdraw.
-- Data Protection Commission registration submitted by 1 December. The consultant confirms whether the pilot can run while registration is pending. If not, the pilot waits.
+- A signed parent consent form for every pilot pupil, explained in person. For pupils who sign up, a parent or guardian consent step in the app with the same content. Both state what ATLAS collects, that AI checks answers, who sees the data, how long it is kept, and how to withdraw.
+- Data Protection Commission registration submitted by 1 December. The consultant confirms whether the pilot can run while registration is pending. If not, the pilot waits. Public sign-up stays off until the consultant confirms that registration and in-app consent cover public use.
+- A global daily cap on AI calls across all pupils, set by the admin, on top of the 120 calls per pupil per day, and a limit on sign-ups per phone per day.
 - Safeguarding: if a pupil's text suggests danger, harm or serious distress, the pupil sees "Thank you for sharing. A teacher may check in with you.", no verdict is shown for that answer, and the admin is alerted by email the same day. Bright names who acts on alerts before the pilot.
 - Handwriting photos are deleted from the phone and the server once the text is confirmed.
 - AI logs and pupil data are kept only as long as the privacy notice says.
