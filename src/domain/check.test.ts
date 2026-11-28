@@ -79,6 +79,13 @@ describe('checkInputSchema', () => {
     expect(checkInputSchema.safeParse({ ...input, reason_text: '' }).success).toBe(true);
   });
 
+  it('S20: takes an optional attempt id, so the server can keep the result for save-attempt', () => {
+    const id = '00000000-0000-4000-8000-000000000001';
+    expect(checkInputSchema.parse({ ...input, attempt_id: id }).attempt_id).toBe(id);
+    expect(checkInputSchema.parse(input).attempt_id).toBeUndefined();
+    expect(checkInputSchema.safeParse({ ...input, attempt_id: 'not-a-uuid' }).success).toBe(false);
+  });
+
   it(`allows ${CHECK_TEXT_MAX} characters and no more`, () => {
     expect(CHECK_TEXT_MAX).toBe(600);
     expect(checkInputSchema.safeParse({ ...input, answer_text: 'a'.repeat(600) }).success).toBe(true);
