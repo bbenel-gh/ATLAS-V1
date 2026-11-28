@@ -37,6 +37,7 @@ describe('extractJsonObject', () => {
     expect(extractJsonObject('[{"a":1}]')).toBeNull();
     expect(extractJsonObject('no json here')).toBeNull();
     expect(extractJsonObject('{"a":')).toBeNull();
+    expect(extractJsonObject('{"a": }')).toBeNull();
     expect(extractJsonObject('} {')).toBeNull();
   });
 });
@@ -47,7 +48,8 @@ describe('cleanReadBack', () => {
   });
 
   it('turns em and en dashes into commas and exclamation marks into full stops (rule 7)', () => {
-    expect(cleanReadBack('You said that wood — not metal – floats!')).toBe(
+    const [em, en] = [String.fromCharCode(0x2014), String.fromCharCode(0x2013)];
+    expect(cleanReadBack(`You said that wood ${em} not metal ${en} floats!`)).toBe(
       'You said that wood, not metal, floats.',
     );
   });

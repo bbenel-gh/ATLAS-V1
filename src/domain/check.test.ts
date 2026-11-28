@@ -181,6 +181,11 @@ describe('tapReadBack', () => {
     expect(tapReadBack('Wood.', 'I have seen it float.')).toBe('You said "Wood" because I have seen it float.');
   });
 
+  it('keeps a reason starting with a word in capitals as it is', () => {
+    expect(tapReadBack('Wood', 'NaCCA says so')).toBe('You said "Wood" because NaCCA says so.');
+    expect(tapReadBack('Wood', 'DRAFT: x')).toBe('You said "Wood" because DRAFT: x.');
+  });
+
   it('cuts a long read-back at a word to stay within 200 characters', () => {
     const out = tapReadBack('The metal spoon', `It is ${'very '.repeat(60)}heavy`);
     expect(out.length).toBeLessThanOrEqual(200);
