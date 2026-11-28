@@ -111,8 +111,11 @@ export type Database = {
           reason: string | null
           reason_input_mode: Database["public"]["Enums"]["input_mode"] | null
           reasoning_verdict: Database["public"]["Enums"]["ai_verdict"] | null
+          round: number
           segment_id: string
           sure: boolean | null
+          tap_answer: string | null
+          tap_reason: string | null
           time_taken_ms: number | null
           try_number: number
           video_version_id: string | null
@@ -134,8 +137,11 @@ export type Database = {
           reason?: string | null
           reason_input_mode?: Database["public"]["Enums"]["input_mode"] | null
           reasoning_verdict?: Database["public"]["Enums"]["ai_verdict"] | null
+          round?: number
           segment_id: string
           sure?: boolean | null
+          tap_answer?: string | null
+          tap_reason?: string | null
           time_taken_ms?: number | null
           try_number: number
           video_version_id?: string | null
@@ -157,8 +163,11 @@ export type Database = {
           reason?: string | null
           reason_input_mode?: Database["public"]["Enums"]["input_mode"] | null
           reasoning_verdict?: Database["public"]["Enums"]["ai_verdict"] | null
+          round?: number
           segment_id?: string
           sure?: boolean | null
+          tap_answer?: string | null
+          tap_reason?: string | null
           time_taken_ms?: number | null
           try_number?: number
           video_version_id?: string | null
@@ -237,6 +246,70 @@ export type Database = {
             columns: ["segment_id"]
             isOneToOne: false
             referencedRelation: "segments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      check_results: {
+        Row: {
+          answer_mode: string
+          answer_text: string
+          attempt_id: string
+          check_item_id: string
+          created_at: string
+          flag_id: string | null
+          id: number
+          pupil_id: string
+          reason_mode: string
+          reason_text: string
+          result: Json
+        }
+        Insert: {
+          answer_mode: string
+          answer_text: string
+          attempt_id: string
+          check_item_id: string
+          created_at?: string
+          flag_id?: string | null
+          id?: never
+          pupil_id: string
+          reason_mode: string
+          reason_text: string
+          result: Json
+        }
+        Update: {
+          answer_mode?: string
+          answer_text?: string
+          attempt_id?: string
+          check_item_id?: string
+          created_at?: string
+          flag_id?: string | null
+          id?: never
+          pupil_id?: string
+          reason_mode?: string
+          reason_text?: string
+          result?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "check_results_check_item_id_fkey"
+            columns: ["check_item_id"]
+            isOneToOne: false
+            referencedRelation: "check_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "check_results_flag_id_fkey"
+            columns: ["flag_id"]
+            isOneToOne: false
+            referencedRelation: "flags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "check_results_pupil_id_fkey"
+            columns: ["pupil_id"]
+            isOneToOne: false
+            referencedRelation: "pupils"
             referencedColumns: ["id"]
           },
         ]
@@ -1008,6 +1081,8 @@ export type Database = {
       segment_status: {
         Row: {
           pupil_id: string
+          round: number
+          round_done: boolean
           segment_id: string
           status: Database["public"]["Enums"]["segment_state"]
           tries_used: number
@@ -1016,6 +1091,8 @@ export type Database = {
         }
         Insert: {
           pupil_id: string
+          round?: number
+          round_done?: boolean
           segment_id: string
           status?: Database["public"]["Enums"]["segment_state"]
           tries_used?: number
@@ -1024,6 +1101,8 @@ export type Database = {
         }
         Update: {
           pupil_id?: string
+          round?: number
+          round_done?: boolean
           segment_id?: string
           status?: Database["public"]["Enums"]["segment_state"]
           tries_used?: number
@@ -1300,6 +1379,7 @@ export type Database = {
           suggested_answer: string
         }[]
       }
+      has_consent: { Args: { p_pupil_id: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_signed_in_user: { Args: never; Returns: boolean }
       is_teacher_of: { Args: { p_class_id: string }; Returns: boolean }
@@ -1330,6 +1410,10 @@ export type Database = {
       signin_rate_hit: {
         Args: { p_key: string; p_limit: number; p_minute: string }
         Returns: boolean
+      }
+      start_segment_round: {
+        Args: { p_round: number; p_segment_id: string }
+        Returns: number
       }
     }
     Enums: {

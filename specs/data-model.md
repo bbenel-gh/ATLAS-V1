@@ -33,8 +33,8 @@ Amended 27 November 2026 by Bright with the team (D-49, S17): `profiles` gained 
 | `video_versions` | Segment, label (a or b), 360p and 480p URLs, example world, misconception tags, interest tags, poster URL (`poster_url` text), captions URL (`captions_url` text), board colour (`board_colour` text, hex like #F6F0E6), duration in seconds (`duration_seconds` integer) |
 | `check_items` | Segment, try number, question, accepted answers, tap options, reason options, reference reasoning, misconception codes |
 | `worked_examples` | Segment, text, image URL |
-| `attempts` | Pupil, segment, round (Relearn, starts at 1, D-48), try number, version shown, answer, input mode, reason, sure or not sure, time taken, changed answer, AI verdicts, misconception codes |
-| `segment_status` | Pupil, segment, status (in progress, complete, moved on; never goes down, D-48), tries used, current round (Relearn, starts at 1, D-48) |
+| `attempts` | Pupil, segment, round (Relearn, starts at 1, D-48), try number, version shown, answer, input mode, reason, reason input mode, sure or not sure, time taken, changed answer, AI verdicts, misconception codes, read-back and whether it was confirmed or edited, AI fallback used, the tap that decided an unsure or unchecked side (`tap_answer`, `tap_reason`, D-54). Id made on the phone. Written only by the save-attempt Edge Function (D-54) |
+| `segment_status` | Pupil, segment, status (in progress, complete, moved on; never goes down, D-48), tries used in the current round, current round (Relearn, starts at 1, D-48), round done (`round_done`, D-54). A round is opened by `start_segment_round` (D-54) |
 | `flags` | Pupil, segment, kind (stalled, safeguarding, borderline), status, admin action, notes |
 | `exam_papers` | Topic, label (A or B), duration in minutes |
 | `exam_items` | Paper, kind (objective or theory), question, options, marks. No answers |
@@ -45,4 +45,5 @@ Amended 27 November 2026 by Bright with the team (D-49, S17): `profiles` gained 
 | `exam_answers` | Attempt, item, answer, marks awarded, borderline, AI notes |
 | `mastery` | Pupil, topic, status, exam score, re-check due date, re-check result |
 | `ai_calls` | Job, model, pupil ID, input, output, success, time taken, date |
+| `check_results` | What ai-check judged for an attempt id: pupil, check item, the texts and modes judged, result, safeguarding flag. Read by save-attempt and raise-flag. Service role only, no policies (D-54) |
 | `signin_rate` | Sign-in calls per code per minute: keyed hash of the code (never the code), minute, count. Service role only, no policies (D-36) |

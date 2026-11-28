@@ -32,11 +32,13 @@ Rules:
 Return exactly:
 {"answer_correct": "yes"|"no"|"unsure", "reasoning_sound": "yes"|"no"|"unsure", "misconception_codes": [string], "read_back": string, "safeguarding": boolean}`;
 
-const pupilText = z
+/** A pupil's own words: trimmed, at most 600 characters. Shared with save-attempt (S20). */
+export const pupilText = z
   .string()
   .transform((s) => s.trim())
   .pipe(z.string().max(CHECK_TEXT_MAX));
-const mode = z.enum(['typing', 'tap']);
+export const mode = z.enum(['typing', 'tap']);
+export type PhoneMode = z.infer<typeof mode>;
 
 /** What the phone sends. Strict: no name, class or anything else about the pupil (rule 2). */
 export const checkInputSchema = z.strictObject({
@@ -48,6 +50,8 @@ export const checkInputSchema = z.strictObject({
   answer_mode: mode,
   reason_text: pupilText,
   reason_mode: mode,
+  /** S20: the attempt this check belongs to (made on the phone). The result is kept for save-attempt. */
+  attempt_id: z.uuid().optional(),
 });
 export type CheckInput = z.infer<typeof checkInputSchema>;
 

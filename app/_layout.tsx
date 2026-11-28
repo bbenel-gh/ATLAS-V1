@@ -14,6 +14,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PinLock } from '@/components/auth/PinLock';
 import { colors } from '@/components/common/theme';
 import { getEnv } from '@/data/env';
+import { startLessonSync } from '@/data/lessonQueue';
 import { useLockStore } from '@/data/lockStore';
 import { startOnboardingSync } from '@/data/onboarding';
 import { startOverviewSync } from '@/data/overviewQueue';
@@ -78,9 +79,11 @@ function RootLayout() {
 
   // S14: onboarding answers saved offline are sent when the network returns.
   // S17: overview answers saved offline are sent the same way.
+  // S20: segment attempts, round starts and flags too.
   useEffect(() => {
     startOnboardingSync();
     startOverviewSync();
+    startLessonSync();
   }, []);
 
   // Hold the splash screen while the fonts load. If they fail, carry on with

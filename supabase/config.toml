@@ -417,6 +417,14 @@ import_map = "./functions/ai-overview/deno.json"
 verify_jwt = false
 import_map = "./functions/ai-check/deno.json"
 
+[functions.save-attempt]
+verify_jwt = false
+import_map = "./functions/save-attempt/deno.json"
+
+[functions.raise-flag]
+verify_jwt = false
+import_map = "./functions/raise-flag/deno.json"
+
 [analytics]
 enabled = true
 port = 54327

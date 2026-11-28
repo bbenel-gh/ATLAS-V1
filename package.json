@@ -23,7 +23,8 @@
     "media:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/checkMedia.ts",
     "video:make": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/makeVideo.ts",
     "test:overview": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/testOverview.ts",
-    "try:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/tryCheck.ts"
+    "try:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/tryCheck.ts",
+    "try:attempt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/tryAttempt.ts"
   },
   "dependencies": {
     "@expo-google-fonts/caveat": "^0.4.2",

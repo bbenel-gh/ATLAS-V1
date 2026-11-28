@@ -16,7 +16,8 @@
  * verdict makes a flag (14). Everything about the question is loaded from the
  * database, never taken from the phone. Two taps are judged here with no AI call.
  *
- * This function does not save the attempt: S20 does (BL-14).
+ * This function does not save the attempt: save-attempt does (S20). With an
+ * attempt_id it keeps its result in check_results for save-attempt (D-54).
  */
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
@@ -177,8 +178,28 @@ Deno.serve(async (req) => {
       if (v === 'invalid') return reply(400, { error: 'bad_input' }, 'bad_tap_reason', started, pupilId);
       tapReason = v;
     }
+    // S20 (D-54): with an attempt id, the result is kept on the server so
+    // save-attempt can decide the verdicts without trusting the phone.
+    const checkItemId = row.data.id;
+    const keep = async (result: CheckResult, flagId: string | null) => {
+      if (!input.attempt_id) return;
+      const kept = await admin.from('check_results').insert({
+        attempt_id: input.attempt_id,
+        pupil_id: pupilId,
+        check_item_id: checkItemId,
+        answer_text: input.answer_text,
+        answer_mode: input.answer_mode,
+        reason_text: input.reason_text,
+        reason_mode: input.reason_mode,
+        result,
+        flag_id: flagId,
+      });
+      if (kept.error) throw new Error('could not keep the check result');
+    };
+
     if (tapAnswer && tapReason) {
       const result = combineCheck({ ai: null, tapAnswer, tapReason, readBack: tapReadBack(input.answer_text, input.reason_text) });
+      await keep(result, null);
       return reply(200, { ok: true, result }, 'tap_only', started, pupilId);
     }
 
@@ -243,15 +264,22 @@ Deno.serve(async (req) => {
     const result = combineCheck({ ai, tapAnswer, tapReason });
 
     // Rule 14: a flag for the admin. The app shows only the neutral message (S21, S22). S27 adds the alert email.
+    let flagId: string | null = null;
     if (result.safeguarding) {
-      const flag = await admin.from('flags').insert({
-        pupil_id: pupilId,
-        kind: 'safeguarding',
-        segment_id: seg.data.id,
-        note: `Check answer, segment ${input.segment_code}, try ${input.try_number}, question ${input.question_id}`,
-      });
+      const flag = await admin
+        .from('flags')
+        .insert({
+          pupil_id: pupilId,
+          kind: 'safeguarding',
+          segment_id: seg.data.id,
+          note: `Check answer, segment ${input.segment_code}, try ${input.try_number}, question ${input.question_id}`,
+        })
+        .select('id')
+        .single();
       if (flag.error) throw new Error('could not create the safeguarding flag');
+      flagId = flag.data.id;
     }
+    await keep(result, flagId);
 
     return reply(200, { ok: true, result }, result.safeguarding ? 'checked_safeguarding' : 'checked', started, pupilId);
   } catch (e) {

@@ -7,8 +7,9 @@
  * public.attempts_sync_segment_status
  * (supabase/migrations/20261124220000_server_owned_progress.sql). The server
  * owns progress (D-29); this reducer lets the app show the right next step.
- * Any change to the rule is made in both places. The SQL has no rounds yet
- * (Relearn rounds come with the S20 migration).
+ * Any change to the rule is made in both places. Rounds are in the SQL since
+ * S20 (20261128120000_attempts_rounds.sql); the server opens a round with
+ * public.start_segment_round.
  *
  * Verdicts arrive already resolved to yes or no: the "unsure" tie-break
  * (FR-22) happens before this reducer (S22).

@@ -164,7 +164,7 @@ const ALL_TABLES = [
   'schools', 'staff', 'classes', 'pupils', 'consents', 'app_settings', 'profiles', 'topics', 'segments',
   'video_versions', 'check_items', 'worked_examples', 'exam_papers', 'exam_items', 'exam_item_keys',
   'recheck_items', 'overview_responses', 'attempts', 'segment_status', 'flags', 'exam_attempts',
-  'exam_answers', 'mastery', 'ai_calls', 'signin_rate', 'class_topics',
+  'exam_answers', 'mastery', 'ai_calls', 'signin_rate', 'class_topics', 'check_results',
 ] as const;
 
 /**
@@ -305,6 +305,17 @@ async function pupilChecks(admin: SupabaseClient) {
   await insertRefused(p1, 'P1 cannot save an attempt as P2', 'attempts', {
     pupil_id: P2, segment_id: CONTENT.segmentId, try_number: 2, input_mode: 'typed', answer: 'x',
   });
+  // S20 (D-54): only save-attempt writes attempts, even with no verdict.
+  await insertRefused(p1, 'P1 cannot insert any attempt directly, even their own with no verdict', 'attempts', {
+    pupil_id: P1, segment_id: CONTENT.segmentId, try_number: 2, input_mode: 'typed', answer: 'x',
+  });
+  await seesNothing(p1, 'P1 cannot read check_results, not even their own', 'check_results', 'pupil_id', PUPIL_IDS);
+  const round = await p1.rpc('start_segment_round', { p_segment_id: CONTENT.segmentId, p_round: 5 });
+  check('P1 cannot jump to a later round', round.error !== null, JSON.stringify(round.data));
+  // BL-15 control: with consent, P1 may still save their own overview answer.
+  const own = await p1.from('overview_responses').insert({ pupil_id: P1, topic_id: CONTENT.topicId, skipped: true }).select('id');
+  check('P1 (consent) can still save their own overview answer', !own.error && (own.data ?? []).length === 1, own.error?.message);
+  if (own.data?.[0]?.id) await admin.from('overview_responses').delete().eq('id', own.data[0].id);
 
   const answer = await admin.from('exam_answers').select('marks_awarded, approved_at').eq('id', r1.examAnswer).single();
   check("Admin confirms P1's marks did not change", Number(answer.data?.marks_awarded) === 0 && answer.data?.approved_at === null,
@@ -333,6 +344,17 @@ async function pupilChecks(admin: SupabaseClient) {
     await seesOnly(client, pupil.user.label, 'consents', 'pupil_id', PUPIL_IDS, OWNERS.consents.includes(pupil.id) ? [pupil.id] : [], 'consents');
     await seesNothing(client, `${pupil.user.label} cannot read P1's profile`, 'profiles', 'pupil_id', [P1]);
     await seesNothing(client, `${pupil.user.label} cannot read flags`, 'flags', 'pupil_id', PUPIL_IDS);
+    if (key === 'p3') {
+      // BL-15 (S20): no consent, no lesson rows, even through the API directly.
+      await insertRefused(client, 'P3 (no consent) cannot save an overview answer', 'overview_responses', {
+        pupil_id: pupil.id, topic_id: CONTENT.topicId, skipped: true,
+      });
+      await insertRefused(client, 'P3 (no consent) cannot start an exam attempt', 'exam_attempts', {
+        pupil_id: pupil.id, paper_id: CONTENT.paperId,
+      });
+      const round = await client.rpc('start_segment_round', { p_segment_id: CONTENT.segmentId, p_round: 1 });
+      check('P3 (no consent) cannot start a segment round', round.error?.code === '42501', JSON.stringify(round.error ?? round.data));
+    }
   }
 }
 

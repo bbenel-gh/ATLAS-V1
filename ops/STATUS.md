@@ -1,8 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 28 November 2026, team with Bright (S18). Sprint mode is on (D-30).
+Last updated: 28 November 2026, team with Bright (S20). Sprint mode is on (D-30).
 
 ## Current session
+
+S20, segment progress and attempt saving, on `feat/S20-attempts-data` (cut from `main`, which Bright fast-forwarded to the S19 merge). D-54. Tests first (`42e04e4`): `src/domain/attempt.ts` (save-attempt input, server verdict rule), `src/domain/segmentSync.ts` (server row to reducer state, phone or server copy, queue keep or drop), `src/data/segmentEngine.ts` (reducer effects to repository calls, fake repository); all 100% covered. Migration `20261128120000_attempts_rounds.sql` on atlas-dev: rounds, `check_results`, no direct pupil inserts on attempts, consent on lesson writes (BL-15), the tries rule with rounds in SQL, `start_segment_round`. Edge Functions save-attempt (the only attempt writer, idempotent by the phone-made id) and raise-flag (stalled, borderline) deployed; ai-check keeps its result per attempt id. Phone: lesson write queue, segment repository, `useSegment`. `npm run try:attempt` 39 of 39 PASS, RLS 202 of 202, `try:check` and `test:signin` pass. Typecheck, lint, test (963) pass, Android bundle builds. BL-14 and BL-15 closed. **Not proven: on a phone** (no screen uses `useSegment` until S21). Next: S21.
+
+## Earlier
 
 S19, the ai-check job, on `feat/S19-ai-check` (cut from `feat/S18-routing`). D-52. Tests first: `src/domain/aiSchemas.ts` (shared check result and reply shapes, model output parse, read-back rules) and `src/domain/check.ts` (prompt word for word, strict input, tap judging, user message with no name or class, code filter, tap read-back, combine). Both 100% coverage. Edge Function `ai-check` deployed to atlas-dev; migration `20261128090000_ai_check_grants.sql` applied. `npm run try:check`: 12 of 12 PASS (401, 403 as another pupil, 403 without consent, 400 for a name field, a fake tap and a wrong segment, two taps answered with no AI call, every reply matches `checkReplySchema`, no name or class in the logged input). The six runbook samples ran on the D-50 stand-in (Nemotron, 5 to 16 s each). Typecheck, lint, test (853) pass. **Not proven: on Claude** (key not set) **and a teacher reading of the verdicts** (1B content is still DRAFT). Next: S20.
 
