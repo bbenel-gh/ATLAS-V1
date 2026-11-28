@@ -89,11 +89,67 @@ Use TEST-P3 (code TESTPC): it is the test pupil with no profile.
 3. Turn airplane mode off and wait 15 seconds (or close and reopen the app).
 4. Expected: the answers are in `profiles` as in step c.
 
+## B5 board video
+
+Runbook S16. Proves the `specs/video-board.md` Done when list: no edge around the board, no player controls, pauses in the background and off screen, captions within half a second, and full playback offline after download.
+Do every step on **both phones** (Phone A and Phone B). Write each line as PASS or FAIL, with the phone, in the shift log.
+
+### Before you start
+
+1. Phone signed in as TESTPA (TEST-P1), on Wi-Fi, sound on, volume up.
+2. To start from nothing: sign-in screen, "Component gallery (dev only)", section "Board video test (S16)", tap "Remove downloaded videos".
+
+### a. Download, cancel and continue
+
+1. Home, open the Materials topic.
+2. Expected: "This topic needs <size> MB of data. Download it now, on Wi-Fi if you can.", a "Video quality" choice with 360p picked, and Download. No percentage anywhere.
+3. Tap Download. Expected: "<n> of <total> videos" counting up.
+4. After 2 or 3 videos, tap Cancel. Expected: "The download is paused. Your finished videos are kept." and the count stays where it was.
+5. Tap "Start lesson" to continue. Expected: the count carries on from where it stopped, not from 0.
+6. Let it finish. Expected: "This topic is on your phone. It works without data now.", then the overview board.
+
+### b. No edge, no controls
+
+1. While the overview plays, look closely at all four edges of the board, in good light, with screen brightness up.
+2. Expected: no line, frame, shadow or change of colour between the video and the board-coloured area around it. Captions sit under the board on the same colour.
+3. Expected: the video started on its own with sound. If the phone started it muted, a "Tap for sound" pill shows. Tap once: sound comes on and the video does not restart.
+4. Tap the board. Expected: it pauses, dims slightly, and "tap to continue" shows in handwriting. Tap again: it continues from the same place.
+5. Press and hold on the video for 3 seconds. Expected: no menu, no controls, no seek bar, no picture-in-picture or cast button. Nothing appears at any time while it plays.
+6. Above the board: "Basic 7 Science · Materials", the title, and the journey label.
+
+### c. Pauses in the background and off screen
+
+1. During playback, press the home button. Wait 5 seconds, then reopen ATLAS (type the PIN if asked).
+2. Expected: the video is paused at the same place. It plays again when you tap it.
+3. During playback, scroll down until about half the board is off the top of the screen.
+4. Expected: it pauses at about the half-way point. Scroll back: it plays again by itself.
+5. Tap to pause, then scroll the board off and back. Expected: it stays paused, because you paused it.
+
+### d. Captions within half a second
+
+1. Pick 3 caption lines: one near the start, one in the middle, one near the end of the overview (75 seconds).
+2. For each one, start a stopwatch the moment the caption appears and stop it when the voice starts that sentence. Use the lap button if your stopwatch has one.
+3. Expected: each gap is under 0.5 seconds. Write the three times in the shift log.
+4. Pause and continue once in the middle. Expected: captions stay in step with the voice.
+
+### e. End state
+
+1. Let the overview play to the end.
+2. Expected: the last frame stays on the board (it does not go black or jump back to the start), and the next section fades in below and the screen scrolls to it.
+3. Tap "Watch again". Expected: the screen scrolls back to the board and the same video restarts from the beginning.
+
+### f. Offline
+
+1. Close ATLAS fully (swipe it away). Turn on airplane mode.
+2. Open ATLAS, type the PIN, Home, open the Materials topic.
+3. Expected: no download screen. The poster shows first, then the overview plays with sound and captions, and the end state works as in step e.
+4. Turn airplane mode off when done.
+
 ## B5 overview
 
 Runbook S17. Proves the B5 gate: the overview works offline after download, the profile updates when the network returns, and `ai_calls` logs every call with no names.
 
-Before you start: Bright has set `ANTHROPIC_API_KEY` in the atlas-dev Supabase secrets, and the Materials topic is downloaded on Phone A (B5 board checks).
+Before you start: Bright has set `ANTHROPIC_API_KEY` in the atlas-dev Supabase secrets, and the Materials topic is downloaded on Phone A (see "B5 board video", step a).
 
 ### Send
 
