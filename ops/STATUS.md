@@ -8,6 +8,10 @@ S19, the ai-check job, on `feat/S19-ai-check` (cut from `feat/S18-routing`). D-5
 
 ## Earlier
 
+S16b, board seek by gesture, on `feat/S16b-board-seek` (cut from `feat/S17-overview`, worktree `../ATLAS-V1-S16b`). D-53. Double tap left or right for 10 s back or forward, hold to keep moving, forward never past the furthest point watched, brief handwritten hint. `src/domain/boardSeek.ts` (23 tests first), `BoardVideo.tsx`, spec P11, test script step g. Typecheck, lint, test pass. **Not proven: step g on both phones** (BL-8). Merged into `feat/S19-ai-check`.
+
+## Earlier
+
 S18, routing and tries rules, on `feat/S18-routing` (cut from `feat/S17-overview`). D-51. Pure TypeScript, tests first (committed before the code). `src/domain/routing.ts`: `collectCodes`, `chooseFirstVersion` (interests, tie to a), `chooseNextVersion` (unseen, codes, interests, label, else worked example), `chooseRelearnVersion` (D-48). `src/domain/tries.ts`: reducer over status, phase, round, tries, versions seen and last codes; effects raise, note and clear stalled flag and log lucky guess; impossible events rejected. 64 new tests, both files 100% statements, branches, functions and lines. Typecheck, lint, test (785) pass. Nothing on Supabase or screens. Next: S19 ai-check. The rounds migration and BL-15 go to S20.
 
 ## Earlier

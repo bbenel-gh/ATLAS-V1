@@ -109,6 +109,14 @@ export const COPY = {
     tapToPause: 'Lesson video. Tap to pause.',
     tapForSound: 'Tap for sound',
     watchAgain: 'Watch again',
+    /** P11 seek hints, shown for about a second in the board handwriting. */
+    back10: 'back 10 s',
+    forward10: 'forward 10 s',
+    backHold: 'going back',
+    forwardHold: 'going forward',
+    /** P11 for screen readers, which cannot double tap the board. */
+    a11yBack: 'Back 10 seconds',
+    a11yForward: 'Forward 10 seconds',
     breadcrumb: (level: string, subject: string, topic: string) =>
       [level, String(subject ?? '').replace(/^Integrated /, '')].filter(Boolean).join(' ') + ` · ${topic ?? ''}`,
   },
