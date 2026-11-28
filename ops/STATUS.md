@@ -1,8 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 27 November 2026, team with Bright (S17). Sprint mode is on (D-30).
+Last updated: 28 November 2026, team with Bright (S18). Sprint mode is on (D-30).
 
 ## Current session
+
+S18, routing and tries rules, on `feat/S18-routing` (cut from `feat/S17-overview`). D-51. Pure TypeScript, tests first (committed before the code). `src/domain/routing.ts`: `collectCodes`, `chooseFirstVersion` (interests, tie to a), `chooseNextVersion` (unseen, codes, interests, label, else worked example), `chooseRelearnVersion` (D-48). `src/domain/tries.ts`: reducer over status, phase, round, tries, versions seen and last codes; effects raise, note and clear stalled flag and log lucky guess; impossible events rejected. 64 new tests, both files 100% statements, branches, functions and lines. Typecheck, lint, test (785) pass. Nothing on Supabase or screens. Next: S19 ai-check. The rounds migration and BL-15 go to S20.
+
+## Earlier
 
 S17, overview stage and ai-overview, on `feat/S17-overview` (cut from `feat/S16-video-board`). D-49. Rules in `src/domain/overview.ts` (39 tests first: input shape with no name or class, 600 characters, output parse with zod, titles to segment codes, profile merge, both daily caps, queue keep or drop, prompt word for word from `specs/ai-prompts.md`). Edge Function `ai-overview` (claude-haiku-5-5 through `@anthropic-ai/sdk`, 20 s, one retry, every try logged in `ai_calls`, safeguarding flag) deployed to atlas-dev. Migrations `20261127120000_overview_interests.sql` (`profiles.overview_interests`, guard so only the function writes the overview words) and `20261127130000_ai_overview_grants.sql` (column grants for the service role) applied; types regenerated; `specs/data-model.md` amended. Phone: answers queued on the phone first (`src/data/overviewQueue.ts`), thanks shown at once, sent every 15 s and on app return. Overview questions under the board, Send and a quiet Skip, "Watch again" keeps the words. RLS 194 PASS; `npm run test:overview` 27 of 27 PASS on the fallback path. Typecheck, lint, test (699) pass, web and Android bundles build. D-50: until the Claude key is set, a free OpenRouter chain stands in on atlas-dev (fake pupils only). With it, `npm run test:overview` passes the AI answer path: Nemotron 3 Ultra answered in about 12 s, ai_result saved with segment codes, profile gained keywords and interests. Migration `20261127140000_fix_profiles_guard.sql` fixed the guard for the service role. **Not proven: the same on Claude** (key not set) **and every phone check** (`docs/test-script.md` "B5 overview", BL-8).
 
