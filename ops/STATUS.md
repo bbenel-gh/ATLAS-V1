@@ -1,8 +1,12 @@
 # ATLAS V1 status
 
-Last updated: 27 November 2026, team with Bright (S17). Sprint mode is on (D-30).
+Last updated: 28 November 2026, team with Bright (S16b). Sprint mode is on (D-30).
 
 ## Current session
+
+S16b, board seek by gesture, on `feat/S16b-board-seek` (cut from `feat/S17-overview`, worktree `../ATLAS-V1-S16b`). D-52. Double tap left or right for 10 s back or forward, hold to keep moving, forward never past the furthest point watched, brief handwritten hint. `src/domain/boardSeek.ts` (23 tests first), `BoardVideo.tsx`, spec P11, test script step g. Typecheck, lint, test pass. **Not proven: step g on both phones** (BL-8).
+
+## Earlier
 
 S17, overview stage and ai-overview, on `feat/S17-overview` (cut from `feat/S16-video-board`). D-49. Rules in `src/domain/overview.ts` (39 tests first: input shape with no name or class, 600 characters, output parse with zod, titles to segment codes, profile merge, both daily caps, queue keep or drop, prompt word for word from `specs/ai-prompts.md`). Edge Function `ai-overview` (claude-haiku-5-5 through `@anthropic-ai/sdk`, 20 s, one retry, every try logged in `ai_calls`, safeguarding flag) deployed to atlas-dev. Migrations `20261127120000_overview_interests.sql` (`profiles.overview_interests`, guard so only the function writes the overview words) and `20261127130000_ai_overview_grants.sql` (column grants for the service role) applied; types regenerated; `specs/data-model.md` amended. Phone: answers queued on the phone first (`src/data/overviewQueue.ts`), thanks shown at once, sent every 15 s and on app return. Overview questions under the board, Send and a quiet Skip, "Watch again" keeps the words. RLS 194 PASS; `npm run test:overview` 27 of 27 PASS on the fallback path. Typecheck, lint, test (699) pass, web and Android bundles build. D-50: until the Claude key is set, a free OpenRouter chain stands in on atlas-dev (fake pupils only). With it, `npm run test:overview` passes the AI answer path: Nemotron 3 Ultra answered in about 12 s, ai_result saved with segment codes, profile gained keywords and interests. Migration `20261127140000_fix_profiles_guard.sql` fixed the guard for the service role. **Not proven: the same on Claude** (key not set) **and every phone check** (`docs/test-script.md` "B5 overview", BL-8).
 

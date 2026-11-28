@@ -114,7 +114,7 @@ Do every step on **both phones** (Phone A and Phone B). Write each line as PASS 
 2. Expected: no line, frame, shadow or change of colour between the video and the board-coloured area around it. Captions sit under the board on the same colour.
 3. Expected: the video started on its own with sound. If the phone started it muted, a "Tap for sound" pill shows. Tap once: sound comes on and the video does not restart.
 4. Tap the board. Expected: it pauses, dims slightly, and "tap to continue" shows in handwriting. Tap again: it continues from the same place.
-5. Press and hold on the video for 3 seconds. Expected: no menu, no controls, no seek bar, no picture-in-picture or cast button. Nothing appears at any time while it plays.
+5. Press and hold on the video for 3 seconds. Expected: no menu, no controls, no seek bar, no picture-in-picture or cast button. Nothing appears at any time while it plays, except the short seek hint of step g.
 6. Above the board: "Basic 7 Science · Materials", the title, and the journey label.
 
 ### c. Pauses in the background and off screen
@@ -144,6 +144,20 @@ Do every step on **both phones** (Phone A and Phone B). Write each line as PASS 
 2. Open ATLAS, type the PIN, Home, open the Materials topic.
 3. Expected: no download screen. The poster shows first, then the overview plays with sound and captions, and the end state works as in step e.
 4. Turn airplane mode off when done.
+
+### g. Seek with taps and holds (P11)
+
+Start from a fresh first watch: remove the downloaded videos as in "Before you start", download again, then open the topic.
+
+1. Let the overview play for about 30 seconds. Double tap the **left** half of the board.
+2. Expected: it jumps back about 10 seconds, "back 10 s" shows in handwriting on the left and fades within a second, and the caption changes to the line for that moment straight away. Nothing else appears.
+3. Double tap the **right** half. Expected: forward about 10 seconds, "forward 10 s" on the right.
+4. Double tap the right half again, two or three times. Expected: it never goes past the point you had reached before step 1. When it can't go further, nothing happens and no hint shows.
+5. Press and hold the **left** half. Expected: after half a second, "going back" shows and the video moves back quickly with the sound off. Lift your finger: it plays on from there. No menu.
+6. Press and hold the **right** half. Expected: "going forward", moving forward only up to the furthest point watched. Lift: it plays on.
+7. Tap once. Expected: it pauses (a short moment later than before, about a quarter of a second). Double tap the left while paused: it goes back and stays paused.
+8. Let the video reach the end. Double tap the right. Expected: nothing happens. Double tap the left. Expected: back 10 seconds, it plays again, and the question below stays on screen.
+9. TalkBack (optional): with TalkBack on, focus the board and swipe up or down to the actions. Expected: "Back 10 seconds" and "Forward 10 seconds" are offered and work.
 
 ## B5 overview
 

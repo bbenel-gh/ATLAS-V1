@@ -22,18 +22,19 @@ The lesson video looks like a page being written on, not like a video player. Ha
 
 | # | Behaviour | Detail |
 | --- | --- | --- |
-| P1 | No player chrome | No frame, border, shadow, progress bar or visible controls. No picture-in-picture, casting, download or speed menu. Long-press menu disabled |
+| P1 | No player chrome | No frame, border, shadow, progress bar or visible controls. No picture-in-picture, casting, download or speed menu. Long-press menu disabled. Seeking is by gesture only (P11) |
 | P2 | Seamless edge | The board area background equals the sampled board colour. A soft 4% fade at each edge hides small colour drift between phones |
 | P3 | Plays from the phone | Always play the cached local file. Show the poster image until the first frame is ready |
 | P4 | Starts automatically | Try to play with sound. If the phone refuses, play muted, show a small "Tap for sound" pill, and unmute on the first touch without restarting |
-| P5 | Tap to pause | Tapping the board pauses or continues. When paused, the board dims slightly and shows "tap to continue" in the handwriting font |
+| P5 | Tap to pause | A single tap on the board pauses or continues (it waits 280 ms, so a double tap can seek instead). When paused, the board dims slightly and shows "tap to continue" in the handwriting font |
 | P6 | Never runs unseen | Pause when less than half of the board is on screen, or when the app goes to the background. Resume only if the pupil did not pause it themselves |
 | P7 | Captions under the board | The current cue shows as text under the board, read from the version's `.vtt` file, updated in step with the video frame (not on a separate timer) |
 | P8 | End state | The last frame stays. The check question section fades in below and scrolls into view |
 | P9 | Watch again | Restarts the same version from the start and scrolls back to the board. It does not use a try |
 | P10 | Header | Above the board: breadcrumb (for example "Basic 7 Science · Materials"), segment title, and the journey label |
+| P11 | Seek by gesture (D-52) | Double tap the left half: back 10 seconds. Double tap the right half: forward 10 seconds. Each further quick tap on the same side moves again. Press and hold a half for 0.5 seconds: it keeps moving back or forward (2 seconds every 250 ms, video paused) until the finger lifts, then playback carries on unless the pupil had paused. Forward never goes past the furthest point already watched, so a first watch cannot skip ahead. A brief handwritten hint ("back 10 s", "forward 10 s", "going back", "going forward") shows on that side and fades within a second. No bar, no arrows, nothing left on screen. Screen readers get "Back 10 seconds" and "Forward 10 seconds" actions. Going back after the end plays on from there; the question below stays |
 
-Handwriting font for board-related text in the app (paused label, "Your turn" heading): Caveat 700, bundled with the app. All other text uses the app fonts in `CLAUDE.md`.
+Handwriting font for board-related text in the app (paused label, seek hints, "Your turn" heading): Caveat 700, bundled with the app. All other text uses the app fonts in `CLAUDE.md`.
 
 ## 4. How this joins the segment loop
 
@@ -63,3 +64,6 @@ The demo ends with a "Your turn" question checked instantly in red or green. **V
 - The video pauses when the app goes to the background and when the board scrolls off screen.
 - Captions match the narration to within half a second.
 - With the network off, a downloaded video plays with its poster, captions and end state.
+- A double tap on the left goes back 10 seconds and on the right forward 10 seconds, with the caption following at once. A single tap still pauses.
+- Holding a side keeps moving back or forward until the finger lifts, and no menu appears.
+- On a first watch, forward never passes the furthest point already watched.
