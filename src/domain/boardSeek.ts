@@ -1,6 +1,6 @@
 /**
  * Pure rules for seeking on the board video by gesture (specs/video-board.md
- * P11, D-52). No bar and no visible controls: double tap left goes back 10 s,
+ * P11, D-53). No bar and no visible controls: double tap left goes back 10 s,
  * double tap right goes forward 10 s, holding a side keeps moving until the
  * finger lifts. Forward never passes the furthest point already watched, so a
  * first watch cannot skip the explanation. No React.

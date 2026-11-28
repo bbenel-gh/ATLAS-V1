@@ -1,10 +1,18 @@
 # ATLAS V1 status
 
-Last updated: 28 November 2026, team with Bright (S16b). Sprint mode is on (D-30).
+Last updated: 28 November 2026, team with Bright (S18). Sprint mode is on (D-30).
 
 ## Current session
 
-S16b, board seek by gesture, on `feat/S16b-board-seek` (cut from `feat/S17-overview`, worktree `../ATLAS-V1-S16b`). D-52. Double tap left or right for 10 s back or forward, hold to keep moving, forward never past the furthest point watched, brief handwritten hint. `src/domain/boardSeek.ts` (23 tests first), `BoardVideo.tsx`, spec P11, test script step g. Typecheck, lint, test pass. **Not proven: step g on both phones** (BL-8).
+S19, the ai-check job, on `feat/S19-ai-check` (cut from `feat/S18-routing`). D-52. Tests first: `src/domain/aiSchemas.ts` (shared check result and reply shapes, model output parse, read-back rules) and `src/domain/check.ts` (prompt word for word, strict input, tap judging, user message with no name or class, code filter, tap read-back, combine). Both 100% coverage. Edge Function `ai-check` deployed to atlas-dev; migration `20261128090000_ai_check_grants.sql` applied. `npm run try:check`: 12 of 12 PASS (401, 403 as another pupil, 403 without consent, 400 for a name field, a fake tap and a wrong segment, two taps answered with no AI call, every reply matches `checkReplySchema`, no name or class in the logged input). The six runbook samples ran on the D-50 stand-in (Nemotron, 5 to 16 s each). Typecheck, lint, test (853) pass. **Not proven: on Claude** (key not set) **and a teacher reading of the verdicts** (1B content is still DRAFT). Next: S20.
+
+## Earlier
+
+S16b, board seek by gesture, on `feat/S16b-board-seek` (cut from `feat/S17-overview`, worktree `../ATLAS-V1-S16b`). D-53. Double tap left or right for 10 s back or forward, hold to keep moving, forward never past the furthest point watched, brief handwritten hint. `src/domain/boardSeek.ts` (23 tests first), `BoardVideo.tsx`, spec P11, test script step g. Typecheck, lint, test pass. **Not proven: step g on both phones** (BL-8). Merged into `feat/S19-ai-check`.
+
+## Earlier
+
+S18, routing and tries rules, on `feat/S18-routing` (cut from `feat/S17-overview`). D-51. Pure TypeScript, tests first (committed before the code). `src/domain/routing.ts`: `collectCodes`, `chooseFirstVersion` (interests, tie to a), `chooseNextVersion` (unseen, codes, interests, label, else worked example), `chooseRelearnVersion` (D-48). `src/domain/tries.ts`: reducer over status, phase, round, tries, versions seen and last codes; effects raise, note and clear stalled flag and log lucky guess; impossible events rejected. 64 new tests, both files 100% statements, branches, functions and lines. Typecheck, lint, test (785) pass. Nothing on Supabase or screens. Next: S19 ai-check. The rounds migration and BL-15 go to S20.
 
 ## Earlier
 

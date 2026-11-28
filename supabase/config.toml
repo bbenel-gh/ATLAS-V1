@@ -412,6 +412,11 @@ import_map = "./functions/pupil-signin/deno.json"
 verify_jwt = false
 import_map = "./functions/ai-overview/deno.json"
 
+# S19 (D-52): same as ai-overview, the function checks the session token itself.
+[functions.ai-check]
+verify_jwt = false
+import_map = "./functions/ai-check/deno.json"
+
 [analytics]
 enabled = true
 port = 54327

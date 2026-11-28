@@ -7,6 +7,8 @@
  */
 import { z } from 'zod';
 
+import { extractJsonObject } from './aiSchemas.ts';
+
 export const OVERVIEW_MODEL = 'claude-haiku-5-5';
 /** Rule 5: an AI call gives up after 20 seconds. */
 export const AI_TIMEOUT_MS = 20_000;
@@ -89,19 +91,7 @@ export type OverviewOutput = z.infer<typeof overviewOutputSchema>;
  * D-50): the JSON is the text from the first { to the last }.
  */
 export function parseOverviewOutput(text: string): OverviewOutput | null {
-  const cleaned = text.replace(/<think>[\s\S]*?<\/think>/gi, '');
-  // A list is not the shape asked for, even with the right object inside.
-  if (/^\s*\[/.test(cleaned)) return null;
-  const start = cleaned.indexOf('{');
-  const end = cleaned.lastIndexOf('}');
-  if (start < 0 || end < start) return null;
-  let json: unknown;
-  try {
-    json = JSON.parse(cleaned.slice(start, end + 1));
-  } catch {
-    return null;
-  }
-  const parsed = overviewOutputSchema.safeParse(json);
+  const parsed = overviewOutputSchema.safeParse(extractJsonObject(text));
   return parsed.success ? parsed.data : null;
 }
 
